@@ -31,7 +31,8 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	/** @return void */
 	protected function loadScript()
 	{
-		( $this->cache->load( $key = static::SCRIPT_KEY ) && is_file( $dest = __DIR__ . '/../js/twigrid.datagrid.js' ) ) || (
+		$dest = __DIR__ . '/../js/twigrid.datagrid.js';
+		( $this->cache->load( $key = static::SCRIPT_KEY ) && is_file( $dest ) ) || (
 			copy($source = __DIR__ . '/../libs/TwiGrid/client-side/twigrid.datagrid.js', $dest)
 			&& $this->cache->save($key, TRUE, array(
 				Nette\Caching\Cache::FILES => array($source),
@@ -47,9 +48,9 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	 */
 	protected function createTemplate($class = NULL)
 	{
+		$this->loadScript();
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
-		$this->loadScript();
 		return parent::createTemplate( $class )->setFile( __DIR__ . '/template.latte' );
 	}
 
@@ -73,6 +74,8 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->dataLoader );
 
+		$grid->addRowAction('edit', 'Upravit', $this->editRecord);
+		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
 		$grid->addGroupAction('change', 'Změnit záznamy', $this->manipulateGroup, 'Opravdu chcete změnit vybrané položky?');
 
 		return $grid;
@@ -146,6 +149,30 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		}
 
 		return $users->where($conds)->limit(16);
+	}
+
+
+
+	/**
+	 * @param  int
+	 * @return void
+	 */
+	function editRecord($id)
+	{
+		$this->flashMessage( "Požadavek na změnu záznamu s ID '$id'.", 'success' );
+		!$this->isAjax() && $this->redirect('this');
+	}
+
+
+
+	/**
+	 * @param  int
+	 * @return void
+	 */
+	function deleteRecord($id)
+	{
+		$this->flashMessage( "Požadavek na smazání záznamu s ID '$id'.", 'warning' );
+		!$this->isAjax() && $this->redirect('this');
 	}
 
 

@@ -11,4 +11,4 @@ services:
 	nette.presenterFactory: PresenterFactory( %appDir%/app, ... )
 
 factories:
-	dataGrid: TwiGrid\DataGrid()
+	dataGrid: TwiGrid\DataGrid( ... )
