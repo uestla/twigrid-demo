@@ -8,15 +8,39 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	/** @var Nette\Database\Connection */
 	protected $database;
 
+	/** @var Nette\Caching\Cache */
+	protected $cache;
+
+	const SCRIPT_KEY = 'grid-script';
+
 
 
 	/**
 	 * @param  Nette\Database\Connection
+	 * @param  Nette\Caching\IStorage
 	 * @return void
 	 */
-	function inject(Nette\Database\Connection $c)
+	function inject(Nette\Database\Connection $c, Nette\Caching\IStorage $s)
 	{
 		$this->database = $c;
+		$this->cache = new Nette\Caching\Cache($s, __CLASS__);
+	}
+
+
+
+	/** @return void */
+	protected function loadScript()
+	{
+		$key = static::SCRIPT_KEY;
+		$load = $this->cache->load($key);
+		$source = __DIR__ . '/../libs/TwiGrid/client-side/twigrid.datagrid.js';
+
+		if ($load === NULL) {
+			copy($source, __DIR__ . '/../js/twigrid.datagrid.js');
+			$this->cache->save($key, TRUE, array(
+				Nette\Caching\Cache::FILES => array($source),
+			));
+		}
 	}
 
 
@@ -29,6 +53,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	{
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
+		$this->loadScript();
 		return parent::createTemplate( $class )->setFile( __DIR__ . '/template.latte' );
 	}
 

@@ -20,10 +20,6 @@
 
 				var grid = $(val);
 
-				// flash messages close button
-				grid.find('.alert.hidable').prepend($('<button type="button" class="close" data-dismiss="alert">&times;</button>'));
-
-
 				// confirmation dialog
 				grid.find('*[data-confirm]').on('click.twigrid', function (event) {
 					if (!window.confirm( $(this).attr('data-confirm') )) {
@@ -111,14 +107,17 @@ $(function () {
 
 					if (flashes.length) {
 						var maxOffset = -1,
-							docOffset = $('html').scrollTop() || $('body').scrollTop();;
+							docOffset = $('html').scrollTop() || $('body').scrollTop();
+
 						flashes.each(function (key, val) {
 							if ((offset = $(val).offset().top) > maxOffset) { maxOffset = offset; }
 						});
 
-						if (maxOffset > -1 && docOffset > maxOffset) { $('html, body').animate({
+						if (maxOffset > -1 && docOffset > maxOffset) {
+							$('html, body').animate({
 								scrollTop: maxOffset
-						}, 512); }
+							}, 512);
+						}
 					}
 				});
 			}
@@ -134,8 +133,5 @@ $(function () {
 	}, {
 		body: $(document.body)
 	});
-
-
-	$.nette.init();
 
 });
