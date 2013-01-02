@@ -11,7 +11,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	/** @var Nette\Caching\Cache */
 	protected $cache;
 
-	const SCRIPT_KEY = 'grid-script';
+	const SCRIPT_KEY = 'grid-script-';
 
 
 
@@ -29,15 +29,16 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 
 
 	/** @return void */
-	protected function loadScript()
+	protected function loadClientScripts()
 	{
-		$dest = __DIR__ . '/../js/twigrid.datagrid.js';
-		( $this->cache->load( $key = static::SCRIPT_KEY ) && is_file( $dest ) ) || (
-			copy($source = __DIR__ . '/../libs/TwiGrid/client-side/twigrid.datagrid.js', $dest)
-			&& $this->cache->save($key, TRUE, array(
-				Nette\Caching\Cache::FILES => array($source),
-			))
-		);
+		foreach (array('js/twigrid.datagrid.js', 'css/twigrid.datagrid.css') as $file) {
+			( ( $key = static::SCRIPT_KEY . $file ) && is_file( $dest = __DIR__ . '/../' . $file ) && $this->cache->load( $key ) ) || (
+				copy($source = __DIR__ . '/../libs/TwiGrid/client-side/' . basename($file), $dest)
+				&& $this->cache->save($key, TRUE, array(
+					Nette\Caching\Cache::FILES => array($source),
+				))
+			);
+		}
 	}
 
 
@@ -48,7 +49,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		$this->loadScript();
+		$this->loadClientScripts();
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
 		return parent::createTemplate( $class )->setFile( __DIR__ . '/template.latte' );

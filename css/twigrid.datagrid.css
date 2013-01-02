@@ -3,6 +3,10 @@
 	white-space: nowrap;
 }
 
+.twigrid th, .twigrid td {
+	vertical-align: middle;
+}
+
 select, .twigrid input[type="text"], .twigrid input[type="date"] {
 	display: block;
 	margin: 0;
