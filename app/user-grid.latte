@@ -1,0 +1,35 @@
+{extends '../libs/TwiGrid/DataGrid/DataGrid.latte'}
+
+
+
+{define filter-cell}
+
+{if FALSE && $name === 'birthday'}
+	<th>
+		{input filters-criteria-birthday-min, placeholder => 'min'}
+		{input filters-criteria-birthday-max, placeholder => 'max'}
+	</th>
+{else}
+	{include #parent}
+{/if}
+
+{/define}
+
+
+
+{define body-cell}
+
+{if $column->name === 'gender'}
+	<td style="text-align: center;"><img src="{$basePath}/img/ico/{$value}.png" alt="{$value}"></td>
+
+{elseif $column->name === 'emailaddress'}
+	<td><a href="{!="mailto:$value"|replace:'@':'&#64;'}">{!$value|replace:'@':'&#64;'}</a></td>
+
+{elseif $column->name === 'birthday'}
+	<td>{$value|date:'j. n. Y'}</td>
+
+{else}
+	{include #parent}
+{/if}
+
+{/define}

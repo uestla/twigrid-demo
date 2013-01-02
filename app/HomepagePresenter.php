@@ -1,0 +1,140 @@
+<?php
+
+use Nette\Forms\Form;
+
+
+class HomepagePresenter extends Nette\Application\UI\Presenter
+{
+	/** @var Nette\Database\Connection */
+	protected $database;
+
+
+
+	/**
+	 * @param  Nette\Database\Connection
+	 * @return void
+	 */
+	function inject(Nette\Database\Connection $c)
+	{
+		$this->database = $c;
+	}
+
+
+
+	/**
+	 * @param  string|NULL
+	 * @return Nette\Templating\ITemplate
+	 */
+	protected function createTemplate($class = NULL)
+	{
+		$this->invalidateControl('flashes');
+		return parent::createTemplate( $class )->setFile( __DIR__ . '/template.latte' );
+	}
+
+
+
+	/** @return TwiGrid\DataGrid */
+	protected function createComponentDataGrid()
+	{
+		$grid = $this->context->createDataGrid();
+		$grid->setTemplateFile( __DIR__ . '/user-grid.latte' );
+
+		$grid->addColumn('gender', 'Pohlaví');
+		$grid->addColumn('firstname', 'Jméno')->setSortable();
+		$grid->addColumn('surname', 'Příjmení')->setSortable();
+		$grid->addColumn('emailaddress', 'E-mail')->setSortable();
+		$grid->addColumn('birthday', 'Datum narození')->setSortable();
+		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
+		$grid->addColumn('centimeters', 'Výška (cm)')->setSortable();
+
+		$grid->setPrimaryKey( $this->database->table('user')->primary );
+		$grid->setFilterContainerFactory( $this->createFilterContainer );
+		$grid->setDataLoader( $this->dataLoader );
+
+		$grid->addGroupAction('change', 'Změnit záznamy', $this->manipulateGroup, 'Opravdu chcete změnit vybrané položky?');
+
+		return $grid;
+	}
+
+
+
+	/** @return Nette\Forms\Container */
+	function createFilterContainer()
+	{
+		$container = new Nette\Forms\Container;
+
+		$container->addSelect('gender', 'Pohlaví', array(
+			'male' => 'Muž',
+			'female' => 'Žena',
+		))->setPrompt('---');
+
+		$container->addText('firstname');
+		$container->addText('surname');
+
+		/* $birthday = $container->addContainer('birthday');
+		$birthday->addText('min');
+		$birthday->addText('max'); */
+
+		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
+		$container->addText('centimeters')->addCondition( Form::FILLED )->addRule( Form::INTEGER );
+
+		return $container;
+	}
+
+
+
+	/**
+	 * @param  array
+	 * @param  array column => desc?
+	 * @param  array
+	 * @return Nette\Database\Table\Selection
+	 */
+	function dataLoader(array $columns, array $orderBy, array $filters)
+	{
+		// selection factory
+		$users = $this->database->table('user');
+
+		// columns
+		$users->select( implode(', ', $columns) );
+
+		// order result
+		foreach ($orderBy as $column => $desc) {
+			$users->order( $column . ($desc ? ' DESC' : '') );
+		}
+
+		// filter result
+		$conds = array();
+		foreach ($filters as $column => $value) {
+			if ($column === 'gender') {
+				$conds[ $column ] = $value;
+
+			} elseif ($column === 'birthday') {
+				isset($value['min']) && $conds["$column >= ?"] = $value['min'];
+				isset($value['max']) && $conds["$column <= ?"] = $value['max'];
+
+			} elseif ($column === 'centimeters') {
+				$conds["$column <= ?"] = $value;
+
+			} elseif ($column === 'kilograms') {
+				$conds["$column <= ?"] = $value;
+
+			} else {
+				$conds["$column LIKE ?"] = "$value%";
+			}
+		}
+
+		return $users->where($conds)->limit(16);
+	}
+
+
+
+	/**
+	 * @param  array
+	 * @return void
+	 */
+	function manipulateGroup(array $primaries)
+	{
+		$this->flashMessage( "Požadavek na změnu záznamů s ID: " . Nette\Utils\Json::encode($primaries), 'success' );
+		!$this->isAjax() && $this->redirect('this');
+	}
+}

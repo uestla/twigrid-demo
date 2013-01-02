@@ -1,0 +1,14 @@
+php:
+	date.timezone: Europe/Prague
+
+nette:
+	xhtml: FALSE
+
+	database:
+			dsn: 'sqlite:%appDir%/users.s3db'
+
+services:
+	nette.presenterFactory: PresenterFactory( %appDir%/app, ... )
+
+factories:
+	dataGrid: TwiGrid\DataGrid()
