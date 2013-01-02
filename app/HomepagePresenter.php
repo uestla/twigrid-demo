@@ -31,16 +31,12 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	/** @return void */
 	protected function loadScript()
 	{
-		$key = static::SCRIPT_KEY;
-		$load = $this->cache->load($key);
-		$source = __DIR__ . '/../libs/TwiGrid/client-side/twigrid.datagrid.js';
-
-		if ($load === NULL) {
-			copy($source, __DIR__ . '/../js/twigrid.datagrid.js');
-			$this->cache->save($key, TRUE, array(
+		( $this->cache->load( $key = static::SCRIPT_KEY ) && is_file( $dest = __DIR__ . '/../js/twigrid.datagrid.js' ) ) || (
+			copy($source = __DIR__ . '/../libs/TwiGrid/client-side/twigrid.datagrid.js', $dest)
+			&& $this->cache->save($key, TRUE, array(
 				Nette\Caching\Cache::FILES => array($source),
-			));
-		}
+			))
+		);
 	}
 
 
