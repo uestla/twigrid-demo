@@ -27,6 +27,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	 */
 	protected function createTemplate($class = NULL)
 	{
+		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
 		return parent::createTemplate( $class )->setFile( __DIR__ . '/template.latte' );
 	}
