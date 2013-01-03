@@ -6,7 +6,10 @@ use Nette\Forms\Form;
 class HomepagePresenter extends Nette\Application\UI\Presenter
 {
 	/** @var Nette\Database\Connection */
-	protected $database;
+	protected $ndb;
+
+	/** @var DibiConnection */
+	protected $dibi;
 
 	/** @var Nette\Caching\Cache */
 	protected $cache;
@@ -17,12 +20,14 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 
 	/**
 	 * @param  Nette\Database\Connection
+	 * @param  DibiConnection
 	 * @param  Nette\Caching\IStorage
 	 * @return void
 	 */
-	function inject(Nette\Database\Connection $c, Nette\Caching\IStorage $s)
+	function inject(Nette\Database\Connection $c, DibiConnection $d, Nette\Caching\IStorage $s)
 	{
-		$this->database = $c;
+		$this->ndb = $c;
+		$this->dibi = $d;
 		$this->cache = new Nette\Caching\Cache($s, __CLASS__);
 	}
 
@@ -52,7 +57,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$this->loadClientScripts();
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
-		return parent::createTemplate( $class )->setFile( __DIR__ . '/template.latte' );
+		return parent::createTemplate( $class )->setFile( __DIR__ . "/actions/{$this->view}.latte" );
 	}
 
 
@@ -71,9 +76,9 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
 		$grid->addColumn('centimeters', 'Výška (cm)')->setSortable();
 
-		$grid->setPrimaryKey( $this->database->table('user')->primary );
+		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
-		$grid->setDataLoader( $this->dataLoader );
+		$grid->setDataLoader( $this->{ $this->action === 'ndb' ? 'ndbDataLoader' : 'dibiDataLoader' } );
 
 		$grid->addRowAction('edit', 'Upravit', $this->editRecord);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
@@ -115,10 +120,10 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	 * @param  array
 	 * @return Nette\Database\Table\Selection
 	 */
-	function dataLoader(array $columns, array $orderBy, array $filters)
+	function ndbDataLoader(array $columns, array $orderBy, array $filters)
 	{
 		// selection factory
-		$users = $this->database->table('user');
+		$users = $this->ndb->table('user');
 
 		// columns
 		$users->select( implode(', ', $columns) );
@@ -126,6 +131,48 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		// order result
 		foreach ($orderBy as $column => $desc) {
 			$users->order( $column . ($desc ? ' DESC' : '') );
+		}
+
+		// filter result
+		$conds = array();
+		foreach ($filters as $column => $value) {
+			if ($column === 'gender') {
+				$conds[ $column ] = $value;
+
+			} elseif ($column === 'birthday') {
+				isset($value['min']) && $conds["$column >= ?"] = $value['min'];
+				isset($value['max']) && $conds["$column <= ?"] = $value['max'];
+
+			} elseif ($column === 'centimeters') {
+				$conds["$column <= ?"] = $value;
+
+			} elseif ($column === 'kilograms') {
+				$conds["$column <= ?"] = $value;
+
+			} else {
+				$conds["$column LIKE ?"] = "$value%";
+			}
+		}
+
+		return $users->where($conds)->limit(16);
+	}
+
+
+
+	/**
+	 * @param  array
+	 * @param  array column => desc?
+	 * @param  array
+	 * @return Nette\Database\Table\Selection
+	 */
+	function dibiDataLoader(array $columns, array $orderBy, array $filters)
+	{
+		// columns
+		$users = $this->dibi->select( $columns )->from('user');
+
+		// order result
+		foreach ($orderBy as $column => $desc) {
+			$users->orderBy( $column . ($desc ? ' DESC' : '') );
 		}
 
 		// filter result

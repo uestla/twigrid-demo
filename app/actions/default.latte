@@ -1,0 +1,19 @@
+{extends '../layout.latte'}
+
+{block content}
+
+	<div style="text-align: center;">
+		<h2>Zvolte DataSource:</h2>
+
+		<ul class="inline">
+			<li>
+				<a n:href="ndb" class="btn btn-large btn-success">Nette\Database</a>
+			</li>
+
+			<li>
+				<a n:href="dibi" class="btn btn-large btn-warning">dibi</a>
+			</li>
+		</ul>
+	</div>
+
+{/block}
