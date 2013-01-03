@@ -257,7 +257,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 */
 	function manipulateGroup(array $primaries)
 	{
-		$this->ndb->table('user')->where('id', $primaries)->delete();
 		$this->flashMessage( "Požadavek na změnu záznamů s ID: " . Nette\Utils\Json::encode($primaries), 'success' );
 		!$this->isAjax() && $this->redirect('this');
 	}
