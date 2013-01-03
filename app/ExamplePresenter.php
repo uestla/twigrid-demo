@@ -218,7 +218,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				$conds[] = array("[$column] <= %f", $value);
 
 			} else {
-				$conds[] = array("[$column] LIKE %like~", $value);
+				$conds[] = array("[$column] LIKE %s", "$value%");
 			}
 		}
 
