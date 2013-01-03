@@ -3,7 +3,7 @@
 use Nette\Forms\Form;
 
 
-class HomepagePresenter extends Nette\Application\UI\Presenter
+class ExamplePresenter extends Nette\Application\UI\Presenter
 {
 	/** @var Nette\Database\Connection */
 	protected $ndb;
@@ -29,6 +29,30 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 		$this->ndb = $c;
 		$this->dibi = $d;
 		$this->cache = new Nette\Caching\Cache($s, __CLASS__);
+
+		$me = $this;
+		$d->onEvent[] = function ($e) use ($me) { $me->logQuery( dibi::dump( $e->sql, TRUE ) ); };
+		$c->onQuery[] = function ($s) use ($me) { $me->logQuery( dibi::dump( $s->queryString, TRUE ) ); };
+	}
+
+
+
+	/** @return void */
+	protected function startup()
+	{
+		parent::startup();
+		$this->payload->queries = array();
+	}
+
+
+
+	/**
+	 * @param  string
+	 * @return void
+	 */
+	function logQuery($sql)
+	{
+		$this->payload->queries[] = $sql;
 	}
 
 
@@ -163,7 +187,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	 * @param  array
 	 * @param  array column => desc?
 	 * @param  array
-	 * @return Nette\Database\Table\Selection
+	 * @return array
 	 */
 	function dibiDataLoader(array $columns, array $orderBy, array $filters)
 	{
@@ -182,21 +206,21 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 				$conds[ $column ] = $value;
 
 			} elseif ($column === 'birthday') {
-				isset($value['min']) && $conds["$column >= ?"] = $value['min'];
-				isset($value['max']) && $conds["$column <= ?"] = $value['max'];
+				isset($value['min']) && $conds[] = array("[$column] >= %d", $value['min']);
+				isset($value['max']) && $conds[] = array("[$column] <= %d", $value['max']);
 
 			} elseif ($column === 'centimeters') {
-				$conds["$column <= ?"] = $value;
+				$conds[] = array("$column <= %i", $value);
 
 			} elseif ($column === 'kilograms') {
-				$conds["$column <= ?"] = $value;
+				$conds[] = array("[$column] <= %f", $value);
 
 			} else {
-				$conds["$column LIKE ?"] = "$value%";
+				$conds[] = array("[$column] LIKE %like~", $value);
 			}
 		}
 
-		return $users->where($conds)->limit(16);
+		return $users->where($conds)->limit(16)->fetchAll();
 	}
 
 
@@ -231,6 +255,7 @@ class HomepagePresenter extends Nette\Application\UI\Presenter
 	 */
 	function manipulateGroup(array $primaries)
 	{
+		$this->ndb->table('user')->where('id', $primaries)->delete();
 		$this->flashMessage( "Požadavek na změnu záznamů s ID: " . Nette\Utils\Json::encode($primaries), 'success' );
 		!$this->isAjax() && $this->redirect('this');
 	}

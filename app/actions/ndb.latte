@@ -1,17 +1,3 @@
-{extends '../layout.latte'}
+{extends '@example.latte'}
 
 {define heading}Nette\Database{/define}
-
-{block content}
-
-	<h2 style="text-align: center;">{include #backlink} {include #heading}</h2>
-
-{block |indent:1}{control dataGrid}{/block}
-
-{/block}
-
-
-
-{define backlink}
-	<a n:href="default">&laquo;</a>
-{/define}

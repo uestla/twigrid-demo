@@ -9,7 +9,6 @@ nette:
 
 services:
 	dibi: DibiConnection( { driver: sqlite3, file: '%appDir%/users.s3db' } )
-	nette.presenterFactory: PresenterFactory( %appDir%/app, ... )
 
 factories:
 	dataGrid: TwiGrid\DataGrid( ... )

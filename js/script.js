@@ -19,6 +19,24 @@ $(function () {
 	});
 
 
+	var queries = function (queries) {
+		$('#queries').html('')
+			.append( '<h3>Queries</h3>' )
+			.append( queries );
+	};
+
+	if (typeof g_Queries !== 'undefined') { queries( g_Queries ); }
+
+
+	$.nette.ext('queries', {
+		success: function (payload) {
+			if (payload.queries) {
+				queries( payload.queries );
+			}
+		}
+	});
+
+
 	$.nette.init();
 
 });
