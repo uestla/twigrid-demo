@@ -3,6 +3,7 @@
 use Nette\Forms\Form;
 
 
+/** @persistent(dataGrid) */
 class ExamplePresenter extends Nette\Application\UI\Presenter
 {
 	/** @var Nette\Database\Connection */
@@ -10,6 +11,12 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 	/** @var DibiConnection */
 	protected $dibi;
+
+	/** @var array */
+	protected $actions = array(
+		'ndb' => 'Nette\\Database',
+		'dibi' => 'dibi',
+	);
 
 	/** @var Nette\Caching\Cache */
 	protected $cache;
@@ -81,9 +88,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$this->loadClientScripts();
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
-		return parent::createTemplate( $class )
+		id ($template = parent::createTemplate($class))->actions = $this->actions;
+		return $template
 				->registerHelper('mtime', function ($f) { return $f . '?' . filemtime( __DIR__ . '/../' . $f ); })
-				->setFile( __DIR__ . "/actions/{$this->view}.latte" );
+				->setFile( __DIR__ . "/views/{$this->view}.latte" );
 	}
 
 
@@ -95,8 +103,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setTemplateFile( __DIR__ . '/user-grid.latte' );
 
 		$grid->addColumn('gender', 'Pohlaví');
-		$grid->addColumn('firstname', 'Jméno')->setSortable();
-		$grid->addColumn('surname', 'Příjmení')->setSortable();
+		$grid->addColumn('name', 'Jméno')->setSortable();
+		$grid->addColumn('countryname', 'Země');
 		$grid->addColumn('emailaddress', 'E-mail')->setSortable();
 		$grid->addColumn('birthday', 'Datum narození')->setSortable();
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
@@ -104,7 +112,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
-		$grid->setDataLoader( $this->{ $this->action === 'ndb' ? 'ndbDataLoader' : 'dibiDataLoader' } );
+		$grid->setDataLoader( $this->{ $this->view . 'DataLoader' } );
 
 		$grid->addRowAction('edit', 'Upravit', $this->editRecord);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
@@ -125,17 +133,35 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			'female' => 'Žena',
 		))->setPrompt('---');
 
-		$container->addText('firstname');
-		$container->addText('surname');
+		$container->addText('name');
 
 		/* $birthday = $container->addContainer('birthday');
 		$birthday->addText('min');
 		$birthday->addText('max'); */
 
+		$container->addSelect( 'countryname', 'Země')
+				->setItems( $this->{ $this->view . 'LoadCountries' }(), FALSE )
+				->setPrompt('---');
+
 		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
 		$container->addText('centimeters')->addCondition( Form::FILLED )->addRule( Form::INTEGER );
 
 		return $container;
+	}
+
+
+
+	// === NETTE\DATABASE ==================================================================
+
+	/** @return array */
+	protected function ndbLoadCountries()
+	{
+		return $this->ndb->table('country')
+				->select( '('
+					. $this->ndb->table('user')->select('COUNT(*)')->where('country_code = code')->getSql()
+				. ') AS count, code, title')
+				->where('count > ?', 0)
+				->fetchPairs('code', 'title');
 	}
 
 
@@ -152,6 +178,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$users = $this->ndb->table('user');
 
 		// columns
+		$columns['countryname'] = '(SELECT title FROM country WHERE code = country_code) AS countryname';
+		$columns['name'] = 'surname || " " || firstname AS name';
 		$users->select( implode(', ', $columns) );
 
 		// order result
@@ -162,7 +190,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		// filter result
 		$conds = array();
 		foreach ($filters as $column => $value) {
-			if ($column === 'gender') {
+			if ($column === 'gender' || $column === 'countryname') {
 				$conds[ $column ] = $value;
 
 			} elseif ($column === 'birthday') {
@@ -176,11 +204,29 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				$conds["$column <= ?"] = $value;
 
 			} else {
-				$conds["$column LIKE ?"] = "$value%";
+				$conds["$column LIKE ?"] = "%$value%";
 			}
 		}
 
 		return $users->where($conds)->limit(16);
+	}
+
+
+
+	// === DIBI ==================================================================
+
+	/** @return array */
+	protected function dibiLoadCountries()
+	{
+		return $this->dibi->select('[code], [title]')
+				->select(
+					$this->dibi->select('COUNT(*)')
+						->from('[user]')
+						->where('[country_code] = [code]')
+				)->as('[count]')
+				->from('[country]')
+				->where('[count] > %i', 0)
+				->fetchPairs('code', 'title');
 	}
 
 
@@ -194,7 +240,13 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function dibiDataLoader(array $columns, array $orderBy, array $filters)
 	{
 		// columns
-		$users = $this->dibi->select( $columns )->from('user');
+		unset($columns['name'], $columns['countryname']);
+		$users = $this->dibi
+				->select( array_values($columns) )
+				->select('[surname] || " " || [firstname]')->as('[name]')
+				->select('[country].[title] AS [countryname]')
+				->from('[user]')
+				->join('[country]')->on('[user].[country_code] = [country].[code]');
 
 		// order result
 		foreach ($orderBy as $column => $desc) {
@@ -204,7 +256,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		// filter result
 		$conds = array();
 		foreach ($filters as $column => $value) {
-			if ($column === 'gender') {
+			if ($column === 'gender' || $column === 'countryname') {
 				$conds[ $column ] = $value;
 
 			} elseif ($column === 'birthday') {
@@ -226,6 +278,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	}
 
 
+
+	// === DATA MANIPULATIONS ===============================================================
 
 	/**
 	 * @param  int
