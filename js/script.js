@@ -21,8 +21,17 @@ $(function () {
 
 	var queries = function (queries) {
 		$('#queries').html('')
-			.append( '<h3>Queries</h3>' )
-			.append( queries );
+			.append( $('<h3>').append( $('<a>', {
+				text: 'Queries (' + queries.length + ')',
+				href: '#n',
+				click: function (event) {
+					event.preventDefault();
+					$(this).parent().next().slideToggle( 256, function () {
+						$.cookie('show_queries', $(this).is(':visible') ? true : null)
+					} );
+				}
+			}) ) )
+			.append( $('<div class="list">').css('display', $.cookie('show_queries') ? 'block' : 'none').html( queries ) );
 	};
 
 	if (typeof g_Queries !== 'undefined') { queries( g_Queries ); }
