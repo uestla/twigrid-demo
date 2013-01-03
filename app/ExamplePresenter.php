@@ -233,6 +233,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 */
 	function editRecord($id)
 	{
+		$this->getRecord($id);
 		$this->flashMessage( "Požadavek na změnu záznamu s ID '$id'.", 'success' );
 		!$this->isAjax() && $this->redirect('this');
 	}
@@ -245,8 +246,22 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 */
 	function deleteRecord($id)
 	{
+		$this->getRecord($id);
 		$this->flashMessage( "Požadavek na smazání záznamu s ID '$id'.", 'warning' );
 		!$this->isAjax() && $this->redirect('this');
+	}
+
+
+
+	/**
+	 * @param  int
+	 * @return mixed
+	 */
+	protected function getRecord($id)
+	{
+		return $this->view === 'ndb'
+				? $this->ndb->table('user')->get($id)
+				: $this->dibi->select('*')->from('user')->where('id = %i', $id)->fetch();
 	}
 
 
@@ -257,6 +272,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 */
 	function manipulateGroup(array $primaries)
 	{
+		$this->view === 'ndb'
+				? $this->ndb->table('user')->where('id', $primaries)->fetchPairs('id')
+				: $this->dibi->select('*')->from('user')->where('id IN %in', $primaries)->fetchAssoc('id');
+
 		$this->flashMessage( "Požadavek na změnu záznamů s ID: " . Nette\Utils\Json::encode($primaries), 'success' );
 		!$this->isAjax() && $this->redirect('this');
 	}
