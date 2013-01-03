@@ -31,8 +31,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$this->cache = new Nette\Caching\Cache($s, __CLASS__);
 
 		$me = $this;
-		$d->onEvent[] = function ($e) use ($me) { $me->logQuery( dibi::dump( $e->sql, TRUE ) ); };
-		$c->onQuery[] = function ($s) use ($me) { $me->logQuery( dibi::dump( $s->queryString, TRUE ) ); };
+		$d->onEvent[] = function ($e) use ($me) { $me->logQuery( $e->sql ); };
+		$c->onQuery[] = function ($s) use ($me) { $me->logQuery( $s->queryString ); };
 	}
 
 
@@ -52,7 +52,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 */
 	function logQuery($sql)
 	{
-		$this->payload->queries[] = $sql;
+		$this->payload->queries[] = dibi::dump( $sql, TRUE );
 	}
 
 
