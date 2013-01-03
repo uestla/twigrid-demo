@@ -8,7 +8,7 @@ nette:
 			dsn: 'sqlite:%appDir%/users.s3db'
 
 services:
-	dibi: DibiConnection( { driver: sqlite3, file: '%appDir%/users.s3db' } )
+	dibi: DibiConnection( { driver: pdo, dsn: 'sqlite:%appDir%/users.s3db' } )
 
 factories:
 	dataGrid: TwiGrid\DataGrid( ... )
