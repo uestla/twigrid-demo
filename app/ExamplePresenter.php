@@ -81,7 +81,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$this->loadClientScripts();
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
-		return parent::createTemplate( $class )->setFile( __DIR__ . "/actions/{$this->view}.latte" );
+		return parent::createTemplate( $class )
+				->registerHelper('mtime', function ($f) { return $f . '?' . filemtime( __DIR__ . '/../' . $f ); })
+				->setFile( __DIR__ . "/actions/{$this->view}.latte" );
 	}
 
 
