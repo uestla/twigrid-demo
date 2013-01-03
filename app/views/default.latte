@@ -6,12 +6,9 @@
 		<h2>Zvolte DataSource</h2>
 
 		<ul class="inline">
-			<li>
-				<a n:href="ndb" class="btn btn-large btn-success">Nette\Database</a>
-			</li>
-
-			<li>
-				<a n:href="dibi" class="btn btn-large btn-warning">dibi</a>
+			{var $buttons = [ success, warning ], $count = count($buttons)}
+			<li n:foreach="$actions as $action => $name">
+				<a n:href="$action" n:class="btn, btn-large, 'btn-' . $buttons[ ($iterator->counter - 1) % $count ]">{$name}</a>
 			</li>
 		</ul>
 	</div>
