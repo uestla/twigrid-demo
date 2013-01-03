@@ -3,9 +3,11 @@ php:
 
 nette:
 	xhtml: FALSE
-
+	session:
+		save_path: %tempDir%/sessions
+		expiration: + 14 days
 	database:
-			dsn: 'sqlite:%appDir%/users.s3db'
+		dsn: 'sqlite:%appDir%/users.s3db'
 
 services:
 	dibi: DibiConnection( { driver: pdo, dsn: 'sqlite:%appDir%/users.s3db' } )
