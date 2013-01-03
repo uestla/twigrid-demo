@@ -261,7 +261,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		return $this->view === 'ndb'
 				? $this->ndb->table('user')->get($id)
-				: $this->dibi->select('*')->from('user')->where('id = %i', $id)->fetch();
+				: $this->dibi->select('*')->from('user')->where('[id] = %i', $id)->fetch();
 	}
 
 
@@ -274,7 +274,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		$this->view === 'ndb'
 				? $this->ndb->table('user')->where('id', $primaries)->fetchPairs('id')
-				: $this->dibi->select('*')->from('user')->where('id IN %in', $primaries)->fetchAssoc('id');
+				: $this->dibi->select('*')->from('user')->where('[id] IN %in', $primaries)->fetchAssoc('id');
 
 		$this->flashMessage( "Požadavek na změnu záznamů s ID: " . Nette\Utils\Json::encode($primaries), 'success' );
 		!$this->isAjax() && $this->redirect('this');
