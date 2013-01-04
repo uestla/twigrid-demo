@@ -113,6 +113,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->{ $this->view . 'DataLoader' } );
+		$grid->setTimelineBehavior();
 
 		$grid->addRowAction('edit', 'Upravit', $this->editRecord);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
@@ -174,9 +175,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 * @param  array
 	 * @param  array column => desc?
 	 * @param  array
+	 * @param  int
 	 * @return Nette\Database\Table\Selection
 	 */
-	function ndbDataLoader(array $columns, array $orderBy, array $filters)
+	function ndbDataLoader(array $columns, array $orderBy, array $filters, $page)
 	{
 		// selection factory
 		$users = $this->ndb->table('user');
@@ -212,7 +214,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		return $users->where($conds)->limit(16);
+		$max = 72;
+		return $users->where($conds)->limit( $page === -1 ? $max : min($max, $page * 16) );
 	}
 
 
@@ -240,9 +243,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 * @param  array
 	 * @param  array column => desc?
 	 * @param  array
+	 * @param  int|NULL
 	 * @return array
 	 */
-	function dibiDataLoader(array $columns, array $orderBy, array $filters)
+	function dibiDataLoader(array $columns, array $orderBy, array $filters, $page)
 	{
 		// columns
 		unset($columns['name'], $columns['countryname']);
@@ -279,7 +283,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		return $users->where($conds)->limit(16)->fetchAll();
+		$max = 72;
+		return $users->where($conds)->limit( $page === -1 ? $max : min($max, $page * 16) )->fetchAll();
 	}
 
 
