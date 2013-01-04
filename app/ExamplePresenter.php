@@ -158,9 +158,13 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		return $this->ndb->table('country')
 				->select( '('
-					. $this->ndb->table('user')->select('COUNT(*)')->where('country_code = code')->getSql()
-				. ') AS count, code, title')
-				->where('count > ?', 0)
+					. $this->ndb->table('user')
+						->select('id')
+						->where('country_code = code')
+						->limit(1)
+						->getSql()
+				. ') AS is_used, code, title')
+				->where('is_used IS NOT NULL')
 				->fetchPairs('code', 'title');
 	}
 
@@ -220,12 +224,13 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		return $this->dibi->select('[code], [title]')
 				->select(
-					$this->dibi->select('COUNT(*)')
+					$this->dibi->select('[id]')
 						->from('[user]')
 						->where('[country_code] = [code]')
-				)->as('[count]')
+						->limit(1)
+				)->as('[is_used]')
 				->from('[country]')
-				->where('[count] > %i', 0)
+				->where('[is_used] IS NOT NULL')
 				->fetchPairs('code', 'title');
 	}
 
