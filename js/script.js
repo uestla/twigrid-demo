@@ -22,12 +22,13 @@ $(function () {
 	var queries = function (queries) {
 		$('#queries').html('')
 			.append( $('<h3>').append( $('<a>', {
-				text: 'Queries (' + queries.length + ')',
+				text: 'SQL dotazy (' + queries.length + ')',
+				title: 'Rozbalit/sbalit příkazy',
 				href: '#n',
 				click: function (event) {
 					event.preventDefault();
 					$(this).parent().next().slideToggle( 256, function () {
-						$.cookie('show_queries', $(this).is(':visible') ? true : null)
+						$.cookie('show_queries', $(this).is(':visible') ? true : null);
 					} );
 				}
 			}) ) )
