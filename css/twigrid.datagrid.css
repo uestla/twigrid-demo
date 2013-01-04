@@ -7,7 +7,7 @@
 	vertical-align: middle;
 }
 
-select, .twigrid input[type="text"], .twigrid input[type="date"] {
+.twigrid select, .twigrid input[type="text"], .twigrid input[type="date"] {
 	display: block;
 	margin: 0;
 	width: 100%;
@@ -21,4 +21,12 @@ select, .twigrid input[type="text"], .twigrid input[type="date"] {
 	float: left;
 	display: block;
 	margin: 0.4% 0.8% 0.4% 0;
+}
+
+.twigrid .center {
+	text-align: center;
+}
+
+.twigrid .nowrap {
+	white-space: nowrap;
 }

@@ -20,10 +20,10 @@
 {define body-cell}
 
 {if $column->name === 'gender'}
-	<td style="text-align: center;"><img src="{$basePath}/img/ico/{$value}.png" alt="{$value}"></td>
+	<td class="center"><img src="{$basePath}/img/ico/{$value}.png" alt="{$value}"></td>
 
 {elseif $column->name === 'emailaddress'}
-	<td style="white-space: nowrap;"><a href="{!="mailto:$value"|replace:'@':'&#64;'}">{!$value|truncate:8|replace:'@':'&#64;'}{!$value|substr:-8|replace:'@':'&#64;'}</a></td>
+	<td class="nowrap"><a href="{!="mailto:$value"|replace:'@':'&#64;'}">{!$value|truncate:8|replace:'@':'&#64;'}{!$value|substr:-8|replace:'@':'&#64;'}</a></td>
 
 {elseif $column->name === 'birthday'}
 	<td>{$value|date:'j. n. Y'}</td>

@@ -1,3 +1,5 @@
+parameters: { lang: cs, appDir: %wwwDir%/app }
+
 php:
 	date.timezone: Europe/Prague
 
@@ -6,11 +8,21 @@ nette:
 	session:
 		save_path: %tempDir%/sessions
 		expiration: + 14 days
+		autoStart: true
 	database:
 		dsn: 'sqlite:%appDir%/users.s3db'
 
 services:
-	dibi: DibiConnection( { driver: pdo, dsn: 'sqlite:%appDir%/users.s3db' } )
+	- DibiConnection( { driver: pdo, dsn: 'sqlite:%appDir%/users.s3db' } )
+	-
+		factory: NetteTranslator\Gettext::getTranslator( ... )
+		run: TRUE
+		setup:
+			- addFile( %appDir%/lang, frontend )
+			- NetteTranslator\Panel::register( ..., ... )
 
 factories:
-	dataGrid: TwiGrid\DataGrid( ... )
+	dataGrid:
+		factory: TwiGrid\DataGrid( ... )
+		setup:
+			- setTranslator( ... )
