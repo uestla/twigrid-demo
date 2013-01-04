@@ -96,6 +96,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 
 
+	// === DATAGRID DEFINITION ==================================================================
+
+
+
 	/** @return TwiGrid\DataGrid */
 	protected function createComponentDataGrid()
 	{
@@ -114,6 +118,13 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->{ $this->view . 'DataLoader' } );
 		$grid->setTimelineBehavior();
+
+		$minmax = $this->{ $this->view . 'LoadMinMaxBirthday' }();
+		foreach ($minmax as $n => $foo) { $minmax[ $n ] = id( new DateTime($minmax[ $n ]) )->format('Y-m-d'); }
+
+		$grid->setDefaultFilters(array(
+			'birthday' => $minmax,
+		));
 
 		$grid->addRowAction('edit', 'Upravit', $this->editRecord);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
@@ -136,9 +147,26 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$container->addText('name');
 
-		/* $birthday = $container->addContainer('birthday');
-		$birthday->addText('min');
-		$birthday->addText('max'); */
+		// simple date form control
+		$addDate = function ($c, $n) {
+			$r = $c->addText($n);
+			$r->addCondition( Form::FILLED )->addRule( function ($control) {
+				try {
+					new DateTime($control->value);
+					return TRUE;
+				} catch (Exception $e) {}
+				return FALSE;
+			}, 'Datum prosím zadávejte ve formátu YYYY-MM-DD' );
+			return $r;
+		};
+
+		$birthday = $container->addContainer('birthday');
+		$min = $addDate( $birthday, 'min' );
+		$max = $addDate( $birthday, 'max' );
+
+		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max) {
+			return !$max->filled || id( new DateTime($min->value) ) <= id( new DateTime($max->value) );
+		}, 'Minimální datum nesmí následovat po maximálním.' );
 
 		$container->addSelect( 'countryname', 'Země')
 				->setItems( $this->{ $this->view . 'LoadCountries' }(), FALSE )
@@ -154,6 +182,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 	// === NETTE\DATABASE ==================================================================
 
+
+
 	/** @return array */
 	protected function ndbLoadCountries()
 	{
@@ -167,6 +197,16 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				. ') AS is_used, code, title')
 				->where('is_used IS NOT NULL')
 				->fetchPairs('code', 'title');
+	}
+
+
+
+	/** @return array */
+	protected function ndbLoadMinMaxBirthday()
+	{
+		return $this->ndb->table('user')
+				->select('MIN(birthday) AS min, MAX(birthday) AS max')
+				->fetch()->toArray();
 	}
 
 
@@ -222,6 +262,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 	// === DIBI ==================================================================
 
+
+
 	/** @return array */
 	protected function dibiLoadCountries()
 	{
@@ -235,6 +277,16 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				->from('[country]')
 				->where('[is_used] IS NOT NULL')
 				->fetchPairs('code', 'title');
+	}
+
+
+
+	/** @return array */
+	protected function dibiLoadMinMaxBirthday()
+	{
+		return (array) $this->dibi->select('MIN([birthday])')->as('[min]')
+				->select('MAX([birthday])')->as('[max]')
+				->from('[user]')->fetch();
 	}
 
 
@@ -290,6 +342,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 
 	// === DATA MANIPULATIONS ===============================================================
+
+
 
 	/**
 	 * @param  int

@@ -4,10 +4,10 @@
 
 {define filter-cell}
 
-{if FALSE && $name === 'birthday'}
+{if $name === 'birthday'}
 	<th>
-		{input filters-criteria-birthday-min, placeholder => 'min'}
-		{input filters-criteria-birthday-max, placeholder => 'max'}
+		{input filters-criteria-birthday-min, class => 'date min', placeholder => min}
+		{input filters-criteria-birthday-max, class => 'date max', placeholder => max}
 	</th>
 {else}
 	{include #parent}

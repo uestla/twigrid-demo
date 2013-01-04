@@ -1,0 +1,9 @@
+.twigrid input.min.date {
+	float: left;
+	width: 90px;
+}
+
+.twigrid input.max.date {
+	float: right;
+	width: 90px;
+}

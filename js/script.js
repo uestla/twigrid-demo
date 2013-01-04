@@ -1,19 +1,31 @@
 $(function () {
 
-	var flashes = function (el) {
-		el.find('.alert.hidable').prepend( $('<button type="button" class="close" data-dismiss="alert">&times;</button>') );
-	};
+	var flashes, datepickers;
 
-	flashes( $('body') );
+	(flashes = function (parent) {
+		parent.find('.alert.hidable').prepend( $('<button type="button" class="close" data-dismiss="alert">&times;</button>') );
+	})( $('body') );
 
 
-	$.nette.ext('flashes', {
+	(datepickers = function (parent) {
+		parent.find('input.date').datepicker({
+			format: 'yyyy-mm-dd',
+			weekStart: 1
+		}).on('show', function (event) {
+			var el = $(event.target);
+			el.attr('value') === '' && ( el.attr( 'value', el.hasClass('min') ? '1950-05-02' : '2000-01-01' ) );
+		});
+	})( $('body') );
+
+
+	$.nette.ext('bind-events', {
 		init: function () {
 			var snippets;
 			if (!(snippets = this.ext('snippets'))) return;
 
 			snippets.after(function (el) {
 				flashes( el );
+				datepickers( el );
 			});
 		}
 	});
