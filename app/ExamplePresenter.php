@@ -298,7 +298,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 * @param  array
 	 * @param  array column => desc?
 	 * @param  array
-	 * @param  int|NULL
+	 * @param  int
 	 * @return array
 	 */
 	function dibiDataLoader(array $columns, array $orderBy, array $filters, $page)
