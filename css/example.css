@@ -3,15 +3,27 @@
 }
 
 .twigrid .birthday {
-	width: 190px;
+	width: 196px;
+	line-height: 26px;
+	text-align: center;
+}
+
+.twigrid .birthday div {
+	position: relative;
+}
+
+.twigrid input.date {
+	position: absolute;
+	top: 50%;
+	margin: -15px 0 0;
+	width: 90px;
+	height: 30px;
 }
 
 .twigrid input.min.date {
-	float: left;
-	width: 90px;
+	left: 0;
 }
 
 .twigrid input.max.date {
-	float: right;
-	width: 90px;
+	right: 0;
 }

@@ -6,8 +6,11 @@
 
 {if $name === birthday}
 	<th class="birthday nowrap">
-		{input filters-criteria-$name-min, class => 'date min', placeholder => min}
-		{input filters-criteria-$name-max, class => 'date max', placeholder => max}
+		<div>
+			{input filters-criteria-$name-min, class => 'date min', placeholder => min}
+			{input filters-criteria-$name-max, class => 'date max', placeholder => max}
+			&ndash;
+		</div>
 	</th>
 
 {elseif in_array($name, [ kilograms, centimeters ], TRUE)}
