@@ -262,9 +262,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		$grid->setCountAll( id(clone $users->where($conds))->select('COUNT(*) AS count_all')->limit(1)->fetch()->{'count_all'} );
-
 		$max = 72;
+		$grid->setCountAll( min($max, id(clone $users->where($conds))->select('COUNT(*) AS count_all')->limit(1)->fetch()->{'count_all'}) );
 		return $users->limit( $page === -1 ? $max : min($max, $page * 16) );
 	}
 
@@ -350,9 +349,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		$grid->setCountAll( id(clone $users->where($conds))->select('COUNT(*)')->as('[count_all]')->fetch()->{'count_all'} );
-
 		$max = 72;
+		$grid->setCountAll( min($max, id(clone $users->where($conds))->select('COUNT(*)')->as('[count_all]')->fetch()->{'count_all'}) );
 		return $users->limit( $page === -1 ? $max : min($max, $page * 16) )->fetchAll();
 	}
 
