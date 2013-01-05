@@ -16,10 +16,10 @@ services:
 	- DibiConnection( { driver: pdo, dsn: 'sqlite:%appDir%/users.s3db' } )
 	-
 		factory: NetteTranslator\Gettext::getTranslator( ... )
-		run: TRUE
 		setup:
 			- addFile( %appDir%/lang, frontend )
 			- NetteTranslator\Panel::register( ..., ... )
+		run: TRUE
 
 factories:
 	dataGrid:

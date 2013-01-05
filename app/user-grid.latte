@@ -4,11 +4,17 @@
 
 {define filter-cell}
 
-{if $name === 'birthday'}
+{if $name === birthday}
 	<th class="birthday nowrap">
-		{input filters-criteria-birthday-min, class => 'date min', placeholder => min}
-		{input filters-criteria-birthday-max, class => 'date max', placeholder => max}
+		{input filters-criteria-$name-min, class => 'date min', placeholder => min}
+		{input filters-criteria-$name-max, class => 'date max', placeholder => max}
 	</th>
+
+{elseif in_array($name, [ kilograms, centimeters ], TRUE)}
+	<th class="numeric">
+		{input filters-criteria-$name}
+	</th>
+
 {else}
 	{include #parent}
 {/if}
@@ -19,13 +25,13 @@
 
 {define body-cell}
 
-{if $column->name === 'gender'}
+{if $column->name === gender}
 	<td class="center"><img src="{$basePath}/img/ico/{$value}.png" alt="{$value}"></td>
 
-{elseif $column->name === 'emailaddress'}
+{elseif $column->name === emailaddress}
 	<td class="nowrap"><a href="{!="mailto:$value"|replace:'@':'&#64;'}">{!$value|truncate:8|replace:'@':'&#64;'}{!$value|substr:-8|replace:'@':'&#64;'}</a></td>
 
-{elseif $column->name === 'birthday'}
+{elseif $column->name === birthday}
 	<td>{$value|date:'j. n. Y'}</td>
 
 {else}
