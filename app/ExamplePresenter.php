@@ -109,7 +109,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->addColumn('gender', 'Pohlaví');
 		$grid->addColumn('name', 'Jméno')->setSortable();
 		$grid->addColumn('countryname', 'Země');
-		$grid->addColumn('emailaddress', 'E-mail')->setSortable();
+		$grid->addColumn('emailaddress', 'E-mail');
 		$grid->addColumn('birthday', 'Datum narození')->setSortable();
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
 		$grid->addColumn('centimeters', 'Výška (cm)')->setSortable();
@@ -146,6 +146,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		))->setPrompt('---');
 
 		$container->addText('name');
+		$container->addText('emailaddress');
 
 		// simple date form control
 		$addDate = function ($c, $n) {
@@ -331,7 +332,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				$conds[] = array("[$column] <= %f", $value);
 
 			} else {
-				$conds[] = array("[$column] LIKE %s", "$value%");
+				$conds[] = array("[$column] LIKE %s", "%$value%");
 			}
 		}
 
