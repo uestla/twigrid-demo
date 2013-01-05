@@ -1,4 +1,4 @@
-{extends '../libs/TwiGrid/DataGrid/DataGrid.latte'}
+{extends $defaultTemplatePath}
 
 
 
@@ -28,14 +28,17 @@
 
 {define body-cell}
 
-{if $column->name === gender}
+{if $name === gender}
 	<td class="center"><img src="{$basePath}/img/ico/{$value}.png" alt="{$value}"></td>
 
-{elseif $column->name === emailaddress}
+{elseif $name === emailaddress}
 	<td class="nowrap"><a href="{!="mailto:$value"|replace:'@':'&#64;'}">{!$value|truncate:8|replace:'@':'&#64;'}{!$value|substr:-8|replace:'@':'&#64;'}</a></td>
 
-{elseif $column->name === birthday}
-	<td>{$value|date:'j. n. Y'}</td>
+{elseif $name === birthday}
+	<td class="numeric center">{$value|date:'d. m. Y'}</td>
+
+{elseif in_array($name, [ kilograms, centimeters ], TRUE)}
+	<td class="numeric right">{$value}</td>
 
 {else}
 	{include #parent}

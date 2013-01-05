@@ -2,10 +2,18 @@
 	width: 82px;
 }
 
+.twigrid .numeric input {
+	text-align: right;
+}
+
 .twigrid .birthday {
 	width: 196px;
 	line-height: 26px;
 	text-align: center;
+}
+
+.twigrid td.numeric {
+	font-family: Calibri;
 }
 
 .twigrid .birthday div {
