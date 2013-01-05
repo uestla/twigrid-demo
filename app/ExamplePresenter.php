@@ -215,13 +215,14 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 
 	/**
+	 * @param  TwiGrid\DataGrid
 	 * @param  array
 	 * @param  array column => desc?
 	 * @param  array
 	 * @param  int
 	 * @return Nette\Database\Table\Selection
 	 */
-	function ndbDataLoader(array $columns, array $orderBy, array $filters, $page)
+	function ndbDataLoader(TwiGrid\DataGrid $grid, array $columns, array $orderBy, array $filters, $page)
 	{
 		// selection factory
 		$users = $this->ndb->table('user');
@@ -257,8 +258,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
+		$grid->setCountAll( id(clone $users->where($conds))->select('COUNT(*) AS count_all')->limit(1)->fetch()->{'count_all'} );
+
 		$max = 72;
-		return $users->where($conds)->limit( $page === -1 ? $max : min($max, $page * 16) );
+		return $users->limit( $page === -1 ? $max : min($max, $page * 16) );
 	}
 
 
@@ -295,13 +298,14 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 
 	/**
+	 * @param  TwiGrid\DataGrid
 	 * @param  array
 	 * @param  array column => desc?
 	 * @param  array
 	 * @param  int
 	 * @return array
 	 */
-	function dibiDataLoader(array $columns, array $orderBy, array $filters, $page)
+	function dibiDataLoader(TwiGrid\DataGrid $grid, array $columns, array $orderBy, array $filters, $page)
 	{
 		// columns
 		unset($columns['name'], $columns['countryname']);
@@ -310,7 +314,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				->select('[surname] || " " || [firstname]')->as('[name]')
 				->select('[country].[title] AS [countryname]')
 				->from('[user]')
-				->join('[country]')->on('[user].[country_code] = [country].[code]');
+				->innerJoin('[country]')->on('[user].[country_code] = [country].[code]');
 
 		// order result
 		foreach ($orderBy as $column => $desc) {
@@ -338,8 +342,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
+		$grid->setCountAll( id(clone $users->where($conds))->select('COUNT(*)')->as('[count_all]')->fetch()->{'count_all'} );
+
 		$max = 72;
-		return $users->where($conds)->limit( $page === -1 ? $max : min($max, $page * 16) )->fetchAll();
+		return $users->limit( $page === -1 ? $max : min($max, $page * 16) )->fetchAll();
 	}
 
 
