@@ -1,3 +1,7 @@
+.twigrid .birthday {
+	width: 190px;
+}
+
 .twigrid input.min.date {
 	float: left;
 	width: 90px;

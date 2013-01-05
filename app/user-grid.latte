@@ -5,7 +5,7 @@
 {define filter-cell}
 
 {if $name === 'birthday'}
-	<th>
+	<th class="birthday nowrap">
 		{input filters-criteria-birthday-min, class => 'date min', placeholder => min}
 		{input filters-criteria-birthday-max, class => 'date max', placeholder => max}
 	</th>
