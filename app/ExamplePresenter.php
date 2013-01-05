@@ -119,6 +119,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setDataLoader( $this->{ $this->view . 'DataLoader' } );
 		$grid->setTimelineBehavior();
 
+		$grid->setDefaultOrderBy('name');
+
 		$minmax = $this->{ $this->view . 'LoadMinMaxBirthday' }();
 		foreach ($minmax as $n => $foo) { $minmax[ $n ] = id( new DateTime($minmax[ $n ]) )->format('Y-m-d'); }
 
