@@ -108,7 +108,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$grid->addColumn('gender', 'Pohlaví');
 		$grid->addColumn('name', 'Jméno')->setSortable();
-		$grid->addColumn('countryname', 'Země');
+		$grid->addColumn('country', 'Země');
 		$grid->addColumn('emailaddress', 'E-mail');
 		$grid->addColumn('birthday', 'Datum narození')->setSortable();
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
@@ -117,6 +117,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->{ $this->view . 'DataLoader' } );
+		$grid->setRecordValueGetter( $this->{ $this->view . 'RecordValueGetter' } );
 		$grid->setTimelineBehavior();
 
 		$grid->setDefaultOrderBy('name');
@@ -171,7 +172,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			return !$max->filled || id( new DateTime($min->value) ) <= id( new DateTime($max->value) );
 		}, 'Minimální datum nesmí následovat po maximálním.' );
 
-		$container->addSelect( 'countryname', 'Země')
+		$container->addSelect( 'country', 'Země')
 				->setItems( $this->{ $this->view . 'LoadCountries' }(), FALSE )
 				->setPrompt('---');
 
@@ -192,7 +193,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		$key = __METHOD__;
 		$countries = $this->cache->load($key);
-		return $countries === NULL ? $this->cache->save( $key, $this->ndb->table('country')
+		return $countries !== NULL ? $countries : $this->cache->save( $key, $this->ndb->table('country')
 				->select( '('
 					. $this->ndb->table('user')
 						->select('id')
@@ -201,7 +202,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 						->getSql()
 				. ') AS is_used, code, title')
 				->where('is_used IS NOT NULL')
-				->fetchPairs('code', 'title') ) : $countries;
+				->fetchPairs('code', 'title') );
 	}
 
 
@@ -211,9 +212,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		$key = __METHOD__;
 		$countries = $this->cache->load($key);
-		return $countries === NULL ? $this->cache->save( $key, $this->ndb->table('user')
+		return $countries !== NULL ? $countries : $this->cache->save( $key, $this->ndb->table('user')
 				->select('MIN(birthday) AS min, MAX(birthday) AS max')
-				->fetch()->toArray() ) : $countries;
+				->fetch()->toArray() );
 	}
 
 
@@ -232,7 +233,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$users = $this->ndb->table('user');
 
 		// columns
-		$columns['countryname'] = '(SELECT title FROM country WHERE code = country_code) AS countryname';
+		unset($columns['country']);
+		$columns[] = 'country_code';
 		$columns['name'] = 'surname || " " || firstname AS name';
 		$users->select( implode(', ', $columns) );
 
@@ -244,8 +246,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		// filter result
 		$conds = array();
 		foreach ($filters as $column => $value) {
-			if ($column === 'gender' || $column === 'countryname') {
+			if ($column === 'gender') {
 				$conds[ $column ] = $value;
+
+			} elseif ($column === 'country') {
+				$conds[ "(SELECT title FROM country WHERE code = country_code) = ?" ] = $value;
 
 			} elseif ($column === 'birthday') {
 				isset($value['min']) && $conds["$column >= ?"] = $value['min'];
@@ -269,6 +274,18 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 
 
+	/**
+	 * @param  Nette\Database\Table\ActiveRow
+	 * @param  string
+	 * @return mixed
+	 */
+	function ndbRecordValueGetter(Nette\Database\Table\ActiveRow $record, $column)
+	{
+		return $column === 'country' ? $record->ref('country', 'country_code')->title : $record->$column;
+	}
+
+
+
 	// === DIBI ==================================================================
 
 
@@ -278,7 +295,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		$key = __METHOD__;
 		$countries = $this->cache->load($key);
-		return $countries === NULL ? $this->cache->save( $key, $this->dibi->select('[code], [title]')
+		return $countries !== NULL ? $countries : $this->cache->save( $key, $this->dibi->select('[code], [title]')
 				->select(
 					$this->dibi->select('[id]')
 						->from('[user]')
@@ -287,7 +304,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				)->as('[is_used]')
 				->from('[country]')
 				->where('[is_used] IS NOT NULL')
-				->fetchPairs('code', 'title') ) : $countries;
+				->fetchPairs('code', 'title') );
 	}
 
 
@@ -297,9 +314,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		$key = __METHOD__;
 		$countries = $this->cache->load($key);
-		return $countries === NULL ? $this->cache->save( $key, (array) $this->dibi->select('MIN([birthday])')->as('[min]')
+		return $countries !== NULL ? $countries : $this->cache->save( $key, (array) $this->dibi->select('MIN([birthday])')->as('[min]')
 				->select('MAX([birthday])')->as('[max]')
-				->from('[user]')->fetch() ) : $countries;
+				->from('[user]')->fetch() );
 	}
 
 
@@ -315,11 +332,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function dibiDataLoader(TwiGrid\DataGrid $grid, array $columns, array $orderBy, array $filters, $page)
 	{
 		// columns
-		unset($columns['name'], $columns['countryname']);
+		unset($columns['name'], $columns['country']);
 		$users = $this->dibi
 				->select( array_values($columns) )
 				->select('[surname] || " " || [firstname]')->as('[name]')
-				->select('[country].[title] AS [countryname]')
+				->select('[country].[title] AS [country]')
 				->from('[user]')
 				->innerJoin('[country]')->on('[user].[country_code] = [country].[code]');
 
@@ -331,7 +348,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		// filter result
 		$conds = array();
 		foreach ($filters as $column => $value) {
-			if ($column === 'gender' || $column === 'countryname') {
+			if ($column === 'gender' || $column === 'country') {
 				$conds[ $column ] = $value;
 
 			} elseif ($column === 'birthday') {
@@ -352,6 +369,18 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$max = 72;
 		$grid->setCountAll( min($max, id(clone $users->where($conds))->select('COUNT(*)')->as('[count_all]')->fetch()->{'count_all'}) );
 		return $users->limit( $page === -1 ? $max : min($max, $page * 16) )->fetchAll();
+	}
+
+
+
+	/**
+	 * @param  DibiRow
+	 * @param  string
+	 * @return mixed
+	 */
+	function dibiRecordValueGetter(DibiRow $record, $column)
+	{
+		return $record->$column;
 	}
 
 
