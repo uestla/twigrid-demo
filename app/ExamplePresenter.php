@@ -190,7 +190,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return array */
 	protected function ndbLoadCountries()
 	{
-		return $this->ndb->table('country')
+		$key = __METHOD__;
+		$countries = $this->cache->load($key);
+		return $countries === NULL ? $this->cache->save( $key, $this->ndb->table('country')
 				->select( '('
 					. $this->ndb->table('user')
 						->select('id')
@@ -199,7 +201,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 						->getSql()
 				. ') AS is_used, code, title')
 				->where('is_used IS NOT NULL')
-				->fetchPairs('code', 'title');
+				->fetchPairs('code', 'title') ) : $countries;
 	}
 
 
@@ -207,9 +209,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return array */
 	protected function ndbLoadMinMaxBirthday()
 	{
-		return $this->ndb->table('user')
+		$key = __METHOD__;
+		$countries = $this->cache->load($key);
+		return $countries === NULL ? $this->cache->save( $key, $this->ndb->table('user')
 				->select('MIN(birthday) AS min, MAX(birthday) AS max')
-				->fetch()->toArray();
+				->fetch()->toArray() ) : $countries;
 	}
 
 
@@ -273,7 +277,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return array */
 	protected function dibiLoadCountries()
 	{
-		return $this->dibi->select('[code], [title]')
+		$key = __METHOD__;
+		$countries = $this->cache->load($key);
+		return $countries === NULL ? $this->cache->save( $key, $this->dibi->select('[code], [title]')
 				->select(
 					$this->dibi->select('[id]')
 						->from('[user]')
@@ -282,7 +288,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				)->as('[is_used]')
 				->from('[country]')
 				->where('[is_used] IS NOT NULL')
-				->fetchPairs('code', 'title');
+				->fetchPairs('code', 'title') ) : $countries;
 	}
 
 
@@ -290,9 +296,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return array */
 	protected function dibiLoadMinMaxBirthday()
 	{
-		return (array) $this->dibi->select('MIN([birthday])')->as('[min]')
+		$key = __METHOD__;
+		$countries = $this->cache->load($key);
+		return $countries === NULL ? $this->cache->save( $key, (array) $this->dibi->select('MIN([birthday])')->as('[min]')
 				->select('MAX([birthday])')->as('[max]')
-				->from('[user]')->fetch();
+				->from('[user]')->fetch() ) : $countries;
 	}
 
 
