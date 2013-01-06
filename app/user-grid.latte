@@ -41,7 +41,7 @@
 
 {elseif $column === birthday}
 {if $isInlineEdited}
-	<td>{input inline-values-$column, class => date}</td>
+	<td>{input inline-values-$column, class => 'date center'}</td>
 
 {else}
 	<td class="numeric center">{$value|date:'d. m. Y'}</td>
@@ -49,7 +49,7 @@
 
 {elseif $column === kilograms}
 {if $isInlineEdited}
-	<td>{input inline-values-$column}</td>
+	<td class="numeric">{input inline-values-$column}</td>
 
 {else}
 	<td class="numeric right">{$value}</td>
