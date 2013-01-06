@@ -268,7 +268,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		}
 
 		$max = 72;
-		$grid->setCountAll( min($max, id(clone $users->where($conds))->select('COUNT(*) AS count_all')->limit(1)->fetch()->{'count_all'}) );
+		$grid->setCountAll( min($max, $users->where($conds)->count('*')) );
 		return $users->limit( $page === -1 ? $max : min($max, $page * 16) );
 	}
 
