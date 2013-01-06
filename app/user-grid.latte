@@ -32,13 +32,28 @@
 	<td class="center"><img src="{$basePath}/img/ico/{$value}.png" alt="{$value}"></td>
 
 {elseif $column === emailaddress}
+{if $isInlineEdited}
+	<td>{input inline-values-$column}</td>
+
+{else}
 	<td class="nowrap"><a href="{!="mailto:$value"|replace:'@':'&#64;'}">{!$value|truncate:8|replace:'@':'&#64;'}{!$value|substr:-8|replace:'@':'&#64;'}</a></td>
+{/if}
 
 {elseif $column === birthday}
+{if $isInlineEdited}
+	<td>{input inline-values-$column, class => date}</td>
+
+{else}
 	<td class="numeric center">{$value|date:'d. m. Y'}</td>
+{/if}
 
 {elseif $column === kilograms}
+{if $isInlineEdited}
+	<td>{input inline-values-$column}</td>
+
+{else}
 	<td class="numeric right">{$value}</td>
+{/if}
 
 {else}
 	{include #parent}

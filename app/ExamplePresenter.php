@@ -117,7 +117,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setTemplateFile( __DIR__ . '/user-grid.latte' );
 
 		$grid->addColumn('gender', 'Pohlaví');
-		$grid->addColumn('name', 'Jméno')->setSortable();
+		$grid->addColumn('firstname', 'Jméno')->setSortable();
+		$grid->addColumn('surname', 'Příjmení')->setSortable();
 		$grid->addColumn('country', 'Země');
 		$grid->addColumn('emailaddress', 'E-mail');
 		$grid->addColumn('birthday', 'Datum narození')->setSortable();
@@ -131,7 +132,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm, 'Rychlá editace');
 
-		$grid->setDefaultOrderBy('name');
+		$grid->setDefaultOrderBy('surname');
 
 		$minmax = $this->{ $this->view . 'LoadMinMaxBirthday' }();
 		foreach ($minmax as $n => $foo) { $minmax[ $n ] = id( new DateTime($minmax[ $n ]) )->format('Y-m-d'); }
@@ -159,25 +160,13 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			'female' => 'Žena',
 		))->setPrompt('---');
 
-		$container->addText('name');
+		$container->addText('firstname');
+		$container->addText('surname');
 		$container->addText('emailaddress');
 
-		// simple date form control
-		$addDate = function ($c, $n) {
-			$r = $c->addText($n);
-			$r->addCondition( Form::FILLED )->addRule( function ($control) {
-				try {
-					new DateTime($control->value);
-					return TRUE;
-				} catch (Exception $e) {}
-				return FALSE;
-			}, 'Datum prosím zadávejte ve formátu YYYY-MM-DD' );
-			return $r;
-		};
-
 		$birthday = $container->addContainer('birthday');
-		$min = $addDate( $birthday, 'min' );
-		$max = $addDate( $birthday, 'max' );
+		$min = $this->addDateInput( $birthday, 'min' );
+		$max = $this->addDateInput( $birthday, 'max' );
 
 		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max) {
 			return !$max->filled || ( new DateTime($min->value) <= new DateTime($max->value) );
@@ -200,10 +189,36 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function createInlineEditContainer($record)
 	{
 		$container = new Nette\Forms\Container;
-		$container->addText('name')->setRequired('Zadejte prosím jméno.');
+		$container->addText('firstname')->setRequired('Zadejte prosím jméno.');
+		$container->addText('surname')->setRequired('Zadejte prosím příjmení.');
 		$container->addSelect( 'country', 'Země', $this->{ $this->view . 'LoadCountries' }() )->setRequired('Zvolte zemi původu.')
 				->setDefaultValue( $record->country_code );
+		$container->addText('emailaddress')->addRule( Form::EMAIL, 'Zadejte prosím validní e-mail.' );
+		$this->addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
+		$container->addText('kilograms')->addRule( Form::FLOAT, 'Váhu zadejte jako číslo.' );
 		return $container->setDefaults( $record->toArray() );
+	}
+
+
+
+	/**
+	 * Simple date form control (doesn't belong in presenter - just for demo purposes!)
+	 *
+	 * @param  Nette\Forms\Container
+	 * @param  string
+	 * @return Nette\Forms\Controls\TextInput
+	 */
+	protected function addDateInput(Nette\Forms\Container $container, $name)
+	{
+		$control = $container->addText($name);
+		$control->addCondition( Form::FILLED )->addRule( function ($control) {
+			try {
+				new DateTime($control->value);
+				return TRUE;
+			} catch (Exception $e) {}
+			return FALSE;
+		}, 'Datum prosím zadávejte ve formátu YYYY-MM-DD' );
+		return $control;
 	}
 
 
@@ -259,7 +274,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		// columns
 		unset($columns['country']);
 		$columns[] = 'country_code';
-		$columns['name'] = 'surname || " " || firstname AS name';
 		$users->select( implode(', ', $columns) );
 
 		// order result
@@ -282,6 +296,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 			} elseif ($column === 'kilograms') {
 				$conds["$column <= ?"] = $value;
+
+			} elseif ($column === 'firstname' || $column === 'surname') {
+				$conds["$column LIKE ?"] = "$value%";
 
 			} else {
 				$conds["$column LIKE ?"] = "%$value%";
@@ -353,11 +370,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function dibiDataLoader(TwiGrid\DataGrid $grid, array $columns, array $orderBy, array $filters, $page)
 	{
 		// columns
-		unset($columns['name'], $columns['country']);
+		unset($columns['country']);
 		$columns[] = 'country_code';
 		$users = $this->dibi
 				->select( array_values($columns) )
-				->select('[surname] || " " || [firstname]')->as('[name]')
 				->select('[country].[title] AS [country]')
 				->from('[user]')
 				->innerJoin('[country]')->on('[user].[country_code] = [country].[code]');
@@ -382,6 +398,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 			} elseif ($column === 'kilograms') {
 				$conds[] = array("[$column] <= %f", $value);
+
+			} elseif ($column === 'firstname' || $column === 'surname') {
+				$conds["[$column] LIKE %s"] = "$value%";
 
 			} else {
 				$conds[] = array("[$column] LIKE %s", "%$value%");

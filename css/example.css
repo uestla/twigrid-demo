@@ -20,7 +20,7 @@
 	position: relative;
 }
 
-.twigrid input.date {
+.twigrid input.date.min, .twigrid input.date.max {
 	position: absolute;
 	top: 50%;
 	margin: -15px 0 0;
