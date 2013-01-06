@@ -1,6 +1,7 @@
 <?php
 
 use Nette\Forms\Form;
+use Nette\Database\Table\ActiveRow;
 
 
 /** @persistent(dataGrid) */
@@ -119,6 +120,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setRecordValueGetter( $this->{ $this->view . 'RecordValueGetter' } );
 		$grid->setTimelineBehavior();
 
+		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm, 'Rychlá editace');
+
 		$grid->setDefaultOrderBy('name');
 
 		$minmax = $this->{ $this->view . 'LoadMinMaxBirthday' }();
@@ -168,16 +171,30 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$max = $addDate( $birthday, 'max' );
 
 		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max) {
-			return !$max->filled || id( new DateTime($min->value) ) <= id( new DateTime($max->value) );
+			return !$max->filled || ( new DateTime($min->value) <= new DateTime($max->value) );
 		}, 'Minimální datum nesmí následovat po maximálním.' );
 
-		$container->addSelect( 'country', 'Země')
-				->setItems( $this->{ $this->view . 'LoadCountries' }(), FALSE )
+		$container->addSelect( 'country', 'Země', $this->{ $this->view . 'LoadCountries' }() )
 				->setPrompt('---');
 
 		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
 
 		return $container;
+	}
+
+
+
+	/**
+	 * @param  ActiveRow|DibiRow
+	 * @return Nette\Forms\Container
+	 */
+	function createInlineEditContainer($record)
+	{
+		$container = new Nette\Forms\Container;
+		$container->addText('name')->setRequired('Zadejte prosím jméno.');
+		$container->addSelect( 'country', 'Země', $this->{ $this->view . 'LoadCountries' }() )->setRequired('Zvolte zemi původu.')
+				->setDefaultValue( $record->country_code );
+		return $container->setDefaults( $record->toArray() );
 	}
 
 
@@ -248,7 +265,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				$conds[ $column ] = $value;
 
 			} elseif ($column === 'country') {
-				$conds[ "(SELECT title FROM country WHERE code = country_code) = ?" ] = $value;
+				$conds['country_code'] = $value;
 
 			} elseif ($column === 'birthday') {
 				isset($value['min']) && $conds["$column >= ?"] = $value['min'];
@@ -262,19 +279,19 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		$max = 72;
+		$max = 42;
 		$grid->setCountAll( min($max, $users->where($conds)->count('*')) );
-		return $users->limit( $page === -1 ? $max : min($max, $page * 16) );
+		return $users->limit( $page === -1 ? $max : min($max, $page * 12) );
 	}
 
 
 
 	/**
-	 * @param  Nette\Database\Table\ActiveRow
+	 * @param  ActiveRow
 	 * @param  string
 	 * @return mixed
 	 */
-	function ndbRecordValueGetter(Nette\Database\Table\ActiveRow $record, $column)
+	function ndbRecordValueGetter(ActiveRow $record, $column)
 	{
 		return $column === 'country' ? $record->ref('country', 'country_code')->title : $record->$column;
 	}
@@ -328,6 +345,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		// columns
 		unset($columns['name'], $columns['country']);
+		$columns[] = 'country_code';
 		$users = $this->dibi
 				->select( array_values($columns) )
 				->select('[surname] || " " || [firstname]')->as('[name]')
@@ -343,8 +361,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		// filter result
 		$conds = array();
 		foreach ($filters as $column => $value) {
-			if ($column === 'gender' || $column === 'country') {
+			if ($column === 'gender') {
 				$conds[ $column ] = $value;
+
+			} elseif ($column === 'country') {
+				$conds['country_code'] = $value;
 
 			} elseif ($column === 'birthday') {
 				isset($value['min']) && $conds[] = array("[$column] >= %d", $value['min']);
@@ -358,9 +379,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		$max = 72;
+		$max = 42;
 		$grid->setCountAll( min($max, id(clone $users->where($conds))->select('COUNT(*)')->as('[count_all]')->fetch()->{'count_all'}) );
-		return $users->limit( $page === -1 ? $max : min($max, $page * 16) )->fetchAll();
+		return $users->limit( $page === -1 ? $max : min($max, $page * 12) )->fetchAll();
 	}
 
 
@@ -431,6 +452,19 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				: $this->dibi->select('*')->from('user')->where('[id] IN %in', $primaries)->fetchAssoc('id');
 
 		$this->flashMessage( "Požadavek na změnu záznamů s ID: " . Nette\Utils\Json::encode($primaries), 'success' );
+		!$this->isAjax() && $this->redirect('this');
+	}
+
+
+
+	/**
+	 * @param  int
+	 * @param  array
+	 * @return void
+	 */
+	function processInlineEditForm($id, $values)
+	{
+		$this->flashMessage( "Požadavek na změnu záznamu s ID '$id'; nové hodnoty: " . Nette\Utils\Json::encode($values), 'success' );
 		!$this->isAjax() && $this->redirect('this');
 	}
 }
