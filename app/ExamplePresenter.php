@@ -7,6 +7,9 @@ use Nette\Database\Table\ActiveRow;
 /** @persistent(dataGrid) */
 class ExamplePresenter extends Nette\Application\UI\Presenter
 {
+	/** @persistent bool */
+	public $showQueries = FALSE;
+
 	/** @var Nette\Database\Connection */
 	protected $ndb;
 
@@ -37,19 +40,24 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$this->ndb = $c;
 		$this->dibi = $d;
 		$this->cache = new Nette\Caching\Cache($s, __CLASS__);
-
-		$me = $this;
-		$d->onEvent[] = function ($e) use ($me) { $me->logQuery( $e->sql ); };
-		$c->onQuery[] = function ($s) use ($me) { $me->logQuery( $s->queryString ); };
 	}
 
 
 
-	/** @return void */
-	protected function startup()
+	/**
+	 * @param  array
+	 * @return void
+	 */
+	function loadState(array $params)
 	{
-		parent::startup();
-		$this->payload->queries = array();
+		parent::loadState($params);
+
+		if ($this->showQueries) {
+			$me = $this;
+			$this->payload->queries = array();
+			$this->dibi->onEvent[] = function ($e) use ($me) { $me->logQuery( $e->sql ); };
+			$this->ndb->onQuery[] = function ($s) use ($me) { $me->logQuery( $s->queryString ); };
+		}
 	}
 
 
@@ -90,6 +98,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
 		id ($template = parent::createTemplate($class))->actions = $this->actions;
+		$template->showQueries = $this->showQueries;
 		return $template
 				->registerHelper('mtime', function ($f) { return $f . '?' . filemtime( __DIR__ . '/../' . $f ); })
 				->setFile( __DIR__ . "/views/{$this->view}.latte" );

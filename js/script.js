@@ -33,18 +33,15 @@ $(function () {
 
 	var queries = function (queries) {
 		$('#queries').html('')
-			.append( $('<h3>').append( $('<a>', {
+			.append( $('<h3>', {
 				text: 'SQL dotazy (' + queries.length + ')',
 				title: 'Rozbalit/sbalit příkazy',
 				href: '#n',
 				click: function (event) {
 					event.preventDefault();
-					$(this).parent().next().slideToggle( 256, function () {
-						$.cookie('show_queries', $(this).is(':visible') ? true : null);
-					} );
 				}
-			}) ) )
-			.append( $('<div class="list">').css('display', $.cookie('show_queries') ? 'block' : 'none').html( queries ) );
+			}) )
+			.append( $('<div class="list">').html( queries ) );
 	};
 
 	if (typeof g_Queries !== 'undefined') { queries( g_Queries ); }

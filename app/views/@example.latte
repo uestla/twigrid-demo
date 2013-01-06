@@ -4,13 +4,15 @@
 
 {block content}
 
+	<a n:href="this, showQueries => !$showQueries" class="pull-left btn btn-info">{$showQueries ? 'Skrýt SQL dotazy' : 'Zobrazovat SQL dotazy'}</a>
+
 	<ul class="pull-right inline" n:snippet="links">
 		<li>
 			<a n:href="this" class="btn btn-success" title="Kotva aktuálního stavu datagridu">#</a>
 		</li>
 
 		<li n:if="$presenter->action !== $action" n:foreach="$actions as $action => $name">
-			<a n:href="$action" class="btn btn-info" n:attr="title => 'Přepnout na ' . $name">{$name}</a>
+			<a n:href="$action" class="btn btn-info">Přepnout na <strong>{$name}</strong></a>
 		</li>
 	</ul>
 
@@ -20,6 +22,6 @@
 
 {block |indent:1}{control dataGrid}{/block}
 
-	<script type="text/javascript">var g_Queries = {$presenter->payload->queries};</script>
+	<script type="text/javascript" n:if="$showQueries">var g_Queries = {$presenter->payload->queries};</script>
 
 {/block}
