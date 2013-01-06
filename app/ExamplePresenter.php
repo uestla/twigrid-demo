@@ -112,7 +112,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->addColumn('emailaddress', 'E-mail');
 		$grid->addColumn('birthday', 'Datum narození')->setSortable();
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
-		$grid->addColumn('centimeters', 'Výška (cm)')->setSortable();
 
 		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
@@ -177,7 +176,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				->setPrompt('---');
 
 		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
-		$container->addText('centimeters')->addCondition( Form::FILLED )->addRule( Form::INTEGER );
 
 		return $container;
 	}
@@ -255,9 +253,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			} elseif ($column === 'birthday') {
 				isset($value['min']) && $conds["$column >= ?"] = $value['min'];
 				isset($value['max']) && $conds["$column <= ?"] = $value['max'];
-
-			} elseif ($column === 'centimeters') {
-				$conds["$column <= ?"] = $value;
 
 			} elseif ($column === 'kilograms') {
 				$conds["$column <= ?"] = $value;
@@ -354,9 +349,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			} elseif ($column === 'birthday') {
 				isset($value['min']) && $conds[] = array("[$column] >= %d", $value['min']);
 				isset($value['max']) && $conds[] = array("[$column] <= %d", $value['max']);
-
-			} elseif ($column === 'centimeters') {
-				$conds[] = array("$column <= %i", $value);
 
 			} elseif ($column === 'kilograms') {
 				$conds[] = array("[$column] <= %f", $value);

@@ -13,7 +13,7 @@
 		</div>
 	</th>
 
-{elseif in_array($column, [ kilograms, centimeters ], TRUE)}
+{elseif $column === kilograms}
 	<th class="numeric">
 		{input filters-criteria-$column}
 	</th>
@@ -37,7 +37,7 @@
 {elseif $column === birthday}
 	<td class="numeric center">{$value|date:'d. m. Y'}</td>
 
-{elseif in_array($column, [ kilograms, centimeters ], TRUE)}
+{elseif $column === kilograms}
 	<td class="numeric right">{$value}</td>
 
 {else}
