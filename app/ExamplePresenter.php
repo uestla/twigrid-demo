@@ -128,21 +128,21 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->{ $this->view . 'DataLoader' } );
 		$grid->setRecordValueGetter( $this->{ $this->view . 'RecordValueGetter' } );
-		$grid->setTimelineBehavior();
+		// $grid->setTimelineBehavior();
 
-		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm, 'Upravit');
+		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
 
-		$grid->setDefaultOrderBy('surname');
+		// $grid->setDefaultOrderBy('surname');
 
-		$minmax = $this->{ $this->view . 'LoadMinMaxBirthday' }();
+		/* $minmax = $this->{ $this->view . 'LoadMinMaxBirthday' }();
 		foreach ($minmax as $n => $foo) { $minmax[ $n ] = id( new DateTime($minmax[ $n ]) )->format('Y-m-d'); }
 
 		$grid->setDefaultFilters(array(
 			'birthday' => $minmax,
-		));
+		)); */
 
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
-		$grid->addGroupAction('change', 'Změnit záznamy', $this->manipulateGroup, 'Opravdu chcete změnit vybrané položky?');
+		// $grid->addGroupAction('change', 'Změnit záznamy', $this->manipulateGroup, 'Opravdu chcete změnit vybrané položky?');
 
 		return $grid;
 	}
@@ -171,8 +171,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			return !$max->filled || ( new DateTime($min->value) <= new DateTime($max->value) );
 		}, 'Minimální datum nesmí následovat po maximálním.' );
 
-		$container->addSelect( 'country', 'Země', $this->{ $this->view . 'LoadCountries' }() )
-				->setPrompt('---');
+		/* $container->addSelect( 'country', 'Země', $this->{ $this->view . 'LoadCountries' }() )
+				->setPrompt('---'); */
 
 		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
 
@@ -216,7 +216,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				return TRUE;
 			} catch (Exception $e) {}
 			return FALSE;
-		}, 'Datum prosím zadávejte ve formátu YYYY-MM-DD' );
+		}, 'Datum prosím zadávejte ve formátu YYYY-MM-DD.' );
 		return $control;
 	}
 

@@ -1,10 +1,10 @@
 # Gettext keys exported by GettextTranslator and Translation Panel
-# Created: 2013-01-07 13:25:11
+# Created: 2013-01-07 22:09:24
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2013-01-07 13:25+0100\n"
+"PO-Revision-Date: 2013-01-07 22:09+0100\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,7 @@ msgid "Choose at least one record!"
 msgstr "Zvolte alespoň jeden záznam."
 
 msgid "Edit inline"
-msgstr "Potvrdit"
+msgstr "Upravit"
 
 msgid "Filter"
 msgstr "Filtrovat"
@@ -42,6 +42,9 @@ msgstr "Zadejte prosím číselnou hodnotu."
 
 msgid "Reset timeline"
 msgstr "Anulovat stránkování"
+
+msgid "Edit"
+msgstr "Potvrdit"
 
 msgid "Pohlaví"
 msgstr ""
@@ -64,24 +67,6 @@ msgstr ""
 msgid "Váha (kg)"
 msgstr ""
 
-msgid "Rychlá editace"
-msgstr ""
-
-msgid "Upravit"
-msgstr ""
-
-msgid "Smazat"
-msgstr ""
-
-msgid "Opravdu chcete smazat tento záznam?"
-msgstr ""
-
-msgid "Změnit záznamy"
-msgstr ""
-
-msgid "Opravdu chcete změnit vybrané položky?"
-msgstr ""
-
 msgid "---"
 msgstr ""
 
@@ -89,6 +74,18 @@ msgid "Muž"
 msgstr ""
 
 msgid "Žena"
+msgstr ""
+
+msgid "Please submit this form again (security token has expired)."
+msgstr ""
+
+msgid "Zadejte prosím jméno."
+msgstr ""
+
+msgid "Zadejte prosím příjmení."
+msgstr ""
+
+msgid "Zvolte zemi původu."
 msgstr ""
 
 msgid "Australia"
@@ -142,18 +139,6 @@ msgstr ""
 msgid "United States"
 msgstr ""
 
-msgid "Please submit this form again (security token has expired)."
-msgstr ""
-
-msgid "Zadejte prosím jméno."
-msgstr ""
-
-msgid "Zadejte prosím příjmení."
-msgstr ""
-
-msgid "Zvolte zemi původu."
-msgstr ""
-
 msgid "Zadejte prosím validní e-mail."
 msgstr ""
 
@@ -161,8 +146,5 @@ msgid "Zadejte datum narození."
 msgstr ""
 
 msgid "Váhu zadejte jako číslo."
-msgstr ""
-
-msgid "Editovat"
 msgstr ""
 
