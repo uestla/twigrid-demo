@@ -130,7 +130,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setRecordValueGetter( $this->{ $this->view . 'RecordValueGetter' } );
 		$grid->setTimelineBehavior();
 
-		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm, 'Rychlá editace');
+		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm, 'Upravit');
 
 		$grid->setDefaultOrderBy('surname');
 
@@ -141,7 +141,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			'birthday' => $minmax,
 		));
 
-		$grid->addRowAction('edit', 'Upravit', $this->editRecord);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
 		$grid->addGroupAction('change', 'Změnit záznamy', $this->manipulateGroup, 'Opravdu chcete změnit vybrané položky?');
 
@@ -307,7 +306,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$max = 42;
 		$grid->setCountAll( min($max, $users->where($conds)->count('*')) );
-		return $users->limit( $page === -1 ? $max : min($max, $page * 12) );
+		return $users->limit( min($max, $page * 12) );
 	}
 
 
@@ -409,7 +408,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$max = 42;
 		$grid->setCountAll( min($max, id(clone $users->where($conds))->select('COUNT(*)')->as('[count_all]')->fetch()->{'count_all'}) );
-		return $users->limit( $page === -1 ? $max : min($max, $page * 12) )->fetchAll();
+		return $users->limit( min($max, $page * 12) )->fetchAll();
 	}
 
 
@@ -427,19 +426,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 
 	// === DATA MANIPULATIONS ===============================================================
-
-
-
-	/**
-	 * @param  int
-	 * @return void
-	 */
-	function editRecord($id)
-	{
-		$this->getRecord($id);
-		$this->flashMessage( "Požadavek na změnu záznamu s ID '$id'.", 'success' );
-		!$this->isAjax() && $this->redirect('this');
-	}
 
 
 
