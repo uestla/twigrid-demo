@@ -61,7 +61,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$container->addText('firstname');
 		$container->addText('surname');
-		$container->addText('emailaddress');
 
 		$birthday = $container->addContainer('birthday');
 		$min = $this->addDateInput( $birthday, 'min' );
@@ -88,7 +87,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$container->addText('surname')->setRequired('Zadejte prosím příjmení.');
 		$container->addSelect( 'country', 'Země', $this->loadCountries() )->setRequired('Zvolte zemi původu.')
 				->setDefaultValue( $record->country_code );
-		$container->addText('emailaddress')->addRule( Form::EMAIL, 'Zadejte prosím validní e-mail.' );
 		$this->addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
 		$container->addText('kilograms')->addRule( Form::FLOAT, 'Váhu zadejte jako číslo.' );
 		return $container->setDefaults( $record->toArray() );

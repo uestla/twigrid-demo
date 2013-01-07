@@ -1,27 +1,33 @@
-parameters: { lang: cs, appDir: %wwwDir%/app }
+common:
+	parameters: { lang: cs, appDir: %wwwDir%/app }
 
-php:
-	date.timezone: Europe/Prague
+	php:
+		date.timezone: Europe/Prague
 
-nette:
-	xhtml: FALSE
-	session:
-		save_path: %tempDir%/sessions
-		expiration: + 14 days
-		autoStart: true
-	database:
-		dsn: 'sqlite:%appDir%/users.s3db'
+	nette:
+		xhtml: FALSE
+		session:
+			save_path: %tempDir%/sessions
+			expiration: + 14 days
+			autoStart: true
+		database:
+			dsn: 'sqlite:%appDir%/users.s3db'
 
-services:
-	-
-		factory: NetteTranslator\Gettext::getTranslator( ... )
-		setup:
-			- addFile( %appDir%/lang, frontend )
-			- NetteTranslator\Panel::register( ..., ... )
-		run: TRUE
+	services:
+		translator:
+			factory: NetteTranslator\Gettext::getTranslator( ... )
+			setup:
+				- addFile( %appDir%/lang, frontend )
 
-factories:
-	dataGrid:
-		factory: TwiGrid\DataGrid( ... )
-		setup:
-			- setTranslator( ... )
+	factories:
+		dataGrid:
+			factory: TwiGrid\DataGrid( ... )
+			setup:
+				- setTranslator( ... )
+
+development < common:
+	services:
+		translator:
+			setup:
+				- NetteTranslator\Panel::register( ..., ... )
+			run: TRUE
