@@ -31,3 +31,5 @@ development < common:
 			setup:
 				- NetteTranslator\Panel::register( ..., ... )
 			run: TRUE
+
+production < common:
