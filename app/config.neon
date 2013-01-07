@@ -13,7 +13,6 @@ nette:
 		dsn: 'sqlite:%appDir%/users.s3db'
 
 services:
-	- DibiConnection( { driver: pdo, dsn: 'sqlite:%appDir%/users.s3db' } )
 	-
 		factory: NetteTranslator\Gettext::getTranslator( ... )
 		setup:

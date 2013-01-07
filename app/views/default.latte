@@ -2,15 +2,21 @@
 
 {block content}
 
-	<div style="text-align: center;">
-		<h2>Zvolte DataSource</h2>
+	<ul class="inline" n:snippet="links">
+		<li>
+			<a n:href="this, showQueries => !$showQueries" class="btn btn-info">{$showQueries ? 'Skrýt SQL dotazy' : 'Zobrazovat SQL dotazy'}</a>
+		</li>
 
-		<ul class="inline">
-			{var $buttons = [ success, warning ], $count = count($buttons)}
-			<li n:foreach="$actions as $action => $name">
-				<a n:href="$action" n:class="btn, btn-large, 'btn-' . $buttons[ ($iterator->counter - 1) % $count ]">{$name}</a>
-			</li>
-		</ul>
-	</div>
+		<li>
+			<a n:href="this" class="btn btn-success" title="Kotva aktuálního stavu datagridu"># kotva stavu</a>
+		</li>
+	</ul>
+
+	<div id="queries"></div>
+	<noscript n:if="$showQueries"><div class="alert alert-error">Pro zobrazování SQL dotazů zapněte Javascript.</div></noscript>
+
+{block |indent:1}{control dataGrid}{/block}
+
+	<script type="text/javascript" n:if="$showQueries">var g_Queries = {$presenter->payload->queries};</script>
 
 {/block}

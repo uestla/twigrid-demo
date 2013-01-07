@@ -28,18 +28,7 @@
 
 {define body-cell}
 
-{if $column === gender}
-	<td class="center"><img src="{$basePath}/img/ico/{$value}.png" alt="{$value}"></td>
-
-{elseif $column === emailaddress}
-{if $isInlineEdited}
-	<td>{input inline-values-$column}</td>
-
-{else}
-	<td class="nowrap"><a href="{!="mailto:$value"|replace:'@':'&#64;'}">{!$value|truncate:8|replace:'@':'&#64;'}{!$value|substr:-8|replace:'@':'&#64;'}</a></td>
-{/if}
-
-{elseif $column === birthday}
+{if $column === birthday}
 {if $isInlineEdited}
 	<td>{input inline-values-$column, class => 'date center'}</td>
 
