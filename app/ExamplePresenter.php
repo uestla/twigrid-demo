@@ -42,8 +42,12 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
 
+		$minmax = $this->loadMinMaxBirthday();
 		$grid->setDefaultFilters(array(
-			'birthday' => $this->loadMinMaxBirthday(),
+			'birthday' => array(
+				'min' => id( new DateTime($minmax['min']) )->format('d. m. Y'),
+				'max' => id( new DateTime($minmax['max']) )->format('d. m. Y'),
+			),
 		));
 
 		return $grid;
@@ -257,11 +261,16 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$control = $container->addText($name);
 		$control->addCondition( Form::FILLED )->addRule( function ($control) {
 			try {
-				new DateTime($control->value);
+				if (!($m = Nette\Utils\Strings::match($control->value, '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*([0-9]{4})\s*$#'))) {
+					return FALSE;
+				}
+
+				new DateTime("{$m[3]}-{$m[2]}-{$m[1]}");
 				return TRUE;
+
 			} catch (Exception $e) {}
 			return FALSE;
-		}, 'Datum prosím zadávejte ve formátu YYYY-MM-DD.' );
+		}, 'Datum prosím zadávejte ve formátu "D.M.RRRR".' );
 		return $control;
 	}
 }
