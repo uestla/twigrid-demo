@@ -37,6 +37,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->dataLoader );
 		$grid->setRecordValueGetter( $this->recordValueGetter );
+		$grid->setTimelineBehavior();
 
 		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
