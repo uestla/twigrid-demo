@@ -9,7 +9,7 @@ $(function () {
 
 	(datepickers = function (parent) {
 		parent.find('input.date').datepicker({
-			format: 'yyyy-mm-dd',
+			dateFormat: 'yy-mm-dd',
 			weekStart: 1
 		}).on('show', function (event) {
 			var el = $(event.target);
