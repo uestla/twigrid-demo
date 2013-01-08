@@ -261,7 +261,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$control = $container->addText($name);
 		$control->addCondition( Form::FILLED )->addRule( function ($control) {
 			try {
-				if (!($m = Nette\Utils\Strings::match($control->value, '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*([0-9]{4})\s*$#'))) {
+				if (!($m = Nette\Utils\Strings::match($control->value, '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*\.\s*([0-9]{4})\s*$#'))) {
 					return FALSE;
 				}
 
