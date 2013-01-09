@@ -2,58 +2,48 @@
 
 
 
-{define filter-cell}
-
-{if $column === birthday}
+{define filter-cell-birthday}
 	<th class="birthday nowrap">
 		<div>
-			{input filters-criteria-$column-min, class => 'date min', placeholder => min}
-			{input filters-criteria-$column-max, class => 'date max', placeholder => max}
+			{? }{input filters-criteria-$column-min, class => 'date min', placeholder => min}
+			{? }{input filters-criteria-$column-max, class => 'date max', placeholder => max}
 			&ndash;
 		</div>
 	</th>
-
-{elseif $column === kilograms}
-	<th class="numeric">
-		{input filters-criteria-$column}
-	</th>
-
-{else}
-	{include #parent}
-{/if}
-
 {/define}
 
 
 
-{define body-cell}
+{define filter-cell-kilograms}
+	<th class="numeric">
+		{? }{input filters-criteria-$column}
+	</th>
+{/define}
 
-{if $column === birthday}
-{if $isInlineEdited}
-	<td>{input inline-values-$column, class => 'date center'}</td>
 
-{else}
+
+{define body-cell-birthday}
 	<td class="numeric center">{$value|date:'d. m. Y'}</td>
-{/if}
+{/define}
 
-{elseif $column === country}
-{if $isInlineEdited}
-	{include #parent}
 
-{else}
+{define body-cell-birthday-inline}
+	<td>{input inline-values-$column, class => 'date center'}</td>
+{/define}
+
+
+
+{define body-cell-country}
 	<td>{$record->ref( country, country_code )->title}</td>
-{/if}
+{/define}
 
-{elseif $column === kilograms}
-{if $isInlineEdited}
-	<td class="numeric">{input inline-values-$column}</td>
 
-{else}
+
+{define body-cell-kilograms}
 	<td class="numeric right">{$value}</td>
-{/if}
+{/define}
 
-{else}
-	{include #parent}
-{/if}
 
+{define body-cell-kilograms-inline}
+	<td class="numeric">{input inline-values-$column}</td>
 {/define}
