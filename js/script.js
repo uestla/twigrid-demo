@@ -9,7 +9,7 @@ $(function () {
 
 	(datepickers = function (parent) {
 		parent.find('input.date').datepicker({
-			dateFormat: 'yy-mm-dd'
+			dateFormat: 'dd. mm. yy'
 		}).on('show', function (event) {
 			var el = $(event.target);
 			el.attr('value') === '' && ( el.attr( 'value', el.hasClass('min') ? '1950-05-02' : '2000-01-01' ) );

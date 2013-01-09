@@ -71,8 +71,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$min = $this->addDateInput( $birthday, 'min' );
 		$max = $this->addDateInput( $birthday, 'max' );
 
-		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max) {
-			return !$max->filled || ( new DateTime($min->value) <= new DateTime($max->value) );
+		$parser = $this->parseDate;
+		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max, $parser) {
+			return !$max->filled || (($minDt = $parser( $min->value )) !== FALSE && ($maxDt = $parser( $max->value )) !== FALSE && $minDt <= $maxDt);
 		}, 'Minimální datum nesmí následovat po maximálním.' );
 
 		$container->addSelect( 'country', 'Země', $this->loadCountries() )
@@ -94,7 +95,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				->setDefaultValue( $record->country_code );
 		$this->addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
 		$container->addText('kilograms')->addRule( Form::FLOAT, 'Váhu zadejte jako číslo.' );
-		return $container->setDefaults( $record->toArray() );
+		$defaults = $record->toArray();
+		$defaults['birthday'] = id( new DateTime($defaults['birthday']) )->format('d. m. Y');
+		return $container->setDefaults( $defaults );
 	}
 
 
@@ -153,8 +156,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				$conds['country_code'] = $value;
 
 			} elseif ($column === 'birthday') {
-				isset($value['min']) && $conds["$column >= ?"] = $value['min'];
-				isset($value['max']) && $conds["$column <= ?"] = $value['max'];
+				isset($value['min']) && $conds["$column >= ?"] = $this->parseDate( $value['min'] )->format('Y-m-d');
+				isset($value['max']) && $conds["$column <= ?"] = $this->parseDate( $value['max'] )->format('Y-m-d');
 
 			} elseif ($column === 'kilograms') {
 				$conds["$column <= ?"] = $value;
@@ -259,18 +262,27 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	protected function addDateInput(Nette\Forms\Container $container, $name)
 	{
 		$control = $container->addText($name);
-		$control->addCondition( Form::FILLED )->addRule( function ($control) {
-			try {
-				if (!($m = Nette\Utils\Strings::match($control->value, '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*\.\s*([0-9]{4})\s*$#'))) {
-					return FALSE;
-				}
-
-				new DateTime("{$m[3]}-{$m[2]}-{$m[1]}");
-				return TRUE;
-
-			} catch (Exception $e) {}
-			return FALSE;
+		$parser = $this->parseDate;
+		$control->addCondition( Form::FILLED )->addRule( function ($control) use ($parser) {
+			return $parser( $control->value ) !== FALSE;
 		}, 'Datum prosím zadávejte ve formátu "D.M.RRRR".' );
+
 		return $control;
+	}
+
+
+
+	function parseDate($s)
+	{
+		try {
+			if (!($m = Nette\Utils\Strings::match($s, '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*\.\s*([0-9]{4})\s*$#'))) {
+				return FALSE;
+			}
+
+			return new DateTime("{$m[3]}-{$m[2]}-{$m[1]}");
+
+		} catch (Exception $e) {}
+
+		return FALSE;
 	}
 }
