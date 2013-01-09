@@ -1,7 +1,6 @@
 <?php
 
 use Nette\Forms\Form;
-use Nette\Database\Table\ActiveRow;
 
 
 /** @persistent(dataGrid) */
@@ -36,7 +35,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
 		$grid->setFilterContainerFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->dataLoader );
-		$grid->setRecordValueGetter( $this->recordValueGetter );
 		$grid->setTimelineBehavior();
 
 		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
@@ -173,13 +171,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$max = 42;
 		$grid->setCountAll( min($max, $users->where($conds)->count('*')) );
 		return $users->limit( min($max, $page * 12) );
-	}
-
-
-
-	function recordValueGetter(ActiveRow $record, $column)
-	{
-		return $column === 'country' ? $record->ref('country', 'country_code')->title : $record->$column;
 	}
 
 

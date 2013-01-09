@@ -36,6 +36,14 @@
 	<td class="numeric center">{$value|date:'d. m. Y'}</td>
 {/if}
 
+{elseif $column === country}
+{if $isInlineEdited}
+	{include #parent}
+
+{else}
+	<td>{$record->ref( country, country_code )->title}</td>
+{/if}
+
 {elseif $column === kilograms}
 {if $isInlineEdited}
 	<td class="numeric">{input inline-values-$column}</td>
