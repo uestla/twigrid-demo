@@ -1,26 +1,26 @@
-.twigrid .numeric {
+.twigrid-cnt .numeric {
 	width: 82px;
 }
 
-.twigrid .numeric input {
+.twigrid-cnt .numeric input {
 	text-align: right;
 }
 
-.twigrid .birthday {
+.twigrid-cnt .birthday {
 	width: 196px;
 	line-height: 26px;
 	text-align: center;
 }
 
-.twigrid td.numeric {
+.twigrid-cnt td.numeric {
 	font-family: Calibri;
 }
 
-.twigrid .birthday div {
+.twigrid-cnt .birthday div {
 	position: relative;
 }
 
-.twigrid input.date.min, .twigrid input.date.max {
+.twigrid-cnt input.date.min, .twigrid-cnt input.date.max {
 	position: absolute;
 	top: 50%;
 	margin: -15px 0 0;
@@ -28,10 +28,10 @@
 	height: 30px;
 }
 
-.twigrid input.min.date {
+.twigrid-cnt input.min.date {
 	left: 0;
 }
 
-.twigrid input.max.date {
+.twigrid-cnt input.max.date {
 	right: 0;
 }
