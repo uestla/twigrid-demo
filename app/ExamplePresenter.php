@@ -23,30 +23,34 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentDataGrid()
 	{
+		$me = $this;
 		$grid = $this->context->createDataGrid();
 		$grid->setTemplateFile( __DIR__ . '/user-grid.latte' );
 
-		$grid->addColumn('firstname', 'Jméno')->setSortable();
+		// $grid->addColumn('firstname', 'Jméno')->setSortable();
 		$grid->addColumn('surname', 'Příjmení')->setSortable();
 		$grid->addColumn('country', 'Země');
-		$grid->addColumn('birthday', 'Datum narození')->setSortable();
+		// $grid->addColumn('birthday', 'Datum narození')->setSortable();
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
 
 		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
-		$grid->setFilterContainerFactory( $this->createFilterContainer );
+		$grid->setFilterFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->dataLoader );
-		$grid->setTimelineBehavior();
+		$grid->setTimeline();
 
 		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
+		$grid->addGroupAction('edit', 'Hromadně zeditovat', function ($ids) use ($me) {
+			$me->flashMessage('IDs to process: ' . Nette\Utils\Json::encode($ids), 'success');
+		});
 
-		$minmax = $this->loadMinMaxBirthday();
+		/* $minmax = $this->loadMinMaxBirthday();
 		$grid->setDefaultFilters(array(
 			'birthday' => array(
 				'min' => id( new DateTime($minmax['min']) )->format('d. m. Y'),
 				'max' => id( new DateTime($minmax['max']) )->format('d. m. Y'),
 			),
-		));
+		)); */
 
 		return $grid;
 	}
@@ -62,17 +66,17 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			'female' => 'Žena',
 		))->setPrompt('---');
 
-		$container->addText('firstname');
+		// $container->addText('firstname');
 		$container->addText('surname');
 
-		$birthday = $container->addContainer('birthday');
+		/* $birthday = $container->addContainer('birthday');
 		$min = $this->addDateInput( $birthday, 'min' );
 		$max = $this->addDateInput( $birthday, 'max' );
 
 		$parser = $this->parseDate;
 		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max, $parser) {
 			return !$max->filled || (($minDt = $parser( $min->value )) !== FALSE && ($maxDt = $parser( $max->value )) !== FALSE && $minDt <= $maxDt);
-		}, 'Minimální datum nesmí následovat po maximálním.' );
+		}, 'Minimální datum nesmí následovat po maximálním.' ); */
 
 		$container->addSelect( 'country', 'Země', $this->loadCountries() )
 				->setPrompt('---');
@@ -87,14 +91,14 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function createInlineEditContainer($record)
 	{
 		$container = new Nette\Forms\Container;
-		$container->addText('firstname')->setRequired('Zadejte prosím jméno.');
+		// $container->addText('firstname')->setRequired('Zadejte prosím jméno.');
 		$container->addText('surname')->setRequired('Zadejte prosím příjmení.');
 		$container->addSelect( 'country', 'Země', $this->loadCountries() )->setRequired('Zvolte zemi původu.')
 				->setDefaultValue( $record->country_code );
-		$this->addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
+		// $this->addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
 		$container->addText('kilograms')->addRule( Form::FLOAT, 'Váhu zadejte jako číslo.' );
 		$defaults = $record->toArray();
-		$defaults['birthday'] = id( new DateTime($defaults['birthday']) )->format('d. m. Y');
+		// $defaults['birthday'] = id( new DateTime($defaults['birthday']) )->format('d. m. Y');
 		return $container->setDefaults( $defaults );
 	}
 
