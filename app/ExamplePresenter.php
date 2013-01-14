@@ -27,7 +27,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid = $this->context->createDataGrid();
 		$grid->setTemplateFile( __DIR__ . '/user-grid.latte' );
 
-		// $grid->addColumn('firstname', 'Jméno')->setSortable();
+		$grid->addColumn('firstname', 'Jméno')->setSortable();
 		$grid->addColumn('surname', 'Příjmení')->setSortable();
 		$grid->addColumn('country', 'Země');
 		// $grid->addColumn('birthday', 'Datum narození')->setSortable();
@@ -66,7 +66,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			'female' => 'Žena',
 		))->setPrompt('---');
 
-		// $container->addText('firstname');
+		$container->addText('firstname');
 		$container->addText('surname');
 
 		/* $birthday = $container->addContainer('birthday');
@@ -91,7 +91,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function createInlineEditContainer($record)
 	{
 		$container = new Nette\Forms\Container;
-		// $container->addText('firstname')->setRequired('Zadejte prosím jméno.');
+		$container->addText('firstname')->setRequired('Zadejte prosím jméno.');
 		$container->addText('surname')->setRequired('Zadejte prosím příjmení.');
 		$container->addSelect( 'country', 'Země', $this->loadCountries() )->setRequired('Zvolte zemi původu.')
 				->setDefaultValue( $record->country_code );
@@ -107,8 +107,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	protected function loadCountries()
 	{
 		$key = __METHOD__;
-		$countries = $this->cache->load($key);
-		return $countries !== NULL ? $countries : $this->cache->save( $key, $this->ndb->table('country')
+		return ( $countries = $this->cache->load($key) ) !== NULL ? $countries : $this->cache->save( $key, $this->ndb->table('country')
 				->select( '('
 					. $this->ndb->table('user')
 						->select('id')
@@ -125,8 +124,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function loadMinMaxBirthday()
 	{
 		$key = __METHOD__;
-		$countries = $this->cache->load($key);
-		return $countries !== NULL ? $countries : $this->cache->save( $key, $this->ndb->table('user')
+		return ( $minmax = $this->cache->load($key) ) !== NULL ? $minmax : $this->cache->save( $key, $this->ndb->table('user')
 				->select('MIN(birthday) AS min, MAX(birthday) AS max')
 				->fetch()->toArray() );
 	}
@@ -167,7 +165,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			} elseif ($column === 'firstname' || $column === 'surname') {
 				$conds["$column LIKE ?"] = "$value%";
 
-			} else {
+			} elseif (isset($columns[$column])) {
 				$conds["$column LIKE ?"] = "%$value%";
 			}
 		}
