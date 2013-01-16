@@ -33,7 +33,7 @@
 
 
 
-{define body-cell-country}
+{define body-cell-country_code}
 	<td>{$record->ref( country, country_code )->title}</td>
 {/define}
 
@@ -51,7 +51,7 @@
 
 
 {define row-action-delete}
-	<a href="{$link}" class="btn btn-danger tw-ajax" data-confirm="{$confirmation}">
-		Odstraň, dík
+	<a href="{$link}" class="btn btn-danger btn-small tw-ajax" data-confirm="{$action[confirmation]}">
+		Smaž jako Bartošová
 	</a>
 {/define}

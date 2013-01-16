@@ -3,7 +3,6 @@
 use Nette\Forms\Form;
 
 
-/** @persistent(dataGrid) */
 class ExamplePresenter extends Nette\Application\UI\Presenter
 {
 	/** @persistent bool */
@@ -11,6 +10,27 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 	/** @var Nette\Database\Connection */
 	protected $ndb;
+
+	/** @var array */
+	protected $countries = array(
+		'au' => 'Australia',
+		'at' => 'Austria',
+		'be' => 'Belgium',
+		'ca' => 'Canada',
+		'ch' => 'Switzerland',
+		'cz' => 'Czech Republic',
+		'de' => 'Germany',
+		'es' => 'Spain',
+		'fi' => 'Finland',
+		'fr' => 'France',
+		'gb' => 'United Kingdom',
+		'hu' => 'Hungary',
+		'is' => 'Iceland',
+		'it' => 'Italy',
+		'pl' => 'Poland',
+		'se' => 'Sweden',
+		'us' => 'United States',
+	);
 
 	/** @var Nette\Caching\Cache */
 	protected $cache;
@@ -29,28 +49,29 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$grid->addColumn('firstname', 'Jméno')->setSortable();
 		$grid->addColumn('surname', 'Příjmení')->setSortable();
-		$grid->addColumn('country', 'Země');
-		// $grid->addColumn('birthday', 'Datum narození')->setSortable();
+		$grid->addColumn('country_code', 'Země');
+		$grid->addColumn('birthday', 'Datum narození')->setSortable();
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
 
 		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
 		$grid->setFilterFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->dataLoader );
-		$grid->setTimeline();
 
-		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
+		$grid->setInlineEditing( $this->createInlineEditContainer, $this->processInlineEditForm );
 		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
-		$grid->addGroupAction('edit', 'Hromadně zeditovat', function ($ids) use ($me) {
-			$me->flashMessage('IDs to process: ' . Nette\Utils\Json::encode($ids), 'success');
-		});
+		$grid->addGroupAction('edit', 'Odstranit', $this->deleteMany, 'UPOZORNĚNÍ! Smazání záznamů je nevratné. Pokračovat?');
 
-		/* $minmax = $this->loadMinMaxBirthday();
+		$grid->setDefaultOrderBy('surname');
+		$grid->setDefaultFilters(array(
+			'kilograms' => 70,
+		));
+
 		$grid->setDefaultFilters(array(
 			'birthday' => array(
-				'min' => id( new DateTime($minmax['min']) )->format('d. m. Y'),
-				'max' => id( new DateTime($minmax['max']) )->format('d. m. Y'),
+				'min' => '15. 01. 1961',
+				'max' => '28. 11. 1996',
 			),
-		)); */
+		));
 
 		return $grid;
 	}
@@ -61,24 +82,24 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	{
 		$container = new Nette\Forms\Container;
 
-		$container->addSelect('gender', 'Pohlaví', array(
+		/* $container->addSelect('gender', 'Pohlaví', array(
 			'male' => 'Muž',
 			'female' => 'Žena',
-		))->setPrompt('---');
+		))->setPrompt('---'); */
 
 		$container->addText('firstname');
 		$container->addText('surname');
 
-		/* $birthday = $container->addContainer('birthday');
+		$birthday = $container->addContainer('birthday');
 		$min = $this->addDateInput( $birthday, 'min' );
 		$max = $this->addDateInput( $birthday, 'max' );
 
 		$parser = $this->parseDate;
 		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max, $parser) {
 			return !$max->filled || (($minDt = $parser( $min->value )) !== FALSE && ($maxDt = $parser( $max->value )) !== FALSE && $minDt <= $maxDt);
-		}, 'Minimální datum nesmí následovat po maximálním.' ); */
+		}, 'Minimální datum nesmí následovat po maximálním.' );
 
-		$container->addSelect( 'country', 'Země', $this->loadCountries() )
+		$container->addSelect( 'country_code', 'Země', $this->countries )
 				->setPrompt('---');
 
 		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
@@ -93,56 +114,27 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$container = new Nette\Forms\Container;
 		$container->addText('firstname')->setRequired('Zadejte prosím jméno.');
 		$container->addText('surname')->setRequired('Zadejte prosím příjmení.');
-		$container->addSelect( 'country', 'Země', $this->loadCountries() )->setRequired('Zvolte zemi původu.')
+		$container->addSelect( 'country_code', 'Země', $this->countries )->setRequired('Zvolte zemi původu.')
 				->setDefaultValue( $record->country_code );
-		// $this->addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
+		$this->addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
 		$container->addText('kilograms')->addRule( Form::FLOAT, 'Váhu zadejte jako číslo.' );
 		$defaults = $record->toArray();
-		// $defaults['birthday'] = id( new DateTime($defaults['birthday']) )->format('d. m. Y');
+		$defaults['birthday'] = id( new DateTime($defaults['birthday']) )->format('d. m. Y');
 		return $container->setDefaults( $defaults );
 	}
 
 
 
-	protected function loadCountries()
-	{
-		$key = __METHOD__;
-		return ( $countries = $this->cache->load($key) ) !== NULL ? $countries : $this->cache->save( $key, $this->ndb->table('country')
-				->select( '('
-					. $this->ndb->table('user')
-						->select('id')
-						->where('country_code = code')
-						->limit(1)
-						->getSql()
-				. ') AS is_used, code, title')
-				->where('is_used IS NOT NULL')
-				->fetchPairs('code', 'title') );
-	}
-
-
-
-	function loadMinMaxBirthday()
-	{
-		$key = __METHOD__;
-		return ( $minmax = $this->cache->load($key) ) !== NULL ? $minmax : $this->cache->save( $key, $this->ndb->table('user')
-				->select('MIN(birthday) AS min, MAX(birthday) AS max')
-				->fetch()->toArray() );
-	}
-
-
-
-	function dataLoader(TwiGrid\DataGrid $grid, array $columns, array $orderBy, array $filters, $page)
+	function dataLoader(TwiGrid\DataGrid $grid, array $columns, array $order, array $filters)
 	{
 		// selection factory
 		$users = $this->ndb->table('user');
 
 		// columns
-		unset($columns['country']);
-		$columns[] = 'country_code';
 		$users->select( implode(', ', $columns) );
 
 		// order result
-		foreach ($orderBy as $column => $desc) {
+		foreach ($order as $column => $desc) {
 			$users->order( $column . ($desc ? ' DESC' : '') );
 		}
 
@@ -152,8 +144,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			if ($column === 'gender') {
 				$conds[ $column ] = $value;
 
-			} elseif ($column === 'country') {
-				$conds['country_code'] = $value;
+			} elseif ($column === 'country_code') {
+				$conds[$column] = $value;
 
 			} elseif ($column === 'birthday') {
 				isset($value['min']) && $conds["$column >= ?"] = $this->parseDate( $value['min'] )->format('Y-m-d');
@@ -170,9 +162,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		$max = 42;
-		$grid->setCountAll( min($max, $users->where($conds)->count('*')) );
-		return $users->limit( min($max, $page * 12) );
+		return $users->where($conds)->limit( 12 );
 	}
 
 
@@ -181,16 +171,27 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 	function deleteRecord($id)
 	{
+		// $this->ndb->table('user')->find($id)->delete();
 		$this->flashMessage( "Požadavek na smazání záznamu s ID '$id'.", 'warning' );
-		!$this->isAjax() && $this->redirect('this');
+		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
 	}
 
 
 
 	function processInlineEditForm($id, array $values)
 	{
+		// $this->ndb->table('user')->find($id)->update($values);
 		$this->flashMessage( "Požadavek na změnu záznamu s ID '$id'; nové hodnoty: " . Nette\Utils\Json::encode($values), 'success' );
-		!$this->isAjax() && $this->redirect('this');
+		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
+	}
+
+
+
+	function deleteMany(array $primaries)
+	{
+		// $this->ndb->table('user')->where('id', $primaries)->delete();
+		$this->flashMessage('Požadavek na smazání záznamů: ' . Nette\Utils\Json::encode($primaries), 'success');
+		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
 	}
 
 
