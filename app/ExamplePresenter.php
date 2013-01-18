@@ -64,9 +64,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->setDefaultOrderBy('surname');
 		$grid->setDefaultFilters(array(
 			'kilograms' => 70,
-		));
-
-		$grid->setDefaultFilters(array(
 			'birthday' => array(
 				'min' => '15. 01. 1961',
 				'max' => '28. 11. 1996',
