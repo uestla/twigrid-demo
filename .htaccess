@@ -15,6 +15,9 @@
         RewriteEngine On
         RewriteBase /
 
+		# RewriteCond %{HTTP_HOST} !(twigrid).1991.cz
+		# RewriteRule ^(twigrid/)?(.*)$ http://twigrid.1991.cz/$2 [R=301,NE,QSA,L]
+
         # front controller
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteCond %{REQUEST_FILENAME} !-d
