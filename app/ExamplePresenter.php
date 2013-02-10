@@ -53,7 +53,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$grid->addColumn('birthday', 'Datum narození')->setSortable();
 		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
 
-		$grid->setPrimaryKey( $this->ndb->table('user')->primary );
+		$grid->setPrimaryKey('id');
 		$grid->setFilterFactory( $this->createFilterContainer );
 		$grid->setDataLoader( $this->dataLoader );
 
