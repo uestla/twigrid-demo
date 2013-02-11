@@ -67,7 +67,7 @@ class Helpers
 			( ( $key = static::SCRIPT_KEY . $file ) && is_file( $dest = $baseDir . '/' . $file )
 					&& $cache->load( $key ) ) || (
 				copy($source = $baseDir . '/libs/TwiGrid/client-side/' . basename($file), $dest)
-					&& $this->cache->save($key, TRUE, array(
+					&& $cache->save($key, TRUE, array(
 						Cache::FILES => array($source),
 					))
 			);
