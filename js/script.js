@@ -57,15 +57,15 @@ $(function () {
 
 	$.nette.ext('spinner', {
 		init: function () {
-			$('body').append('<style>.twigrid-loading * { cursor: wait !important; }</style>');
+			$('body').append('<style>.ajax-loading * { cursor: wait !important; }</style>');
 		},
 
 		before: function () {
-			$('body').addClass('twigrid-loading');
+			$('html').addClass('ajax-loading');
 		},
 
 		complete: function () {
-			$('body').removeClass('twigrid-loading');
+			$('html').removeClass('ajax-loading');
 		}
 	});
 
