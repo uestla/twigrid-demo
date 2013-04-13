@@ -4,16 +4,16 @@
 
 	<ul class="inline" n:snippet="links">
 		<li>
-			<a n:href="this, showQueries => !$showQueries" class="btn btn-info">{$showQueries ? 'Skrýt SQL dotazy' : 'Zobrazovat SQL dotazy'}</a>
+			<a n:href="this, showQueries => !$showQueries" class="btn btn-info">{$showQueries ? 'Hide SQL queries' : 'Show SQL queries'}</a>
 		</li>
 
 		<li>
-			<a n:href="this" class="btn btn-success" title="Kotva aktuálního stavu datagridu"># kotva stavu</a>
+			<a n:href="this" class="btn btn-success" title="Kotva aktuálního stavu datagridu"># state anchor</a>
 		</li>
 	</ul>
 
 	<div id="queries"></div>
-	<noscript n:if="$showQueries"><div class="alert alert-error">Pro zobrazování SQL dotazů zapněte Javascript.</div></noscript>
+	<noscript n:if="$showQueries"><div class="alert alert-error">For viewing SQL queries please enable Javascript.</div></noscript>
 
 {block |indent:1}{control dataGrid}{/block}
 

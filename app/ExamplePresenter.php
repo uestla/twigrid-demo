@@ -5,6 +5,7 @@ use Nette\Forms\Form;
 
 class ExamplePresenter extends Nette\Application\UI\Presenter
 {
+
 	/** @persistent bool */
 	public $showQueries = FALSE;
 
@@ -21,21 +22,21 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	protected function createComponentDataGrid()
 	{
 		$grid = $this->context->createDataGrid();
-		$grid->setTemplateFile( __DIR__ . '/user-grid.latte' );
+		$grid->setTemplateFile(__DIR__ . '/user-grid.latte');
 
-		$grid->addColumn('firstname', 'Jméno')->setSortable();
-		$grid->addColumn('surname', 'Příjmení')->setSortable();
-		$grid->addColumn('country_code', 'Země');
-		$grid->addColumn('birthday', 'Datum narození')->setSortable();
-		$grid->addColumn('kilograms', 'Váha (kg)')->setSortable();
+		$grid->addColumn('firstname', 'Name')->setSortable();
+		$grid->addColumn('surname', 'Surname')->setSortable();
+		$grid->addColumn('country_code', 'Country');
+		$grid->addColumn('birthday', 'Birthdate')->setSortable();
+		$grid->addColumn('kilograms', 'Weight (kg)')->setSortable();
 
 		$grid->setPrimaryKey('id');
-		$grid->setFilterFactory( $this->createFilterContainer );
-		$grid->setDataLoader( $this->dataLoader );
+		$grid->setFilterFactory($this->createFilterContainer);
+		$grid->setDataLoader($this->dataLoader);
 
-		$grid->setInlineEditing( $this->createInlineEditContainer, $this->processInlineEditForm );
-		$grid->addRowAction('delete', 'Smazat', $this->deleteRecord, 'Opravdu chcete smazat tento záznam?');
-		$grid->addGroupAction('edit', 'Odstranit', $this->deleteMany, 'UPOZORNĚNÍ! Smazání záznamů je nevratné. Pokračovat?');
+		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
+		$grid->addRowAction('delete', 'Delete', $this->deleteRecord, 'Do you really want to delete this record?');
+		$grid->addGroupAction('edit', 'Update', $this->deleteMany, 'WARNING! Deleted records cannot be restored! Proceed?');
 
 		$grid->setDefaultOrderBy('surname');
 		$grid->setDefaultFilters(array(
@@ -63,14 +64,14 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$max = Helpers::addDateInput( $birthday, 'max' );
 
 		$parser = callback('Helpers::parseDate');
-		$min->addCondition( Form::FILLED )->addRule( function () use ($min, $max, $parser) {
+		$min->addCondition(Form::FILLED)->addRule(function () use ($min, $max, $parser) {
 			return !$max->filled
-					|| (($minDt = $parser( $min->value )) !== FALSE
-						&& ($maxDt = $parser( $max->value )) !== FALSE
+					|| (($minDt = $parser($min->value)) !== FALSE
+						&& ($maxDt = $parser($max->value)) !== FALSE
 						&& $minDt <= $maxDt);
-		}, 'Minimální datum nesmí následovat po maximálním.' );
+		}, 'Please select valid date range.');
 
-		$container->addSelect( 'country_code', 'Země', Helpers::getCountries() )
+		$container->addSelect('country_code', 'Country', Helpers::getCountries())
 				->setPrompt('---');
 
 		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
@@ -83,12 +84,12 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function createInlineEditContainer($record)
 	{
 		$container = new Nette\Forms\Container;
-		$container->addText('firstname')->setRequired('Zadejte prosím jméno.');
-		$container->addText('surname')->setRequired('Zadejte prosím příjmení.');
-		$container->addSelect( 'country_code', 'Země', Helpers::getCountries() )->setRequired('Zvolte zemi původu.')
-				->setDefaultValue( $record->country_code );
-		Helpers::addDateInput($container, 'birthday')->setRequired('Zadejte datum narození.');
-		$container->addText('kilograms')->addRule( Form::FLOAT, 'Váhu zadejte jako číslo.' );
+		$container->addText('firstname')->setRequired();
+		$container->addText('surname')->setRequired();
+		$container->addSelect('country_code', 'Country', Helpers::getCountries())->setRequired()
+				->setDefaultValue($record->country_code);
+		Helpers::addDateInput($container, 'birthday')->setRequired();
+		$container->addText('kilograms')->addRule(Form::FLOAT);
 		$defaults = $record->toArray();
 		$defaults['birthday'] = id( new DateTime($defaults['birthday']) )->format('d. m. Y');
 		return $container->setDefaults( $defaults );
@@ -133,7 +134,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			}
 		}
 
-		return $users->where($conds)->limit( 12 );
+		return $users->where($conds)->limit(12);
 	}
 
 
@@ -143,7 +144,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function deleteRecord($id)
 	{
 		// $this->ndb->table('user')->find($id)->delete();
-		$this->flashMessage( "Požadavek na smazání záznamu s ID '$id'.", 'warning' );
+		$this->flashMessage("Deletion request sent for record '$id'.", 'warning');
 		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
 	}
 
@@ -152,7 +153,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function processInlineEditForm($id, array $values)
 	{
 		// $this->ndb->table('user')->find($id)->update($values);
-		$this->flashMessage( "Požadavek na změnu záznamu s ID '$id'; nové hodnoty: " . Nette\Utils\Json::encode($values), 'success' );
+		$this->flashMessage("Update request sent for record '$id'; new values: " . Nette\Utils\Json::encode($values), 'success' );
 		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
 	}
 
@@ -161,7 +162,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	function deleteMany(array $primaries)
 	{
 		// $this->ndb->table('user')->where('id', $primaries)->delete();
-		$this->flashMessage('Požadavek na smazání záznamů: ' . Nette\Utils\Json::encode($primaries), 'success');
+		$this->flashMessage('Records deletion request : ' . Nette\Utils\Json::encode($primaries), 'success');
 		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
 	}
 
@@ -198,4 +199,5 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 				->registerHelper('mtime', function ($f) { return $f . '?' . filemtime( __DIR__ . '/../' . $f ); })
 				->setFile( __DIR__ . "/views/{$this->view}.latte" );
 	}
+
 }
