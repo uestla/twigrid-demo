@@ -36,7 +36,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
 		$grid->addRowAction('delete', 'Delete', $this->deleteRecord, 'Do you really want to delete this record?');
-		$grid->addGroupAction('edit', 'Update', $this->deleteMany, 'WARNING! Deleted records cannot be restored! Proceed?');
+		$grid->addGroupAction('edit', 'Delete', $this->deleteMany, 'WARNING! Deleted records cannot be restored! Proceed?');
 
 		$grid->setDefaultOrderBy('surname');
 		$grid->setDefaultFilters(array(
