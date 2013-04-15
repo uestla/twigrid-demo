@@ -1,0 +1,13 @@
+{extends '@grid.latte'}
+
+
+
+{block h2}Filtering records by multiple criteria{/block}
+
+
+
+{block content}
+
+{include #grid, grid => 'filterGrid', sources => $sourceDir . '/FilterGrid.php'}
+
+{/block}

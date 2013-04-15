@@ -1,0 +1,12 @@
+{extends '@grid.latte'}
+
+
+
+{block h2}Paginate result set{/block}
+
+
+{block content}
+
+{include #grid, grid => 'paginationGrid', sources => $sourceDir . '/PaginationGrid.php'}
+
+{/block}

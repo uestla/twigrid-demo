@@ -1,5 +1,5 @@
 common:
-	parameters: { lang: cs, appDir: %wwwDir%/app }
+	parameters: { appDir: %wwwDir%/app }
 
 	php:
 		date.timezone: Europe/Prague
@@ -13,23 +13,16 @@ common:
 		database:
 			dsn: 'sqlite:%appDir%/users.s3db'
 
-	services:
-		translator:
-			factory: NetteTranslator\Gettext::getTranslator( ... )
-			setup:
-				- addFile( %appDir%/lang, frontend )
-
 	factories:
-		dataGrid:
-			factory: TwiGrid\DataGrid( ... )
-			setup:
-				- setTranslator( ... )
+		simpleGrid: SimpleGrid( ..., ... )
+		filterGrid: FilterGrid( ..., ... )
+		rowActionGrid: RowActionGrid( ..., ... )
+		groupActionGrid: GroupActionGrid( ..., ... )
+		inlineGrid: InlineGrid( ..., ... )
+		paginationGrid: PaginationGrid( ..., ... )
+		fullGrid: FullGrid( ..., ... )
 
 development < common:
-	services:
-		translator:
-			setup:
-				- NetteTranslator\Panel::register( ..., ... )
-			run: TRUE
+
 
 production < common:

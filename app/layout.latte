@@ -4,6 +4,7 @@
 <link href="{$basePath}/{='css/twigrid.datagrid.css'|mtime}" rel="stylesheet">         <!-- required for datagrid styling -->
 <link href="{$basePath}/{='css/jquery-ui-bootstrap-theme/jquery-ui-1.8.16.custom.css'|mtime}" rel="stylesheet">
 <link href="{$basePath}/{='css/jquery-ui-bootstrap-theme/jquery.ui.1.8.16.ie.css'|mtime}" rel="stylesheet">
+<link href="{$basePath}/{='css/highlight.js/github.css'|mtime}" rel="stylesheet">
 <link href="{$basePath}/{='css/example.css'|mtime}" rel="stylesheet">
 
 
@@ -20,6 +21,15 @@
 				)</small>
 		</h1>
 	</div>
+
+
+	{ifset #h2}<h2>{include #h2}</h2>{/ifset}
+
+	<ul class="pull-left inline" n:if="$presenter->action !== 'default'">
+		<li>
+			<a n:href="default" class="btn">&laquo; back home</a>
+		</li>
+	</ul>
 
 
 	<div n:snippet="flashes">
@@ -40,4 +50,5 @@
 <script src="{$basePath}/{='js/nette.ajax.js'|mtime}"></script>
 <script src="{$basePath}/{='js/bootstrap.min.js'|mtime}"></script>
 <script src="{$basePath}/{='js/twigrid.datagrid.js'|mtime}"></script>
+<script src="{$basePath}/{='js/highlight.js/highlight.pack.js'|mtime}"></script>
 <script src="{$basePath}/{='js/script.js'|mtime}"></script>

@@ -1,0 +1,13 @@
+{extends '@grid.latte'}
+
+
+
+{block h2}Few columns with sorting ability{/block}
+
+
+
+{block content}
+
+{include #grid, grid => 'simpleGrid', sources => $sourceDir . '/SimpleGrid.php'}
+
+{/block}

@@ -1,3 +1,21 @@
+body {
+	padding: 0 0 128px;
+}
+
+
+
+.hero-unit h2 {
+	margin: 16px 0 32px;
+	font-size: 230%;
+	text-align: center;
+}
+
+.hero-unit ul {
+	text-align: center;
+}
+
+
+
 .tw-cnt .numeric {
 	width: 82px;
 }

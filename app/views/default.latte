@@ -1,22 +1,41 @@
 {extends '../layout.latte'}
 
+
+
 {block content}
 
-	<ul class="inline" n:snippet="links">
-		<li>
-			<a n:href="this, showQueries => !$showQueries" class="btn btn-info">{$showQueries ? 'Hide SQL queries' : 'Show SQL queries'}</a>
-		</li>
+	<div class="hero-unit">
+		<h2>Choose an example</h2>
 
-		<li>
-			<a n:href="this" class="btn btn-success" title="Kotva aktuálního stavu datagridu"># state anchor</a>
-		</li>
-	</ul>
+		<ul class="inline">
+			<li>
+				<a n:href="simple" class="btn btn-large">Simple</a>
+			</li>
 
-	<div id="queries"></div>
-	<noscript n:if="$showQueries"><div class="alert alert-error">For viewing SQL queries please enable Javascript.</div></noscript>
+			<li>
+				<a n:href="filtering" class="btn btn-large btn-primary">Filtering</a>
+			</li>
 
-{block |indent:1}{control dataGrid}{/block}
+			<li>
+				<a n:href="rowActions" class="btn btn-large btn-info">Row actions</a>
+			</li>
 
-	<script type="text/javascript" n:if="$showQueries">var g_Queries = {$presenter->payload->queries};</script>
+			<li>
+				<a n:href="groupActions" class="btn btn-large btn-success">Group actions</a>
+			</li>
+
+			<li>
+				<a n:href="inline" class="btn btn-large btn-warning">Inline editing</a>
+			</li>
+
+			<li>
+				<a n:href="pagination" class="btn btn-large btn-danger">Pagination</a>
+			</li>
+
+			<li>
+				<a n:href="full" class="btn btn-large btn-inverse">Full featured</a>
+			</li>
+		</ul>
+	</div>
 
 {/block}

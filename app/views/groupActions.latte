@@ -1,0 +1,12 @@
+{extends '@grid.latte'}
+
+
+
+{block h2}Manipulating with multiple records via group actions{/block}
+
+
+{block content}
+
+{include #grid, grid => 'groupActionGrid', sources => $sourceDir . '/GroupActionGrid.php'}
+
+{/block}

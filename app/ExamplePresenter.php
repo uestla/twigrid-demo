@@ -1,7 +1,5 @@
 <?php
 
-use Nette\Forms\Form;
-
 
 class ExamplePresenter extends Nette\Application\UI\Presenter
 {
@@ -17,153 +15,77 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 
 
-	// === DATAGRID DEFINITION ==================================================================
-
-	protected function createComponentDataGrid()
+	/** @return void */
+	protected function beforeRender()
 	{
-		$grid = $this->context->createDataGrid();
-		$grid->setTemplateFile(__DIR__ . '/user-grid.latte');
+		parent::beforeRender();
 
-		$grid->addColumn('firstname', 'Name')->setSortable();
-		$grid->addColumn('surname', 'Surname')->setSortable();
-		$grid->addColumn('country_code', 'Country');
-		$grid->addColumn('birthday', 'Birthdate')->setSortable();
-		$grid->addColumn('kilograms', 'Weight (kg)')->setSortable();
-
-		$grid->setPrimaryKey('id');
-		$grid->setFilterFactory($this->createFilterContainer);
-		$grid->setDataLoader($this->dataLoader);
-
-		$grid->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
-		$grid->addRowAction('delete', 'Delete', $this->deleteRecord, 'Do you really want to delete this record?');
-		$grid->addGroupAction('edit', 'Delete', $this->deleteMany, 'WARNING! Deleted records cannot be restored! Proceed?');
-
-		$grid->setDefaultOrderBy('surname');
-		$grid->setDefaultFilters(array(
-			'kilograms' => 70,
-			'birthday' => array(
-				'min' => '15. 01. 1961',
-				'max' => '28. 11. 1996',
-			),
-		));
-
-		return $grid;
+		$this->template->sourceDir = __DIR__ . '/grids';
 	}
 
 
 
-	function createFilterContainer()
+	// === DATAGRIDS ==================================================================
+
+	/** @return SimpleGrid */
+	protected function createComponentSimpleGrid()
 	{
-		$container = new Nette\Forms\Container;
-
-		$container->addText('firstname');
-		$container->addText('surname');
-
-		$birthday = $container->addContainer('birthday');
-		$min = Helpers::addDateInput( $birthday, 'min' );
-		$max = Helpers::addDateInput( $birthday, 'max' );
-
-		$parser = callback('Helpers::parseDate');
-		$min->addCondition(Form::FILLED)->addRule(function () use ($min, $max, $parser) {
-			return !$max->filled
-					|| (($minDt = $parser($min->value)) !== FALSE
-						&& ($maxDt = $parser($max->value)) !== FALSE
-						&& $minDt <= $maxDt);
-		}, 'Please select valid date range.');
-
-		$container->addSelect('country_code', 'Country', Helpers::getCountries())
-				->setPrompt('---');
-
-		$container->addText('kilograms')->addCondition( Form::FILLED )->addRule( Form::FLOAT );
-
-		return $container;
+		$cc = $this->context->createSimpleGrid();
+		return $cc;
 	}
 
 
 
-	function createInlineEditContainer($record)
+	/** @return FilterGrid */
+	protected function createComponentFilterGrid()
 	{
-		$container = new Nette\Forms\Container;
-		$container->addText('firstname')->setRequired();
-		$container->addText('surname')->setRequired();
-		$container->addSelect('country_code', 'Country', Helpers::getCountries())->setRequired()
-				->setDefaultValue($record->country_code);
-		Helpers::addDateInput($container, 'birthday')->setRequired();
-		$container->addText('kilograms')->addRule(Form::FLOAT);
-		$defaults = $record->toArray();
-		$defaults['birthday'] = id( new DateTime($defaults['birthday']) )->format('d. m. Y');
-		return $container->setDefaults( $defaults );
+		$cc = $this->context->createFilterGrid();
+		return $cc;
 	}
 
 
 
-	function dataLoader(TwiGrid\DataGrid $grid, array $columns, array $order, array $filters)
+	/** @return RowActionGrid */
+	protected function createComponentRowActionGrid()
 	{
-		// selection factory
-		$users = $this->ndb->table('user');
-
-		// columns
-		$users->select( implode(', ', $columns) );
-
-		// order result
-		foreach ($order as $column => $desc) {
-			$users->order( $column . ($desc ? ' DESC' : '') );
-		}
-
-		// filter result
-		$conds = array();
-		foreach ($filters as $column => $value) {
-			if ($column === 'gender') {
-				$conds[ $column ] = $value;
-
-			} elseif ($column === 'country_code') {
-				$conds[$column] = $value;
-
-			} elseif ($column === 'birthday') {
-				isset($value['min']) && $conds["$column >= ?"] = Helpers::parseDate( $value['min'] )->format('Y-m-d');
-				isset($value['max']) && $conds["$column <= ?"] = Helpers::parseDate( $value['max'] )->format('Y-m-d');
-
-			} elseif ($column === 'kilograms') {
-				$conds["$column <= ?"] = $value;
-
-			} elseif ($column === 'firstname' || $column === 'surname') {
-				$conds["$column LIKE ?"] = "$value%";
-
-			} elseif (isset($columns[$column])) {
-				$conds["$column LIKE ?"] = "%$value%";
-			}
-		}
-
-		return $users->where($conds)->limit(12);
+		$cc = $this->context->createRowActionGrid();
+		return $cc;
 	}
 
 
 
-	// === DATA MANIPULATIONS ===============================================================
-
-	function deleteRecord($id)
+	/** @return GroupActionGrid */
+	protected function createComponentGroupActionGrid()
 	{
-		// $this->ndb->table('user')->find($id)->delete();
-		$this->flashMessage("Deletion request sent for record '$id'.", 'warning');
-		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
+		$cc = $this->context->createGroupActionGrid();
+		return $cc;
 	}
 
 
 
-	function processInlineEditForm($id, array $values)
+	/** @return InlineGrid */
+	protected function createComponentInlineGrid()
 	{
-		// $this->ndb->table('user')->find($id)->update($values);
-		$this->flashMessage("Update request sent for record '$id'; new values: " . Nette\Utils\Json::encode($values), 'success' );
-		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
+		$cc = $this->context->createInlineGrid();
+		return $cc;
 	}
 
 
 
-	function deleteMany(array $primaries)
+	/** @return PaginationGrid */
+	protected function createComponentPaginationGrid()
 	{
-		// $this->ndb->table('user')->where('id', $primaries)->delete();
-		$this->flashMessage('Records deletion request : ' . Nette\Utils\Json::encode($primaries), 'success');
-		// !$this->isAjax() && $this->redirect('this'); // intentionally not redirecting (it's in the grid call)
+		$cc = $this->context->createPaginationGrid();
+		return $cc;
+	}
+
+
+
+	/** @return FullGrid */
+	protected function createComponentFullGrid()
+	{
+		$cc = $this->context->createFullGrid();
+		return $cc;
 	}
 
 
@@ -194,10 +116,10 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		Helpers::loadClientScripts($this->cache, __DIR__ . '/..');
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
-		id ($template = parent::createTemplate($class))->showQueries = $this->showQueries;
+		id($template = parent::createTemplate($class))->showQueries = $this->showQueries;
 		return $template
-				->registerHelper('mtime', function ($f) { return $f . '?' . filemtime( __DIR__ . '/../' . $f ); })
-				->setFile( __DIR__ . "/views/{$this->view}.latte" );
+				->registerHelper('mtime', function ($f) { return $f . '?' . filemtime(__DIR__ . '/../' . $f); })
+				->setFile(__DIR__ . "/views/{$this->view}.latte");
 	}
 
 }

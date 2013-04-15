@@ -1,0 +1,13 @@
+{extends '@grid.latte'}
+
+
+
+{block h2}Full featured example{/block}
+
+
+
+{block content}
+
+{include #grid, grid => 'fullGrid', sources => [ $sourceDir . '/FullGrid.php', $sourceDir . '/@full.latte' ]}
+
+{/block}

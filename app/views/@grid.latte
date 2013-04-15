@@ -1,0 +1,51 @@
+{extends '../layout.latte'}
+
+
+
+{define grid}
+
+	<ul class="inline" n:snippet="links">
+		<li>
+			<a n:href="this, showQueries => !$showQueries" class="btn btn-info">
+				{$showQueries ? 'Hide SQL queries' : 'Show SQL queries'}
+			</a>
+		</li>
+
+		<li>
+			<a n:href="this" class="btn btn-success" title="Actual datagrid state anchor"># state anchor</a>
+		</li>
+	</ul>
+
+	<div id="queries"></div>
+	<noscript n:if="$showQueries">
+		<div class="alert alert-error">For viewing SQL queries please enable Javascript.</div>
+	</noscript>
+
+
+	{control $grid}
+
+
+	<script type="text/javascript" n:if="$showQueries">var g_Queries = {$presenter->payload->queries};</script>
+
+
+	<h2 id="code">Code</h2>
+
+	<ul class="inline" n:if="count($sources) > 1">
+		<li n:foreach="$sources as $file">
+			<a href="#src-{basename($file)|webalize}">{basename($file)}</a>
+		</li>
+	</ul>
+
+	{foreach (array) $sources as $file}
+	<h3 id="src-{basename($file)|webalize}">
+		<a href="#src-{basename($file)|webalize}">#</a>
+		{basename($file)}
+		<a href="#code" n:if="count($sources) > 1">&uArr;</a>
+	</h3>
+
+	<pre><code class="{pathinfo($file, PATHINFO_EXTENSION)}">
+{file_get_contents('safe://' . $file) |replaceRE:'#^<\?php#':''|trim}
+	</code></pre>
+	{/foreach}
+
+{/define}
