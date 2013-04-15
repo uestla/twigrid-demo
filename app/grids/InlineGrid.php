@@ -29,12 +29,14 @@ class InlineGrid extends TwiGrid\DataGrid
 
 
 
-	function inlineEditFactory()
+	function inlineEditFactory(Nette\Database\Table\ActiveRow $record)
 	{
 		$c = new Nette\Forms\Container;
 
 		$c->addText('firstname')->setRequired();
 		$c->addText('surname')->setRequired();
+
+		$c->setDefaults($record->toArray());
 
 		return $c;
 	}
