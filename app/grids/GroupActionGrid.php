@@ -20,15 +20,10 @@ class GroupActionGrid extends TwiGrid\DataGrid
 		$this->addColumn('country_code', 'Country');
 		$this->addColumn('birthday', 'Birthdate');
 
-		$me = $this;
-		$this->addGroupAction('export', 'Export', function (array $ids) use ($me) {
-			$me->flashMessage('Exporting items ' . Nette\Utils\Json::encode($ids), 'success');
-		});
+		$this->addGroupAction('export', 'Export', $this->exportMany);
 
-		$this->addGroupAction('delete', 'Delete', function (array $ids) use ($me) {
-			$me->flashMessage('Deleting items ' . Nette\Utils\Json::encode($ids), 'success');
-
-		}, 'Do you really want to delete all chosen items?');
+		$this->addGroupAction('delete', 'Delete', $this->deleteMany)
+			->setConfirmation('Do you really want to delete all chosen items?');
 
 		$this->setDataLoader($this->dataLoader);
 	}
@@ -40,6 +35,20 @@ class GroupActionGrid extends TwiGrid\DataGrid
 		return $this->connection->table('user')
 			->select(implode(', ', $columns))
 			->limit(12);
+	}
+
+
+
+	function exportMany(array $ids)
+	{
+		$this->flashMessage('Exporting items ' . Nette\Utils\Json::encode($ids), 'success');
+	}
+
+
+
+	function deleteMany(array $ids)
+	{
+		$this->flashMessage('Deleting items ' . Nette\Utils\Json::encode($ids), 'success');
 	}
 
 }

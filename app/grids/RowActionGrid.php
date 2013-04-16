@@ -20,15 +20,11 @@ class RowActionGrid extends TwiGrid\DataGrid
 		$this->addColumn('country_code', 'Country');
 		$this->addColumn('birthday', 'Birthdate');
 
-		$me = $this;
-		$this->addRowAction('download', 'Download', function ($id) use ($me) {
-			$me->flashMessage("Downloading item '$id'...", 'success');
-		});
+		$this->addRowAction('download', 'Download', $this->downloadItem)
+			->setProtected(FALSE);
 
-		$this->addRowAction('delete', 'Delete', function ($id) use ($me) {
-			$me->flashMessage("Deleting item '$id'...", 'success');
-
-		}, 'Do you really want to delete this item?');
+		$this->addRowAction('delete', 'Delete', $this->deleteItem)
+			->setConfirmation('Do you really want to delete this item?');
 
 		$this->setDataLoader($this->dataLoader);
 	}
@@ -40,6 +36,20 @@ class RowActionGrid extends TwiGrid\DataGrid
 		return $this->connection->table('user')
 			->select(implode(', ', $columns))
 			->limit(12);
+	}
+
+
+
+	function downloadItem($id)
+	{
+		$this->flashMessage("Downloading item '$id'...", 'success');
+	}
+
+
+
+	function deleteItem($id)
+	{
+		$this->flashMessage("Deleting item '$id'...", 'success');
 	}
 
 }

@@ -30,8 +30,11 @@ class FullGrid extends TwiGrid\DataGrid
 		$this->setPagination(12, $this->itemCounter);
 		$this->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
 
-		$this->addRowAction('delete', 'Delete', $this->deleteRecord, 'Do you really want to delete this record?');
-		$this->addGroupAction('edit', 'Delete', $this->deleteMany, 'WARNING! Deleted records cannot be restored! Proceed?');
+		$this->addRowAction('delete', 'Delete', $this->deleteRecord)
+			->setConfirmation('Do you really want to delete this record?');
+
+		$this->addGroupAction('edit', 'Delete', $this->deleteMany)
+			->setConfirmation('WARNING! Deleted records cannot be restored! Proceed?');
 
 		$this->setDefaultOrderBy('surname');
 		$this->setDefaultFilters(array(
