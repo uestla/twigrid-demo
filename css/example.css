@@ -21,6 +21,10 @@ body {
 	max-width: 192px;
 }
 
+.tip-box + .tip-box {
+	margin-right: 20px;
+}
+
 
 
 .tw-cnt .numeric {
