@@ -16,6 +16,13 @@ body {
 
 
 
+.tip-box {
+	padding-right: 14px;
+	max-width: 192px;
+}
+
+
+
 .tw-cnt .numeric {
 	width: 82px;
 }
