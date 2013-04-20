@@ -7,6 +7,8 @@
 
 {block content}
 
+{include #tip-box, tip => 'Note that $limit and $offset parameters are appended to the dataLoader callback.'}
+
 {include #grid, grid => 'paginationGrid', sources => $sourceDir . '/PaginationGrid.php'}
 
 {/block}
