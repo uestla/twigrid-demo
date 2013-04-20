@@ -16,6 +16,12 @@ body {
 
 
 
+.grid-cnt {
+	min-height: 680px;
+}
+
+
+
 .tip-box {
 	padding-right: 14px;
 	max-width: 200px;
@@ -64,3 +70,4 @@ body {
 .tw-cnt input.max.date {
 	right: 0;
 }
+
