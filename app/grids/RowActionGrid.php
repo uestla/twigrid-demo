@@ -21,7 +21,7 @@ class RowActionGrid extends TwiGrid\DataGrid
 		$this->addColumn('birthday', 'Birthdate');
 
 		$this->addRowAction('download', 'Download', $this->downloadItem)
-			->setProtected(FALSE); // turns of the CSRF protection
+			->setProtected(FALSE); // turns of the CSRF protection (not necessary here)
 
 		$this->addRowAction('delete', 'Delete', $this->deleteItem)
 			->setConfirmation('Do you really want to delete this item?');
