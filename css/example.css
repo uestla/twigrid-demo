@@ -10,8 +10,9 @@ body {
 	text-align: center;
 }
 
-.hero-unit ul {
+.hero-unit ul.examples {
 	text-align: center;
+	line-height: 60px;
 }
 
 
