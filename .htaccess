@@ -23,3 +23,8 @@
         RewriteCond %{REQUEST_FILENAME} !-d
         RewriteRule (.*) index.php [L]
 </IfModule>
+
+# enable gzip compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript text/javascript application/javascript application/json
+</IfModule>
