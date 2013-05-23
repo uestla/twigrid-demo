@@ -114,8 +114,8 @@ class FullGrid extends TwiGrid\DataGrid
 
 
 	/**
-	 * @param  array
-	 * @param  array
+	 * @param  array $columns
+	 * @param  array $filters
 	 * @return int
 	 */
 	function itemCounter(array $columns, array $filters)
@@ -127,8 +127,9 @@ class FullGrid extends TwiGrid\DataGrid
 
 
 	/**
-	 * @param  NSelection
-	 * @param  array
+	 * @param  NSelection $data
+	 * @param  array $columns
+	 * @param  array $filters
 	 * @return NSelection
 	 */
 	protected static function filterData(Nette\Database\Table\Selection $data, array $columns, array $filters)
@@ -161,8 +162,8 @@ class FullGrid extends TwiGrid\DataGrid
 
 
 	/**
-	 * @param  NSelection
-	 * @param  array
+	 * @param  NSelection $data
+	 * @param  array $order
 	 * @return NSelection
 	 */
 	protected static function orderData(Nette\Database\Table\Selection $data, array $order)
