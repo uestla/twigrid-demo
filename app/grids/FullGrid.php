@@ -168,8 +168,8 @@ class FullGrid extends TwiGrid\DataGrid
 	 */
 	protected static function orderData(Nette\Database\Table\Selection $data, array $order)
 	{
-		foreach ($order as $column => $desc) {
-			$data->order($column . ($desc ? ' DESC' : ''));
+		foreach ($order as $column => $dir) {
+			$data->order($column . ($dir === TwiGrid\Components\Column::DESC ? ' DESC' : ''));
 		}
 
 		return $data;

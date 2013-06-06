@@ -61,8 +61,8 @@ class FilterGrid extends TwiGrid\DataGrid
 		}
 
 		// sorting
-		foreach ($order as $column => $desc) {
-			$users->order($column . ($desc ? ' DESC' : ''));
+		foreach ($order as $column => $dir) {
+			$users->order($column . ($dir === TwiGrid\Components\Column::DESC ? ' DESC' : ''));
 		}
 
 		return $users->limit(12);
