@@ -1,6 +1,7 @@
 <?php
 
 use Nette\Forms\Form;
+use TwiGrid\Components\Column;
 
 
 class FullGrid extends TwiGrid\DataGrid
@@ -36,7 +37,11 @@ class FullGrid extends TwiGrid\DataGrid
 		$this->addGroupAction('edit', 'Delete', $this->deleteMany)
 			->setConfirmation('WARNING! Deleted records cannot be restored! Proceed?');
 
-		$this->setDefaultOrderBy('surname');
+		$this->setDefaultOrderBy(array(
+			'surname' => Column::ASC,
+			'firstname' => Column::DESC,
+		));
+
 		$this->setDefaultFilters(array(
 			'kilograms' => 70,
 			'birthday' => array(
