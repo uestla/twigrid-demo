@@ -14,9 +14,12 @@ class InlineGrid extends TwiGrid\DataGrid
 		parent::__construct($s);
 		$this->connection = $connection;
 
+		$this->setTemplateFile(__DIR__ . '/@inline.latte');
+
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name');
 		$this->addColumn('surname', 'Surname');
+		$this->addColumn('biography', 'Biography');
 		$this->addColumn('country_code', 'Country');
 
 		$me = $this;
@@ -35,6 +38,7 @@ class InlineGrid extends TwiGrid\DataGrid
 
 		$c->addText('firstname')->setRequired();
 		$c->addText('surname')->setRequired();
+		$c->addTextarea('biography')->setRequired()->setAttribute('rows', 6);
 
 		$c->setDefaults($record->toArray());
 
