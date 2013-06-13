@@ -83,3 +83,8 @@ body {
 	right: 0;
 }
 
+
+
+.fade {
+	opacity: 0.5;
+}
