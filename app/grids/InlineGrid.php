@@ -38,7 +38,7 @@ class InlineGrid extends TwiGrid\DataGrid
 
 		$c->addText('firstname')->setRequired();
 		$c->addText('surname')->setRequired();
-		$c->addTextarea('biography')->setRequired()->setAttribute('rows', 6);
+		$c->addTextarea('biography')->setRequired()->setAttribute('rows', 7);
 
 		$c->setDefaults($record->toArray());
 
