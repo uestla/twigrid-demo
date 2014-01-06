@@ -7,11 +7,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @persistent bool */
 	public $showQueries = FALSE;
 
-	/** @var Nette\Database\Connection */
-	protected $ndb;
+	/** @var \Nette\Database\Context @inject */
+	public $dbContext;
 
 	/** @var Nette\Caching\Cache */
-	protected $cache;
+	private $cache;
 
 
 
@@ -30,8 +30,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return SimpleGrid */
 	protected function createComponentSimpleGrid()
 	{
-		$cc = $this->context->createSimpleGrid();
-		return $cc;
+		return $this->context->createService('simpleGrid');
 	}
 
 
@@ -39,8 +38,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return FilterGrid */
 	protected function createComponentFilterGrid()
 	{
-		$cc = $this->context->createFilterGrid();
-		return $cc;
+		return $this->context->createService('filterGrid');
 	}
 
 
@@ -48,8 +46,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return RowActionGrid */
 	protected function createComponentRowActionGrid()
 	{
-		$cc = $this->context->createRowActionGrid();
-		return $cc;
+		return $this->context->createService('rowActionGrid');
 	}
 
 
@@ -57,8 +54,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return GroupActionGrid */
 	protected function createComponentGroupActionGrid()
 	{
-		$cc = $this->context->createGroupActionGrid();
-		return $cc;
+		return $this->context->createService('groupActionGrid');
 	}
 
 
@@ -66,8 +62,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return InlineGrid */
 	protected function createComponentInlineGrid()
 	{
-		$cc = $this->context->createInlineGrid();
-		return $cc;
+		return $this->context->createService('inlineGrid');
 	}
 
 
@@ -75,8 +70,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return PaginationGrid */
 	protected function createComponentPaginationGrid()
 	{
-		$cc = $this->context->createPaginationGrid();
-		return $cc;
+		return $this->context->createService('paginationGrid');
 	}
 
 
@@ -84,33 +78,43 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @return FullGrid */
 	protected function createComponentFullGrid()
 	{
-		$cc = $this->context->createFullGrid();
-		return $cc;
+		return $this->context->createService('fullGrid');
 	}
 
 
 
 	// === APP-RELATED STUFF & HELPERS ===============================================================
 
-	function inject(Nette\Database\Connection $c, Nette\Caching\IStorage $s)
+	/**
+	 * @param  Nette\Caching\IStorage $s
+	 * @return void
+	 */
+	function inject(Nette\Caching\IStorage $s)
 	{
-		$this->ndb = $c;
 		$this->cache = new Nette\Caching\Cache($s, __CLASS__);
 	}
 
 
 
+	/**
+	 * @param  array $params
+	 * @return void
+	 */
 	function loadState(array $params)
 	{
 		parent::loadState($params);
 
 		if ($this->showQueries) {
-			Helpers::initQueryLogging($this->ndb, $this->payload);
+			Helpers::initQueryLogging($this->dbContext->getConnection(), $this->payload);
 		}
 	}
 
 
 
+	/**
+	 * @param  string $class
+	 * @return \Nette\Templating\ITemplate
+	 */
 	protected function createTemplate($class = NULL)
 	{
 		Helpers::loadClientScripts($this->cache, __DIR__ . '/..');

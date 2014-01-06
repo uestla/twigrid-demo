@@ -4,15 +4,15 @@
 class InlineGrid extends TwiGrid\DataGrid
 {
 
-	/** @var Nette\Database\Connection */
-	protected $connection;
+	/** @var Nette\Database\Context */
+	private $dbContext;
 
 
 
-	function __construct(Nette\Http\Session $s, Nette\Database\Connection $connection)
+	function __construct(Nette\Http\Session $s, Nette\Database\Context $dbContext)
 	{
 		parent::__construct($s);
-		$this->connection = $connection;
+		$this->dbContext = $dbContext;
 
 		$this->setTemplateFile(__DIR__ . '/@inline.latte');
 
@@ -49,7 +49,7 @@ class InlineGrid extends TwiGrid\DataGrid
 
 	function dataLoader(InlineGrid $grid, array $columns, array $filters, array $order)
 	{
-		return $this->connection->table('user')
+		return $this->dbContext->table('user')
 			->select(implode(', ', $columns))
 			->limit(12);
 	}

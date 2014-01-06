@@ -4,7 +4,7 @@
 class SimpleGrid extends TwiGrid\DataGrid
 {
 
-	function __construct(Nette\Http\Session $s, Nette\Database\Connection $connection)
+	function __construct(Nette\Http\Session $s, Nette\Database\Context $dbContext)
 	{
 		parent::__construct($s);
 
@@ -15,8 +15,8 @@ class SimpleGrid extends TwiGrid\DataGrid
 		$this->addColumn('birthday', 'Birthdate')->setSortable();
 		$this->addColumn('kilograms', 'Weight (kg)')->setSortable();
 
-		$this->setDataLoader(function ($grid, array $columns, array $filters, array $order) use ($connection) {
-			$users = $connection->table('user');
+		$this->setDataLoader(function ($grid, array $columns, array $filters, array $order) use ($dbContext) {
+			$users = $dbContext->table('user');
 
 			// columns
 			$users->select(implode(', ', $columns));

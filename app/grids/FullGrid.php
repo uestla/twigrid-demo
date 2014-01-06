@@ -7,15 +7,15 @@ use TwiGrid\Components\Column;
 class FullGrid extends TwiGrid\DataGrid
 {
 
-	/** @var Nette\Database\Connection */
-	protected $connection;
+	/** @var Nette\Database\Context */
+	private $dbContext;
 
 
 
-	function __construct(Nette\Http\Session $s, Nette\Database\Connection $connection)
+	function __construct(Nette\Http\Session $s, Nette\Database\Context $dbContext)
 	{
 		parent::__construct($s);
-		$this->connection = $connection;
+		$this->dbContext = $dbContext;
 
 		$this->setTemplateFile(__DIR__ . '/@full.latte');
 
@@ -24,7 +24,7 @@ class FullGrid extends TwiGrid\DataGrid
 		$this->addColumn('surname', 'Surname')->setSortable();
 		$this->addColumn('country_code', 'Country');
 		$this->addColumn('birthday', 'Birthdate')->setSortable();
-		$this->addColumn('kilograms', 'Weight (kg)')->setSortable();
+		$this->addColumn('kilograms', 'W (kg)')->setSortable();
 
 		$this->setFilterFactory($this->createFilterContainer);
 		$this->setDataLoader($this->dataLoader);
@@ -34,7 +34,7 @@ class FullGrid extends TwiGrid\DataGrid
 		$this->addRowAction('delete', 'Delete', $this->deleteRecord)
 			->setConfirmation('Do you really want to delete this record?');
 
-		$this->addGroupAction('edit', 'Delete', $this->deleteMany)
+		$this->addGroupAction('delete', 'Delete', $this->deleteMany)
 			->setConfirmation('WARNING! Deleted records cannot be restored! Proceed?');
 
 		$this->setDefaultOrderBy(array(
@@ -45,7 +45,7 @@ class FullGrid extends TwiGrid\DataGrid
 		$this->setDefaultFilters(array(
 			'kilograms' => 70,
 			'birthday' => array(
-				'min' => '15. 01. 1961',
+				'min' => '01. 01. 1970',
 				'max' => '28. 11. 1996',
 			),
 		));
@@ -101,7 +101,7 @@ class FullGrid extends TwiGrid\DataGrid
 	function dataLoader(TwiGrid\DataGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
 	{
 		// selection factory
-		$users = $this->connection->table('user');
+		$users = $this->dbContext->table('user');
 
 		// columns
 		$users->select(implode(', ', $columns));
@@ -125,7 +125,7 @@ class FullGrid extends TwiGrid\DataGrid
 	 */
 	function itemCounter(array $columns, array $filters)
 	{
-		return static::filterData($this->connection->table('user'), $columns, $filters)
+		return static::filterData($this->dbContext->table('user'), $columns, $filters)
 				->count('*');
 	}
 

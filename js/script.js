@@ -20,8 +20,10 @@ $(function () {
 	// === datepicker ====================
 
 	(datepickers = function (parent) {
-		parent.find('input.date').datepicker({
-			dateFormat: 'dd. mm. yy'
+		parent.find('input.date').datetimepicker({
+			pickTime: false,
+			format: 'DD. MM. YYYY'
+
 		}).on('show', function (event) {
 			var el = $(event.target);
 			el.attr('value') === '' && (el.attr('value', el.hasClass('min') ? '1950-05-02' : '2000-01-01'));

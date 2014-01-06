@@ -13,14 +13,34 @@ common:
 		database:
 			dsn: 'sqlite:%appDir%/users.s3db'
 
-	factories:
-		simpleGrid: SimpleGrid( ..., ... )
-		filterGrid: FilterGrid( ..., ... )
-		rowActionGrid: RowActionGrid( ..., ... )
-		groupActionGrid: GroupActionGrid( ..., ... )
-		inlineGrid: InlineGrid( ..., ... )
-		paginationGrid: PaginationGrid( ..., ... )
-		fullGrid: FullGrid( ..., ... )
+	services:
+		simpleGrid:
+			factory: SimpleGrid( ..., ... )
+			autowired: FALSE
+
+		filterGrid:
+			factory: FilterGrid( ..., ... )
+			autowired: FALSE
+
+		rowActionGrid:
+			factory: RowActionGrid( ..., ... )
+			autowired: FALSE
+
+		groupActionGrid:
+			factory: GroupActionGrid( ..., ... )
+			autowired: FALSE
+
+		inlineGrid:
+			factory: InlineGrid( ..., ... )
+			autowired: FALSE
+
+		paginationGrid:
+			factory: PaginationGrid( ..., ... )
+			autowired: FALSE
+
+		fullGrid:
+			factory: FullGrid( ..., ... )
+			autowired: FALSE
 
 development < common:
 

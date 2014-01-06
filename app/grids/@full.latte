@@ -5,8 +5,8 @@
 {define filter-cell-birthday}
 	<th class="birthday nowrap">
 		<div>
-			{? }{input filters-criteria-$column-min, class => 'date min', placeholder => min}
-			{? }{input filters-criteria-$column-max, class => 'date max', placeholder => max}
+			{? }{input filters-criteria-$column-min, class => 'form-control date min', placeholder => 'min'}
+			{? }{input filters-criteria-$column-max, class => 'form-control date max', placeholder => 'max'}
 			&ndash;
 		</div>
 	</th>
@@ -16,7 +16,7 @@
 
 {define filter-cell-kilograms}
 	<th class="numeric">
-		{? }{input filters-criteria-$column}
+		{? }{input filters-criteria-$column, class => 'form-control'}
 	</th>
 {/define}
 
@@ -29,13 +29,13 @@
 
 
 {define body-cell-birthday-inline}
-	<td>{input inline-values-$column, class => 'date center'}</td>
+	<td>{input inline-values-$column, class => 'form-control date center'}</td>
 {/define}
 
 
 
 {define body-cell-country_code}
-	<td>{$record->ref( country, country_code )->title}</td>
+	<td>{$record->ref('country', 'country_code')->title}</td>
 {/define}
 
 
@@ -47,13 +47,13 @@
 
 
 {define body-cell-kilograms-inline}
-	<td class="numeric">{input inline-values-$column}</td>
+	<td class="numeric">{input inline-values-$column, class => 'form-control'}</td>
 {/define}
 
 
 
 {define row-action-delete}
-	<a href="{$link}" class="btn btn-danger btn-small tw-ajax" data-confirm="{$action->confirmation}">
+	<a href="{$link}" class="btn btn-danger btn-sm tw-ajax" data-tw-confirm="{$action->confirmation}">
 		{$action->label}
 	</a>
 {/define}

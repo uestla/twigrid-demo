@@ -4,26 +4,29 @@ body {
 
 
 
-.hero-unit h2 {
+.jumbotron h2 {
 	margin: 16px 0 32px;
 	font-size: 230%;
 	text-align: center;
 }
 
-.hero-unit .promo {
+.jumbotron .promo {
 	margin: 0 0 48px;
 	padding: 0 0 48px;
 	border-bottom: 1px solid #bbb;
 }
 
-.hero-unit ul.examples {
+.jumbotron ul.examples {
 	text-align: center;
-	line-height: 60px;
 }
 
-.hero-unit .row-fluid .span7 {
+.jumbotron ul.examples li {
+	margin: 0 0 16px;
+}
+
+.jumbotron .row .col-xs-6 + .col-xs-6 {
 	border-left: 1px solid #bbb;
-	min-height: 338px;
+	min-height: 420px;
 }
 
 
@@ -54,7 +57,7 @@ body {
 }
 
 .tw-cnt .birthday {
-	width: 166px;
+	width: 256px;
 	line-height: 26px;
 	text-align: center;
 }
@@ -70,9 +73,9 @@ body {
 .tw-cnt input.date.min, .tw-cnt input.date.max {
 	position: absolute;
 	top: 50%;
-	margin: -15px 0 0;
-	width: 90px;
-	height: 30px;
+	margin: -20px 0 0;
+	width: 108px;
+	height: 34px;
 }
 
 .tw-cnt input.min.date {

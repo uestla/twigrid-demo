@@ -4,15 +4,15 @@
 class PaginationGrid extends TwiGrid\DataGrid
 {
 
-	/** @var Nette\Database\Connection */
-	protected $connection;
+	/** @var Nette\Database\Context */
+	private $dbContext;
 
 
 
-	function __construct(Nette\Http\Session $s, Nette\Database\Connection $connection)
+	function __construct(Nette\Http\Session $s, Nette\Database\Context $dbContext)
 	{
 		parent::__construct($s);
-		$this->connection = $connection;
+		$this->dbContext = $dbContext;
 
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name')->setSortable();
@@ -27,14 +27,14 @@ class PaginationGrid extends TwiGrid\DataGrid
 
 	function userCounter(array $columns, array $filters)
 	{
-		return $this->connection->table('user')->count('*');
+		return $this->dbContext->table('user')->count('*');
 	}
 
 
 
 	function dataLoader(PaginationGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
 	{
-		$users = $this->connection->table('user');
+		$users = $this->dbContext->table('user');
 
 		// columns
 		$users->select(implode(', ', $columns));

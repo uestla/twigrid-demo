@@ -1,10 +1,8 @@
 <title>TwiGrid example</title>
 
-<link href="{$basePath}/{='css/bootstrap.min.css'|mtime}" rel="stylesheet">            <!-- required for datagrid styling -->
-<link href="{$basePath}/{='css/bootstrap-responsive.min.css'|mtime}" rel="stylesheet">
-<link href="{$basePath}/{='css/twigrid.datagrid.css'|mtime}" rel="stylesheet">         <!-- required for datagrid styling -->
-<link href="{$basePath}/{='css/jquery-ui-bootstrap-theme/jquery-ui-1.8.16.custom.css'|mtime}" rel="stylesheet">
-<link href="{$basePath}/{='css/jquery-ui-bootstrap-theme/jquery.ui.1.8.16.ie.css'|mtime}" rel="stylesheet">
+<link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+<link href="{$basePath}/{='css/bootstrap-datetimepicker.min.css' |mtime}" rel="stylesheet">
+<link href="{$basePath}/{='css/twigrid.datagrid.css' |mtime}" rel="stylesheet">  <!-- required for datagrid styling -->
 <link href="{$basePath}/{='css/highlight.js/github.css'|mtime}" rel="stylesheet">
 <link href="{$basePath}/{='css/example.css'|mtime}" rel="stylesheet">
 
@@ -14,7 +12,7 @@
 	<div class="page-header">
 		<div class="pull-right">
 			<a href="https://github.com/uestla/twigrid/archive/master.zip" class="btn btn-success">
-				<i class="icon-download icon-white"></i>
+				<span class="glyphicon glyphicon-download"></span>
 				Download
 			</a>
 		</div>
@@ -33,9 +31,9 @@
 
 	{ifset #h2}<h2>{include #h2}</h2>{/ifset}
 
-	<ul class="pull-left inline" n:if="$presenter->action !== 'default'">
+	<ul class="pull-left list-inline" n:if="$presenter->action !== 'default'">
 		<li>
-			<a n:href="default" class="btn">&laquo; back home</a>
+			<a n:href="default" class="btn btn-default">&laquo; back home</a>
 		</li>
 	</ul>
 
@@ -51,12 +49,13 @@
 </div>
 
 
-<script src="{$basePath}/{='js/jquery.js'|mtime}"></script>
-<script src="{$basePath}/{='js/jquery-ui-1.9.2.custom.min.js'|mtime}"></script>
-<script src="{$basePath}/{='js/jquery-ui-datepicker-cs.js'|mtime}"></script>
-<script src="{$basePath}/{='js/nette.forms.js'|mtime}"></script>
-<script src="{$basePath}/{='js/nette.ajax.js'|mtime}"></script>
-<script src="{$basePath}/{='js/bootstrap.min.js'|mtime}"></script>
-<script src="{$basePath}/{='js/twigrid.datagrid.js'|mtime}"></script>
-<script src="{$basePath}/{='js/highlight.js/highlight.pack.js'|mtime}"></script>
-<script src="{$basePath}/{='js/script.js'|mtime}"></script>
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="{$basePath}/{='js/moment.min.js' |mtime}"></script>
+<script src="{$basePath}/{='js/bootstrap-datetimepicker.min.js' |mtime}"></script>
+<script src="{$basePath}/{='js/nette.forms.js' |mtime}"></script>
+<script src="{$basePath}/{='js/nette.ajax.js' |mtime}"></script>
+<script src="{$basePath}/{='js/twigrid.datagrid.js' |mtime}"></script>
+<script src="{$basePath}/{='js/highlight.js/highlight.pack.js' |mtime}"></script>
+<script src="{$basePath}/{='js/script.js' |mtime}"></script>

@@ -3,13 +3,11 @@
 use Nette\Forms\Form;
 use Nette\Caching\Cache;
 use Nette\Forms\Container;
-use Nette\Database\Statement;
+use Nette\Database\ResultSet;
 use Nette\Database\Connection;
 
 
-/**
- * Misc helpers for demo purposes
- */
+/** Misc helpers for demo purposes */
 class Helpers
 {
 
@@ -47,8 +45,8 @@ class Helpers
 	{
 		$logger = callback(__CLASS__, 'logQuery');
 		$payload->queries = array();
-		$connection->onQuery[] = function (Statement $st) use ($logger, $payload) {
-			$logger($payload, $st->queryString);
+		$connection->onQuery[] = function (Connection $c, ResultSet $r) use ($logger, $payload) {
+			$logger($payload, $r->getPdoStatement()->queryString);
 		};
 	}
 
