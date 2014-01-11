@@ -41,14 +41,14 @@ class GroupActionGrid extends TwiGrid\DataGrid
 
 	function exportMany(array $ids)
 	{
-		$this->flashMessage('Exporting items ' . Nette\Utils\Json::encode($ids), 'success');
+		$this->flashMessage('[DEMO] Exporting items ' . Nette\Utils\Json::encode($ids), 'success');
 	}
 
 
 
 	function deleteMany(array $ids)
 	{
-		$this->flashMessage('Deleting items ' . Nette\Utils\Json::encode($ids), 'success');
+		$this->flashMessage('[DEMO] Deleting items ' . Nette\Utils\Json::encode($ids), 'success');
 	}
 
 }

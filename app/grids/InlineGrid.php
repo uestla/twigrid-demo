@@ -24,7 +24,7 @@ class InlineGrid extends TwiGrid\DataGrid
 
 		$me = $this;
 		$this->setInlineEditing($this->inlineEditFactory, function ($id, array $values) use ($me) {
-			$me->flashMessage("Updating item '$id' with values " . Nette\Utils\Json::encode($values), 'success');
+			$me->flashMessage("[DEMO] Updating item '$id' with values " . Nette\Utils\Json::encode($values), 'success');
 		});
 
 		$this->setDataLoader($this->dataLoader);

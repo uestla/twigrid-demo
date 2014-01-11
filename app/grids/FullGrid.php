@@ -184,21 +184,21 @@ class FullGrid extends TwiGrid\DataGrid
 
 	function deleteRecord($id)
 	{
-		$this->flashMessage("Deletion request sent for record '$id'.", 'warning');
+		$this->flashMessage("[DEMO] Deletion request sent for record '$id'.", 'success');
 	}
 
 
 
 	function processInlineEditForm($id, array $values)
 	{
-		$this->flashMessage("Update request sent for record '$id'; new values: " . Nette\Utils\Json::encode($values), 'success');
+		$this->flashMessage("[DEMO] Update request sent for record '$id'; new values: " . Nette\Utils\Json::encode($values), 'success');
 	}
 
 
 
 	function deleteMany(array $primaries)
 	{
-		$this->flashMessage('Records deletion request : ' . Nette\Utils\Json::encode($primaries), 'success');
+		$this->flashMessage('[DEMO] Records deletion request : ' . Nette\Utils\Json::encode($primaries), 'success');
 	}
 
 }

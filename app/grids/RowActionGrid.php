@@ -42,14 +42,14 @@ class RowActionGrid extends TwiGrid\DataGrid
 
 	function downloadItem($id)
 	{
-		$this->flashMessage("Downloading item '$id'...", 'success');
+		$this->flashMessage("[DEMO] Downloading item '$id'...", 'success');
 	}
 
 
 
 	function deleteItem($id)
 	{
-		$this->flashMessage("Deleting item '$id'...", 'success');
+		$this->flashMessage("[DEMO] Deleting item '$id'...", 'success');
 	}
 
 }
