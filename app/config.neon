@@ -9,7 +9,6 @@ common:
 		session:
 			save_path: %tempDir%/sessions
 			expiration: + 14 days
-			autoStart: true
 		database:
 			dsn: 'sqlite:%appDir%/users.s3db'
 
