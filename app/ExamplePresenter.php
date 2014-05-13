@@ -8,7 +8,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	public $showQueries = FALSE;
 
 	/** @var \Nette\Database\Context @inject */
-	public $dbContext;
+	public $database;
 
 	/** @var Nette\Caching\Cache */
 	private $cache;
@@ -105,7 +105,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		parent::loadState($params);
 
 		if ($this->showQueries) {
-			Helpers::initQueryLogging($this->dbContext->getConnection(), $this->payload);
+			Helpers::initQueryLogging($this->database->getConnection(), $this->payload);
 		}
 	}
 

@@ -1,5 +1,6 @@
 {
 	"require": {
+		"dibi/dibi": "*",
 		"php": ">= 5.3.0",
 		"uestla/twigrid": "3.*"
 	}
