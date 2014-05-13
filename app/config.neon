@@ -1,47 +1,49 @@
-common:
-	parameters: { appDir: %wwwDir%/app }
+parameters:
+	appDir: %wwwDir%/app
 
-	php:
-		date.timezone: Europe/Prague
+php:
+	date.timezone: Europe/Prague
 
-	nette:
-		xhtml: FALSE
-		session:
-			save_path: %tempDir%/sessions
-			expiration: + 14 days
-		database:
-			dsn: 'sqlite:%appDir%/users.s3db'
+nette:
+	xhtml: FALSE
+	session:
+		save_path: %tempDir%/sessions
+		expiration: + 14 days
+	database:
+		dsn: 'sqlite:%appDir%/users.s3db'
 
-	services:
-		simpleGrid:
-			factory: SimpleGrid( ..., ... )
-			autowired: FALSE
+services:
+	simpleGrid:
+		inject: TRUE
+		autowired: FALSE
+		factory: SimpleGrid( ... )
 
-		filterGrid:
-			factory: FilterGrid( ..., ... )
-			autowired: FALSE
+	filterGrid:
+		inject: TRUE
+		autowired: FALSE
+		factory: FilterGrid( ... )
 
-		rowActionGrid:
-			factory: RowActionGrid( ..., ... )
-			autowired: FALSE
+	rowActionGrid:
+		inject: TRUE
+		autowired: FALSE
+		factory: RowActionGrid( ... )
 
-		groupActionGrid:
-			factory: GroupActionGrid( ..., ... )
-			autowired: FALSE
+	groupActionGrid:
+		inject: TRUE
+		autowired: FALSE
+		factory: GroupActionGrid( ... )
 
-		inlineGrid:
-			factory: InlineGrid( ..., ... )
-			autowired: FALSE
+	inlineGrid:
+		inject: TRUE
+		autowired: FALSE
+		factory: InlineGrid( ... )
 
-		paginationGrid:
-			factory: PaginationGrid( ..., ... )
-			autowired: FALSE
+	paginationGrid:
+		inject: TRUE
+		autowired: FALSE
+		factory: PaginationGrid( ... )
 
-		fullGrid:
-			factory: FullGrid( ..., ... )
-			autowired: FALSE
-
-development < common:
-
-
-production < common:
+	fullGrid:
+		inject: TRUE
+		autowired: FALSE
+		factory: FullGrid( ... )

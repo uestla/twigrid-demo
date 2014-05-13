@@ -6,16 +6,13 @@ use Nette\Forms\Form;
 class FilterGrid extends TwiGrid\DataGrid
 {
 
-	/** @var Nette\Database\Context */
-	private $dbContext;
+	/** @var Nette\Database\Context @inject */
+	public $database;
 
 
 
-	function __construct(Nette\Http\Session $s, Nette\Database\Context $dbContext)
+	protected function build()
 	{
-		parent::__construct($s);
-		$this->dbContext = $dbContext;
-
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name')->setSortable();
 		$this->addColumn('surname', 'Surname')->setSortable();
@@ -45,7 +42,7 @@ class FilterGrid extends TwiGrid\DataGrid
 
 	function dataLoader(FilterGrid $grid, array $columns, array $filters, array $order)
 	{
-		$users = $this->dbContext->table('user');
+		$users = $this->database->table('user');
 
 		// columns
 		$users->select(implode(', ', $columns));

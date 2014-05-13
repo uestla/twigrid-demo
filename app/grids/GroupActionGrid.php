@@ -4,16 +4,13 @@
 class GroupActionGrid extends TwiGrid\DataGrid
 {
 
-	/** @var Nette\Database\Context */
-	private $dbContext;
+	/** @var Nette\Database\Context @inject */
+	public $database;
 
 
 
-	function __construct(Nette\Http\Session $s, Nette\Database\Context $dbContext)
+	protected function build()
 	{
-		parent::__construct($s);
-		$this->dbContext = $dbContext;
-
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name');
 		$this->addColumn('surname', 'Surname');
@@ -32,7 +29,7 @@ class GroupActionGrid extends TwiGrid\DataGrid
 
 	function dataLoader(GroupActionGrid $grid, array $columns, array $filters, array $order)
 	{
-		return $this->dbContext->table('user')
+		return $this->database->table('user')
 			->select(implode(', ', $columns))
 			->limit(12);
 	}

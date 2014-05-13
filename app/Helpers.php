@@ -64,7 +64,7 @@ class Helpers
 		foreach (array('js/twigrid.datagrid.js', 'css/twigrid.datagrid.css') as $file) {
 			( ( $key = static::SCRIPT_KEY . $file ) && is_file( $dest = $baseDir . '/' . $file )
 					&& $cache->load( $key ) ) || (
-				copy($source = $baseDir . '/libs/TwiGrid/client-side/' . basename($file), $dest)
+				copy($source = $baseDir . '/vendor/uestla/twigrid/client-side/' . basename($file), $dest)
 					&& $cache->save($key, TRUE, array(
 						Cache::FILES => array($source),
 					))

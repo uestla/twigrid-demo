@@ -121,9 +121,8 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
 		id($template = parent::createTemplate($class))->showQueries = $this->showQueries;
-		return $template
-				->registerHelper('mtime', function ($f) { return $f . '?' . filemtime(__DIR__ . '/../' . $f); })
-				->setFile(__DIR__ . "/views/{$this->view}.latte");
+		$template->getLatte()->addFilter('mtime', function ($f) { return $f . '?' . filemtime(__DIR__ . '/../' . $f); });
+		return $template->setFile(__DIR__ . "/views/{$this->view}.latte");
 	}
 
 }

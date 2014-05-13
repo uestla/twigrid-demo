@@ -7,16 +7,13 @@ use TwiGrid\Components\Column;
 class FullGrid extends TwiGrid\DataGrid
 {
 
-	/** @var Nette\Database\Context */
-	private $dbContext;
+	/** @var Nette\Database\Context @inject */
+	public $database;
 
 
 
-	function __construct(Nette\Http\Session $s, Nette\Database\Context $dbContext)
+	protected function build()
 	{
-		parent::__construct($s);
-		$this->dbContext = $dbContext;
-
 		$this->setTemplateFile(__DIR__ . '/@full.latte');
 
 		$this->setPrimaryKey('id');
@@ -101,7 +98,7 @@ class FullGrid extends TwiGrid\DataGrid
 	function dataLoader(TwiGrid\DataGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
 	{
 		// selection factory
-		$users = $this->dbContext->table('user');
+		$users = $this->database->table('user');
 
 		// columns
 		$users->select(implode(', ', $columns));
@@ -125,7 +122,7 @@ class FullGrid extends TwiGrid\DataGrid
 	 */
 	function itemCounter(array $columns, array $filters)
 	{
-		return static::filterData($this->dbContext->table('user'), $columns, $filters)
+		return static::filterData($this->database->table('user'), $columns, $filters)
 				->count('*');
 	}
 
