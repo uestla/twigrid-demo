@@ -8,7 +8,6 @@ class InlineGrid extends TwiGrid\DataGrid
 	public $database;
 
 
-
 	protected function build()
 	{
 		$this->setTemplateFile(__DIR__ . '/@inline.latte');
@@ -28,7 +27,6 @@ class InlineGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function inlineEditFactory(Nette\Database\Table\ActiveRow $record)
 	{
 		$c = new Nette\Forms\Container;
@@ -41,7 +39,6 @@ class InlineGrid extends TwiGrid\DataGrid
 
 		return $c;
 	}
-
 
 
 	function dataLoader(InlineGrid $grid, array $columns, array $filters, array $order)

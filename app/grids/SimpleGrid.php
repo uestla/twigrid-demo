@@ -8,7 +8,6 @@ class SimpleGrid extends TwiGrid\DataGrid
 	public $database;
 
 
-
 	protected function build()
 	{
 		$this->setPrimaryKey('id');

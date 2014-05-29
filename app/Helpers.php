@@ -15,7 +15,6 @@ class Helpers
 	const DATE_REGEXP = '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*\.\s*([0-9]{4})\s*$#';
 
 
-
 	static function getCountries()
 	{
 		return array(
@@ -40,7 +39,6 @@ class Helpers
 	}
 
 
-
 	static function initQueryLogging(Connection $connection, $payload)
 	{
 		$logger = callback(__CLASS__, 'logQuery');
@@ -51,12 +49,10 @@ class Helpers
 	}
 
 
-
 	static function logQuery($payload, $sql)
 	{
 		$payload->queries[] = dibi::dump($sql, TRUE);
 	}
-
 
 
 	static function loadClientScripts(Cache $cache, $baseDir)
@@ -73,7 +69,6 @@ class Helpers
 	}
 
 
-
 	static function addDateInput(Container $container, $name)
 	{
 		$control = $container->addText($name);
@@ -84,7 +79,6 @@ class Helpers
 
 		return $control;
 	}
-
 
 
 	static function parseDate($s)

@@ -10,7 +10,6 @@ class FilterGrid extends TwiGrid\DataGrid
 	public $database;
 
 
-
 	protected function build()
 	{
 		$this->setPrimaryKey('id');
@@ -21,7 +20,6 @@ class FilterGrid extends TwiGrid\DataGrid
 		$this->setFilterFactory($this->filterFactory);
 		$this->setDataLoader($this->dataLoader);
 	}
-
 
 
 	function filterFactory()
@@ -37,7 +35,6 @@ class FilterGrid extends TwiGrid\DataGrid
 
 		return $c;
 	}
-
 
 
 	function dataLoader(FilterGrid $grid, array $columns, array $filters, array $order)

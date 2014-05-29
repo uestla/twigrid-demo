@@ -8,7 +8,6 @@ class PaginationGrid extends TwiGrid\DataGrid
 	public $database;
 
 
-
 	function __construct(Nette\Http\Session $s, Nette\Database\Context $database)
 	{
 		parent::__construct($s);
@@ -24,12 +23,10 @@ class PaginationGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function userCounter(array $columns, array $filters)
 	{
 		return $this->database->table('user')->count('*');
 	}
-
 
 
 	function dataLoader(PaginationGrid $grid, array $columns, array $filters, array $order, $limit, $offset)

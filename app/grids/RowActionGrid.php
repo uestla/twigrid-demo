@@ -8,7 +8,6 @@ class RowActionGrid extends TwiGrid\DataGrid
 	public $database;
 
 
-
 	protected function build()
 	{
 		$this->setPrimaryKey('id');
@@ -27,7 +26,6 @@ class RowActionGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function dataLoader(RowActionGrid $grid, array $columns, array $filters, array $order)
 	{
 		return $this->database->table('user')
@@ -36,12 +34,10 @@ class RowActionGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function downloadItem($id)
 	{
 		$this->flashMessage("[DEMO] Downloading item '$id'...", 'success');
 	}
-
 
 
 	function deleteItem($id)

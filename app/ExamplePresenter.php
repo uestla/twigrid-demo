@@ -14,7 +14,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	private $cache;
 
 
-
 	/** @return void */
 	protected function beforeRender()
 	{
@@ -22,7 +21,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 		$this->template->sourceDir = __DIR__ . '/grids';
 	}
-
 
 
 	// === DATAGRIDS ==================================================================
@@ -34,13 +32,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	}
 
 
-
 	/** @return FilterGrid */
 	protected function createComponentFilterGrid()
 	{
 		return $this->context->createService('filterGrid');
 	}
-
 
 
 	/** @return RowActionGrid */
@@ -50,13 +46,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	}
 
 
-
 	/** @return GroupActionGrid */
 	protected function createComponentGroupActionGrid()
 	{
 		return $this->context->createService('groupActionGrid');
 	}
-
 
 
 	/** @return InlineGrid */
@@ -66,7 +60,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	}
 
 
-
 	/** @return PaginationGrid */
 	protected function createComponentPaginationGrid()
 	{
@@ -74,13 +67,11 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	}
 
 
-
 	/** @return FullGrid */
 	protected function createComponentFullGrid()
 	{
 		return $this->context->createService('fullGrid');
 	}
-
 
 
 	// === APP-RELATED STUFF & HELPERS ===============================================================
@@ -95,7 +86,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	}
 
 
-
 	/**
 	 * @param  array $params
 	 * @return void
@@ -108,7 +98,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 			Helpers::initQueryLogging($this->database->getConnection(), $this->payload);
 		}
 	}
-
 
 
 	/**

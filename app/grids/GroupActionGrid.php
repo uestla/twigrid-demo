@@ -8,7 +8,6 @@ class GroupActionGrid extends TwiGrid\DataGrid
 	public $database;
 
 
-
 	protected function build()
 	{
 		$this->setPrimaryKey('id');
@@ -26,7 +25,6 @@ class GroupActionGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function dataLoader(GroupActionGrid $grid, array $columns, array $filters, array $order)
 	{
 		return $this->database->table('user')
@@ -35,12 +33,10 @@ class GroupActionGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function exportMany(array $ids)
 	{
 		$this->flashMessage('[DEMO] Exporting items ' . Nette\Utils\Json::encode($ids), 'success');
 	}
-
 
 
 	function deleteMany(array $ids)

@@ -11,7 +11,6 @@ class FullGrid extends TwiGrid\DataGrid
 	public $database;
 
 
-
 	protected function build()
 	{
 		$this->setTemplateFile(__DIR__ . '/@full.latte');
@@ -49,7 +48,6 @@ class FullGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function createFilterContainer()
 	{
 		$container = new Nette\Forms\Container;
@@ -78,7 +76,6 @@ class FullGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function createInlineEditContainer($record)
 	{
 		$container = new Nette\Forms\Container;
@@ -92,7 +89,6 @@ class FullGrid extends TwiGrid\DataGrid
 		$defaults['birthday'] = id(new DateTime($defaults['birthday']))->format('d. m. Y');
 		return $container->setDefaults($defaults);
 	}
-
 
 
 	function dataLoader(TwiGrid\DataGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
@@ -114,7 +110,6 @@ class FullGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	/**
 	 * @param  array $columns
 	 * @param  array $filters
@@ -125,7 +120,6 @@ class FullGrid extends TwiGrid\DataGrid
 		return static::filterData($this->database->table('user'), $columns, $filters)
 				->count('*');
 	}
-
 
 
 	/**
@@ -162,7 +156,6 @@ class FullGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	/**
 	 * @param  NSelection $data
 	 * @param  array $order
@@ -178,19 +171,16 @@ class FullGrid extends TwiGrid\DataGrid
 	}
 
 
-
 	function deleteRecord($id)
 	{
 		$this->flashMessage("[DEMO] Deletion request sent for record '$id'.", 'success');
 	}
 
 
-
 	function processInlineEditForm($id, array $values)
 	{
 		$this->flashMessage("[DEMO] Update request sent for record '$id'; new values: " . Nette\Utils\Json::encode($values), 'success');
 	}
-
 
 
 	function deleteMany(array $primaries)
