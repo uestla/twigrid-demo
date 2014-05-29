@@ -9,6 +9,6 @@
 {include #tip-box, tip => 'When inside a textarea, use [Ctrl] + [Enter] to submit the form.'}
 {include #tip-box, tip => 'Press [Ctrl] + Click to activate inline editing and [Esc] to cancel it.'}
 
-{include #grid, grid => 'inlineGrid', sources => [ $sourceDir . '/InlineGrid.php', $sourceDir . '/@inline.latte' ] }
+{include #grid, grid => 'inlineGrid', sources => [ $sourceDir . '/InlineGrid.php', $sourceDir . '/BaseGrid.php', $sourceDir . '/@inline.latte' ] }
 
 {/block}

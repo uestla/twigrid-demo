@@ -3,12 +3,8 @@
 use Nette\Forms\Form;
 
 
-class FilterGrid extends TwiGrid\DataGrid
+class FilterGrid extends BaseGrid
 {
-
-	/** @var Nette\Database\Context @inject */
-	public $database;
-
 
 	protected function build()
 	{

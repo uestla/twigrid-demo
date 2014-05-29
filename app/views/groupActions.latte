@@ -9,6 +9,6 @@
 {include #tip-box, tip => 'Press Shift to (un)check multiple rows.'}
 {include #tip-box, tip => 'Clicking in the header row checks all rows.'}
 
-{include #grid, grid => 'groupActionGrid', sources => $sourceDir . '/GroupActionGrid.php'}
+{include #grid, grid => 'groupActionGrid', sources => [ $sourceDir . '/GroupActionGrid.php', $sourceDir . '/BaseGrid.php' ]}
 
 {/block}

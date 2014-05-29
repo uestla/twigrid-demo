@@ -1,12 +1,8 @@
 <?php
 
 
-class SimpleGrid extends TwiGrid\DataGrid
+class SimpleGrid extends BaseGrid
 {
-
-	/** @var Nette\Database\Context @inject */
-	public $database;
-
 
 	protected function build()
 	{

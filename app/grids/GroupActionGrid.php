@@ -1,12 +1,8 @@
 <?php
 
 
-class GroupActionGrid extends TwiGrid\DataGrid
+class GroupActionGrid extends BaseGrid
 {
-
-	/** @var Nette\Database\Context @inject */
-	public $database;
-
 
 	protected function build()
 	{

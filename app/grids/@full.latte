@@ -1,7 +1,6 @@
 {extends $defaultTemplate}
 
 
-
 {define filter-cell-birthday}
 	<th class="birthday nowrap">
 		<div>
@@ -13,7 +12,6 @@
 {/define}
 
 
-
 {define filter-cell-kilograms}
 	<th class="numeric">
 		{? }{input filters-criteria-$column, class => 'form-control'}
@@ -21,11 +19,9 @@
 {/define}
 
 
-
 {define body-cell-birthday}
 	<td class="numeric center">{$value|date:'d. m. Y'}</td>
 {/define}
-
 
 
 {define body-cell-birthday-inline}
@@ -33,11 +29,9 @@
 {/define}
 
 
-
 {define body-cell-country_code}
 	<td>{$record->ref('country', 'country_code')->title}</td>
 {/define}
-
 
 
 {define body-cell-kilograms}
@@ -45,11 +39,9 @@
 {/define}
 
 
-
 {define body-cell-kilograms-inline}
 	<td class="numeric">{input inline-values-$column, class => 'form-control'}</td>
 {/define}
-
 
 
 {define row-action-delete}

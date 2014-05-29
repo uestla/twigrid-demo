@@ -1,18 +1,11 @@
 <?php
 
 
-class PaginationGrid extends TwiGrid\DataGrid
+class PaginationGrid extends BaseGrid
 {
 
-	/** @var Nette\Database\Context @inject */
-	public $database;
-
-
-	function __construct(Nette\Http\Session $s, Nette\Database\Context $database)
+	protected function build()
 	{
-		parent::__construct($s);
-		$this->database = $database;
-
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name')->setSortable();
 		$this->addColumn('surname', 'Surname')->setSortable();

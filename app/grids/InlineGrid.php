@@ -1,12 +1,8 @@
 <?php
 
 
-class InlineGrid extends TwiGrid\DataGrid
+class InlineGrid extends BaseGrid
 {
-
-	/** @var Nette\Database\Context @inject */
-	public $database;
-
 
 	protected function build()
 	{

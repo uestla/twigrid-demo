@@ -4,12 +4,8 @@ use Nette\Forms\Form;
 use TwiGrid\Components\Column;
 
 
-class FullGrid extends TwiGrid\DataGrid
+class FullGrid extends BaseGrid
 {
-
-	/** @var Nette\Database\Context @inject */
-	public $database;
-
 
 	protected function build()
 	{

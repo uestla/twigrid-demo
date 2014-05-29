@@ -6,6 +6,6 @@
 
 {block content}
 
-{include #grid, grid => 'filterGrid', sources => $sourceDir . '/FilterGrid.php'}
+{include #grid, grid => 'filterGrid', sources => [ $sourceDir . '/FilterGrid.php', $sourceDir . '/BaseGrid.php' ]}
 
 {/block}

@@ -14,36 +14,29 @@ nette:
 
 services:
 	simpleGrid:
-		inject: TRUE
 		autowired: FALSE
-		factory: SimpleGrid( ... )
+		factory: SimpleGrid( ..., ... )
 
 	filterGrid:
-		inject: TRUE
 		autowired: FALSE
-		factory: FilterGrid( ... )
+		factory: FilterGrid( ..., ... )
 
 	rowActionGrid:
-		inject: TRUE
 		autowired: FALSE
-		factory: RowActionGrid( ... )
+		factory: RowActionGrid( ..., ... )
 
 	groupActionGrid:
-		inject: TRUE
 		autowired: FALSE
-		factory: GroupActionGrid( ... )
+		factory: GroupActionGrid( ..., ... )
 
 	inlineGrid:
-		inject: TRUE
 		autowired: FALSE
-		factory: InlineGrid( ... )
+		factory: InlineGrid( ..., ... )
 
 	paginationGrid:
-		inject: TRUE
 		autowired: FALSE
-		factory: PaginationGrid( ... )
+		factory: PaginationGrid( ..., ... )
 
 	fullGrid:
-		inject: TRUE
 		autowired: FALSE
-		factory: FullGrid( ... )
+		factory: FullGrid( ..., ... )
