@@ -10,8 +10,20 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	/** @var \Nette\Database\Context @inject */
 	public $database;
 
+	/** @var Nette\Caching\IStorage @inject */
+	public $storage;
+
 	/** @var Nette\Caching\Cache */
 	private $cache;
+
+
+	/** @return void */
+	protected function startup()
+	{
+		parent::startup();
+
+		$this->cache = new Nette\Caching\Cache($this->storage, __CLASS__);
+	}
 
 
 	/** @return void */
@@ -77,16 +89,6 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	// === APP-RELATED STUFF & HELPERS ===============================================================
 
 	/**
-	 * @param  Nette\Caching\IStorage $s
-	 * @return void
-	 */
-	function inject(Nette\Caching\IStorage $s)
-	{
-		$this->cache = new Nette\Caching\Cache($s, __CLASS__);
-	}
-
-
-	/**
 	 * @param  array $params
 	 * @return void
 	 */
@@ -106,9 +108,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		Helpers::loadClientScripts($this->cache, __DIR__ . '/..');
 		$this->invalidateControl('links');
 		$this->invalidateControl('flashes');
+		Helpers::loadClientScripts($this->cache, __DIR__ . '/..');
 		id($template = parent::createTemplate($class))->showQueries = $this->showQueries;
 		$template->getLatte()->addFilter('mtime', function ($f) { return $f . '?' . filemtime(__DIR__ . '/../' . $f); });
 		return $template->setFile(__DIR__ . "/views/{$this->view}.latte");
