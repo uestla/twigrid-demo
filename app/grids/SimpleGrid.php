@@ -4,6 +4,7 @@
 class SimpleGrid extends BaseGrid
 {
 
+	/** @return void */
 	protected function build()
 	{
 		$this->setPrimaryKey('id');
@@ -15,7 +16,7 @@ class SimpleGrid extends BaseGrid
 
 		$db = $this->database;
 
-		$this->setDataLoader(function ($grid, array $columns, array $filters, array $order) use ($db) {
+		$this->setDataLoader(function (SimpleGrid $grid, array $columns, array $filters, array $order) use ($db) {
 			$users = $db->table('user');
 
 			// columns

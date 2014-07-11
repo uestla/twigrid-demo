@@ -15,8 +15,13 @@
 	RewriteEngine On
 	# RewriteBase /
 
+	# www-form redirection
+	Options +FollowSymlinks
 	# RewriteCond %{HTTP_HOST} !(twigrid).1991.cz
 	# RewriteRule ^(twigrid/)?(.*)$ http://twigrid.1991.cz/$2 [R=301,NE,QSA,L]
+
+	# prevents files starting with dot to be viewed by browser
+	RewriteRule /\.|^\. - [F]
 
 	# front controller
 	RewriteCond %{REQUEST_FILENAME} !-f
@@ -26,5 +31,5 @@
 
 # enable gzip compression
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript text/javascript application/javascript application/json
+	AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/x-javascript text/javascript application/javascript application/json
 </IfModule>

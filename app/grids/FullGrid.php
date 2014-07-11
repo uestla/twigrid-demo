@@ -7,6 +7,7 @@ use TwiGrid\Components\Column;
 class FullGrid extends BaseGrid
 {
 
+	/** @return void */
 	protected function build()
 	{
 		$this->setTemplateFile(__DIR__ . '/@full.latte');
@@ -44,6 +45,7 @@ class FullGrid extends BaseGrid
 	}
 
 
+	/** @return Nette\Forms\Container */
 	function createFilterContainer()
 	{
 		$container = new Nette\Forms\Container;
@@ -72,7 +74,11 @@ class FullGrid extends BaseGrid
 	}
 
 
-	function createInlineEditContainer($record)
+	/**
+	 * @param  Nette\Database\Table\ActiveRow $record
+	 * @return Nette\Forms\Container
+	 */
+	function createInlineEditContainer(Nette\Database\Table\ActiveRow $record)
 	{
 		$container = new Nette\Forms\Container;
 		$container->addText('firstname')->setRequired();
@@ -87,7 +93,16 @@ class FullGrid extends BaseGrid
 	}
 
 
-	function dataLoader(TwiGrid\DataGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
+	/**
+	 * @param  FullGrid $grid
+	 * @param  array $columns
+	 * @param  array $filters
+	 * @param  array $order
+	 * @param  int $limit
+	 * @param  int $offset
+	 * @return Nette\Database\Table\Selection
+	 */
+	function dataLoader(FullGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
 	{
 		// selection factory
 		$users = $this->database->table('user');
@@ -107,11 +122,12 @@ class FullGrid extends BaseGrid
 
 
 	/**
+	 * @param  FullGrid $grid
 	 * @param  array $columns
 	 * @param  array $filters
 	 * @return int
 	 */
-	function itemCounter(array $columns, array $filters)
+	function itemCounter(FullGrid $grid, array $columns, array $filters)
 	{
 		return static::filterData($this->database->table('user'), $columns, $filters)
 				->count('*');
@@ -167,21 +183,39 @@ class FullGrid extends BaseGrid
 	}
 
 
-	function deleteRecord($id)
+	/**
+	 * @param  Nette\Database\Table\ActiveRow $record
+	 * @return void
+	 */
+	function deleteRecord(Nette\Database\Table\ActiveRow $record)
 	{
-		$this->flashMessage("[DEMO] Deletion request sent for record '$id'.", 'success');
+		$this->flashMessage("[DEMO] Deletion request sent for record '{$record->id}'.", 'success');
 	}
 
 
-	function processInlineEditForm($id, array $values)
+	/**
+	 * @param  Nette\Database\Table\ActiveRow $record
+	 * @param  array $values
+	 * @return void
+	 */
+	function processInlineEditForm(Nette\Database\Table\ActiveRow $record, array $values)
 	{
-		$this->flashMessage("[DEMO] Update request sent for record '$id'; new values: " . Nette\Utils\Json::encode($values), 'success');
+		$this->flashMessage("[DEMO] Update request sent for record '{$record->id}'; new values: " . Nette\Utils\Json::encode($values), 'success');
 	}
 
 
-	function deleteMany(array $primaries)
+	/**
+	 * @param  Nette\Database\Table\ActiveRow[]
+	 * @return void
+	 */
+	function deleteMany(array $records)
 	{
-		$this->flashMessage('[DEMO] Records deletion request : ' . Nette\Utils\Json::encode($primaries), 'success');
+		$ids = array();
+		foreach ($records as $record) {
+			$ids[] = $record->id;
+		}
+
+		$this->flashMessage('[DEMO] Records deletion request : ' . Nette\Utils\Json::encode($ids), 'success');
 	}
 
 }

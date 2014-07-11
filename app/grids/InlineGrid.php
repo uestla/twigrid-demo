@@ -4,6 +4,7 @@
 class InlineGrid extends BaseGrid
 {
 
+	/** @return void */
 	protected function build()
 	{
 		$this->setTemplateFile(__DIR__ . '/@inline.latte');
@@ -23,6 +24,10 @@ class InlineGrid extends BaseGrid
 	}
 
 
+	/**
+	 * @param  Nette\Database\Table\ActiveRow $record
+	 * @return Nette\Forms\Container
+	 */
 	function inlineEditFactory(Nette\Database\Table\ActiveRow $record)
 	{
 		$c = new Nette\Forms\Container;
@@ -37,6 +42,13 @@ class InlineGrid extends BaseGrid
 	}
 
 
+	/**
+	 * @param  InlineGrid $grid
+	 * @param  array $columns
+	 * @param  array $filters
+	 * @param  array $order
+	 * @return Nette\Database\Table\Selection
+	 */
 	function dataLoader(InlineGrid $grid, array $columns, array $filters, array $order)
 	{
 		return $this->database->table('user')

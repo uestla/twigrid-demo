@@ -4,6 +4,7 @@
 class PaginationGrid extends BaseGrid
 {
 
+	/** @return void */
 	protected function build()
 	{
 		$this->setPrimaryKey('id');
@@ -16,12 +17,27 @@ class PaginationGrid extends BaseGrid
 	}
 
 
-	function userCounter(array $columns, array $filters)
+	/**
+	 * @param  PaginationGrid $grid
+	 * @param  array $columns
+	 * @param  array $filters
+	 * @return Nette\Database\Table\Selection
+	 */
+	function userCounter(PaginationGrid $grid, array $columns, array $filters)
 	{
 		return $this->database->table('user')->count('*');
 	}
 
 
+	/**
+	 * @param  PaginationGrid $grid
+	 * @param  array $columns
+	 * @param  array $filters
+	 * @param  array $order
+	 * @param  int $limit
+	 * @param  int $offset
+	 * @return Nette\Database\Table\Selection
+	 */
 	function dataLoader(PaginationGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
 	{
 		$users = $this->database->table('user');

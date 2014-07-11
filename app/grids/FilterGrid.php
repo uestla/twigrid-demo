@@ -6,6 +6,7 @@ use Nette\Forms\Form;
 class FilterGrid extends BaseGrid
 {
 
+	/** @return void */
 	protected function build()
 	{
 		$this->setPrimaryKey('id');
@@ -18,6 +19,7 @@ class FilterGrid extends BaseGrid
 	}
 
 
+	/** @return Nette\Forms\Container */
 	function filterFactory()
 	{
 		$c = new Nette\Forms\Container;
@@ -33,6 +35,13 @@ class FilterGrid extends BaseGrid
 	}
 
 
+	/**
+	 * @param  FilterGrid $grid
+	 * @param  array $columns
+	 * @param  array $filters
+	 * @param  array $order
+	 * @return Nette\Database\Table\Selection
+	 */
 	function dataLoader(FilterGrid $grid, array $columns, array $filters, array $order)
 	{
 		$users = $this->database->table('user');

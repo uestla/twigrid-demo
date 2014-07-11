@@ -4,6 +4,7 @@
 class RowActionGrid extends BaseGrid
 {
 
+	/** @return void */
 	protected function build()
 	{
 		$this->setPrimaryKey('id');
@@ -22,23 +23,38 @@ class RowActionGrid extends BaseGrid
 	}
 
 
+	/**
+	 * @param  RowActionGrid $grid
+	 * @param  array $columns
+	 * @param  array $filters
+	 * @param  array $order
+	 * @return Nette\Database\Table\Selection
+	 */
 	function dataLoader(RowActionGrid $grid, array $columns, array $filters, array $order)
 	{
 		return $this->database->table('user')
-			->select(implode(', ', $columns))
-			->limit(12);
+				->select(implode(', ', $columns))
+				->limit(12);
 	}
 
 
-	function downloadItem($id)
+	/**
+	 * @param  Nette\Database\Table\ActiveRow $record
+	 * @return void
+	 */
+	function downloadItem(Nette\Database\Table\ActiveRow $record)
 	{
-		$this->flashMessage("[DEMO] Downloading item '$id'...", 'success');
+		$this->flashMessage("[DEMO] Downloading item '{$record->id}'...", 'success');
 	}
 
 
-	function deleteItem($id)
+	/**
+	 * @param  Nette\Database\Table\ActiveRow $record
+	 * @return void
+	 */
+	function deleteItem(Nette\Database\Table\ActiveRow $record)
 	{
-		$this->flashMessage("[DEMO] Deleting item '$id'...", 'success');
+		$this->flashMessage("[DEMO] Deleting item '{$record->id}'...", 'success');
 	}
 
 }
