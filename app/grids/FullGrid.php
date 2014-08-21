@@ -195,10 +195,10 @@ class FullGrid extends BaseGrid
 
 	/**
 	 * @param  Nette\Database\Table\ActiveRow $record
-	 * @param  array $values
+	 * @param  Nette\Utils\ArrayHash $values
 	 * @return void
 	 */
-	function processInlineEditForm(Nette\Database\Table\ActiveRow $record, array $values)
+	function processInlineEditForm(Nette\Database\Table\ActiveRow $record, Nette\Utils\ArrayHash $values)
 	{
 		$this->flashMessage("[DEMO] Update request sent for record '{$record->id}'; new values: " . Nette\Utils\Json::encode($values), 'success');
 	}

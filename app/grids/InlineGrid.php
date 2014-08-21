@@ -16,7 +16,7 @@ class InlineGrid extends BaseGrid
 		$this->addColumn('country_code', 'Country');
 
 		$me = $this;
-		$this->setInlineEditing($this->inlineEditFactory, function ($id, array $values) use ($me) {
+		$this->setInlineEditing($this->inlineEditFactory, function ($id, Nette\Utils\ArrayHash $values) use ($me) {
 			$me->flashMessage("[DEMO] Updating item '$id' with values " . Nette\Utils\Json::encode($values), 'success');
 		});
 
