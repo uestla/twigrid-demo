@@ -1,62 +1,70 @@
-<title>TwiGrid example</title>
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>TwiGrid example</title>
 
-<link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-<link href="{$basePath}/{='css/bootstrap-datetimepicker.min.css' |mtime}" rel="stylesheet">
-<link href="{$basePath}/{='css/twigrid.datagrid.css' |mtime}" rel="stylesheet">  <!-- required for datagrid styling -->
-<link href="{$basePath}/{='css/highlight.js/github.css' |mtime}" rel="stylesheet">
-<link href="{$basePath}/{='css/example.css' |mtime}" rel="stylesheet">
+		<link rel="stylesheet" media="screen" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+		<link rel="stylesheet" media="screen" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+		<link href="{$basePath}/{='css/bootstrap-datetimepicker.min.css' |mtime}" rel="stylesheet">
+		<link href="{$basePath}/{='css/twigrid.datagrid.css' |mtime}" rel="stylesheet">  <!-- required for datagrid styling -->
+		<link href="{$basePath}/{='css/highlight.js/github.css' |mtime}" rel="stylesheet">
+		<link href="{$basePath}/{='css/example.css' |mtime}" rel="stylesheet">
+
+		<!-- @GA@ -->
+	</head>
+
+	<body>
+		<div class="container">
+
+			<div class="page-header">
+				<div class="pull-right">
+					<a href="https://github.com/uestla/twigrid/archive/master.zip" class="btn btn-success">
+						<span class="glyphicon glyphicon-download"></span>
+						Download
+					</a>
+				</div>
+
+				<h1>
+					<a n:href="Example:default,
+						dataGrid-poluted => NULL, dataGrid-orderBy => NULL, dataGrid-orderDesc => NULL, dataGrid-filters => NULL, dataGrid-page => NULL, dataGrid-inlineEditPrimary => NULL">TwiGrid\DataGrid</a>
+						<small>(
+							<a href="https://github.com/uestla/twigrid/blob/master/README.md#quickstart" target="_blank"><i class="fa fa-book"></i> tutorial</a>,
+							<a href="https://github.com/uestla/twigrid" target="_blank"><i class="fa fa-code"></i> source code</a>,
+							<a href="https://github.com/uestla/twigrid-demo" target="_blank"><i class="fa fa-code"></i> demo</a>,
+							<a href="http://forum.nette.org/cs/13181-twigrid-omlouvam-se" target="_blank"><i class="fa fa-comments"></i> forum <small>(cs)</small></a>
+						)</small>
+				</h1>
+			</div>
 
 
-<div class="container">
+			{ifset #h2}<h2>{include #h2}</h2>{/ifset}
 
-	<div class="page-header">
-		<div class="pull-right">
-			<a href="https://github.com/uestla/twigrid/archive/master.zip" class="btn btn-success">
-				<span class="glyphicon glyphicon-download"></span>
-				Download
-			</a>
+			<ul class="pull-left list-inline" n:if="$presenter->action !== 'default'">
+				<li>
+					<a n:href="default" class="btn btn-default">&laquo; back home</a>
+				</li>
+			</ul>
+
+
+			<div n:snippet="flashes">
+				<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} hidable">{$flash->message}</div>
+			</div>
+
+
+{block content |indent:2}{/block}
+
+
 		</div>
 
-		<h1>
-			<a n:href="Example:default,
-				dataGrid-poluted => NULL, dataGrid-orderBy => NULL, dataGrid-orderDesc => NULL, dataGrid-filters => NULL, dataGrid-page => NULL, dataGrid-inlineEditPrimary => NULL">TwiGrid\DataGrid</a>
-				<small>(
-					<a href="https://github.com/uestla/twigrid/blob/master/README.md#quickstart" target="_blank"><img src="{$basePath}/img/ico/docs.png" alt=""> tutorial</a>,
-					<a href="https://github.com/uestla/twigrid" target="_blank"><img src="{$basePath}/img/ico/code.png" alt=""> source</a>,
-					<a href="https://github.com/uestla/twigrid-demo" target="_blank"><img src="{$basePath}/img/ico/code.png" alt=""> demo</a>,
-					<a href="http://forum.nette.org/cs/13181-twigrid-omlouvam-se" target="_blank"><img src="{$basePath}/img/ico/forum.png" alt=""> forum<sub class="fade"><img src="{$basePath}/img/cs.flag.png" alt="cs"></sub></a>
-				)</small>
-		</h1>
-	</div>
-
-
-	{ifset #h2}<h2>{include #h2}</h2>{/ifset}
-
-	<ul class="pull-left list-inline" n:if="$presenter->action !== 'default'">
-		<li>
-			<a n:href="default" class="btn btn-default">&laquo; back home</a>
-		</li>
-	</ul>
-
-
-	<div n:snippet="flashes">
-		<div n:foreach="$flashes as $flash" class="alert alert-{$flash->type} hidable">{$flash->message}</div>
-	</div>
-
-
-{block content}{/block}
-
-
-</div>
-
-
-
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-<script src="{$basePath}/{='js/moment.min.js' |mtime}"></script>
-<script src="{$basePath}/{='js/bootstrap-datetimepicker.min.js' |mtime}"></script>
-<script src="{$basePath}/{='js/nette.forms.js' |mtime}"></script>
-<script src="{$basePath}/{='js/nette.ajax.js' |mtime}"></script>
-<script src="{$basePath}/{='js/twigrid.datagrid.js' |mtime}"></script>
-<script src="{$basePath}/{='js/highlight.js/highlight.pack.js' |mtime}"></script>
-<script src="{$basePath}/{='js/script.js' |mtime}"></script>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+		<script src="{$basePath}/{='js/moment.min.js' |mtime}"></script>
+		<script src="{$basePath}/{='js/bootstrap-datetimepicker.min.js' |mtime}"></script>
+		<script src="{$basePath}/{='js/nette.forms.js' |mtime}"></script>
+		<script src="{$basePath}/{='js/nette.ajax.js' |mtime}"></script>
+		<script src="{$basePath}/{='js/twigrid.datagrid.js' |mtime}"></script>
+		<script src="{$basePath}/{='js/highlight.js/highlight.pack.js' |mtime}"></script>
+		<script src="{$basePath}/{='js/script.js' |mtime}"></script>
+	</body>
+</html>
