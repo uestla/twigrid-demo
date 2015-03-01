@@ -4,13 +4,15 @@ parameters:
 php:
 	date.timezone: Europe/Prague
 
-nette:
+latte:
 	xhtml: FALSE
-	session:
-		save_path: %tempDir%/sessions
-		expiration: + 14 days
-	database:
-		dsn: 'sqlite:%appDir%/users.s3db'
+
+session:
+	save_path: %tempDir%/sessions
+	expiration: + 14 days
+
+database:
+	dsn: 'sqlite:%appDir%/users.s3db'
 
 services:
 	simpleGrid:

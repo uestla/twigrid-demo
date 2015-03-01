@@ -10,6 +10,7 @@ $c->addConfig(__DIR__ . '/app/config.neon');
 
 function id($a) { return $a; }
 $cont = $c->createContainer();
-$cont->router[] = new Nette\Application\Routers\Route('<action>', 'Example:default');
-$cont->router[] = new Nette\Application\Routers\SimpleRouter('Example:default');
-$cont->application->run();
+$router = $cont->getService('router');
+$router[] = new Nette\Application\Routers\Route('<action>', 'Example:default');
+$router[] = new Nette\Application\Routers\SimpleRouter('Example:default');
+$cont->getService('application')->run();
