@@ -5,6 +5,7 @@ use Nette\Caching\Cache;
 use Nette\Forms\Container;
 use Nette\Database\ResultSet;
 use Nette\Database\Connection;
+use Nette\Utils\Callback as NCallback;
 
 
 /** Misc helpers for demo purposes */
@@ -41,7 +42,9 @@ class Helpers
 
 	static function initQueryLogging(Connection $connection, $payload)
 	{
-		$logger = callback(__CLASS__, 'logQuery');
+		$logger =
+		$logger = NCallback::closure(__CLASS__, 'logQuery');
+
 		$payload->queries = array();
 		$connection->onQuery[] = function (Connection $c, ResultSet $r) use ($logger, $payload) {
 			$logger($payload, $r->getPdoStatement()->queryString);
@@ -72,7 +75,7 @@ class Helpers
 	static function addDateInput(Container $container, $name)
 	{
 		$control = $container->addText($name);
-		$parser = callback(__CLASS__, 'parseDate');
+		$parser = NCallback::closure(__CLASS__, 'parseDate');
 		$control->addCondition( Form::FILLED )->addRule( function ($control) use ($parser) {
 			return $parser($control->value) !== FALSE;
 		}, 'Datum prosím zadávejte ve formátu "D.M.RRRR".' );

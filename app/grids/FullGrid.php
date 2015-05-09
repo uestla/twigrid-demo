@@ -2,6 +2,7 @@
 
 use Nette\Forms\Form;
 use TwiGrid\Components\Column;
+use Nette\Utils\Callback as NCallback;
 
 
 class FullGrid extends BaseGrid
@@ -57,7 +58,7 @@ class FullGrid extends BaseGrid
 		$min = Helpers::addDateInput($birthday, 'min');
 		$max = Helpers::addDateInput($birthday, 'max');
 
-		$parser = callback('Helpers::parseDate');
+		$parser = NCallback::closure('Helpers::parseDate');
 		$min->addCondition(Form::FILLED)->addRule(function () use ($min, $max, $parser) {
 			return !$max->filled
 					|| (($minDt = $parser($min->value)) !== FALSE
