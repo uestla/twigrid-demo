@@ -4,8 +4,8 @@
 {define filter-cell-birthday}
 	<th class="birthday nowrap">
 		<div>
-			{? }{input filters-criteria-$column-min, class => 'form-control date min', placeholder => 'min'}
-			{? }{input filters-criteria-$column-max, class => 'form-control date max', placeholder => 'max'}
+			<input n:name="filters-criteria-birthday-min" class="form-control date min" placeholder="min">
+			<input n:name="filters-criteria-birthday-max" class="form-control date max" placeholder="max">
 			&ndash;
 		</div>
 	</th>
@@ -14,18 +14,18 @@
 
 {define filter-cell-kilograms}
 	<th class="numeric">
-		{? }{input filters-criteria-$column, class => 'form-control'}
+		<input n:name="filters-criteria-kilograms" class="form-control">
 	</th>
 {/define}
 
 
 {define body-cell-birthday}
-	<td class="numeric center">{$value|date:'d. m. Y'}</td>
+	<td class="numeric center">{$value |date:'d. m. Y'}</td>
 {/define}
 
 
 {define body-cell-birthday-inline}
-	<td>{input inline-values-$column, class => 'form-control date center'}</td>
+	<td><input n:name="inline-values-birthday" class="form-control date center"></td>
 {/define}
 
 
@@ -40,12 +40,12 @@
 
 
 {define body-cell-kilograms-inline}
-	<td class="numeric">{input inline-values-$column, class => 'form-control'}</td>
+	<td class="numeric"><input n:name="inline-values-kilograms" class="form-control"></td>
 {/define}
 
 
 {define row-action-delete}
-	<a href="{$link}" class="btn btn-danger btn-sm tw-ajax" data-tw-confirm="{$action->confirmation}">
+	<a href="{$link}" class="btn btn-danger btn-sm tw-ajax" n:attr="data-tw-confirm => $action->confirmation">
 		{$action->label}
 	</a>
 {/define}
