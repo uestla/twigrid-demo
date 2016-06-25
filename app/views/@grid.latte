@@ -1,19 +1,30 @@
-{extends 'layout.latte'}
+{extends '@layout.latte'}
+
+
+{define tips}{/define}
 
 
 {define grid}
 
-	<ul class="list-inline" n:snippet="links">
-		<li>
-			<a n:href="this, showQueries => !$showQueries" class="btn btn-info">
-				{$showQueries ? 'Hide SQL queries' : 'Show SQL queries'}
-			</a>
-		</li>
+	<div class="media">
+		<div class="media-left media-bottom text-nowrap">
+			<ul class="list-inline" n:snippet="links">
+				<li>
+					<a n:href="this, showQueries => !$showQueries" class="btn btn-info">
+						{$showQueries ? 'Hide SQL queries' : 'Show SQL queries'}
+					</a>
+				</li>
 
-		<li>
-			<a n:href="this" class="btn btn-success" title="Actual datagrid state anchor"># state anchor</a>
-		</li>
-	</ul>
+				<li>
+					<a n:href="this" class="btn btn-success" title="Actual datagrid state anchor"># state anchor</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="media-body">
+{include #tips |indent:1}
+		</div>
+	</div>
 
 	<div id="queries"></div>
 
@@ -55,6 +66,6 @@
 
 {define tip-box}
 	<div class="tip-box alert alert-block alert-info pull-right">
-		<i class="icon-info-sign pull-right" n:if="FALSE"></i> <strong>Tip:</strong> {$tip}
+		<strong>Tip:</strong> {$tip}
 	</div>
 {/define}

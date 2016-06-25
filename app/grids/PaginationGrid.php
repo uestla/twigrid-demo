@@ -12,8 +12,8 @@ class PaginationGrid extends BaseGrid
 		$this->addColumn('surname', 'Surname')->setSortable();
 		$this->addColumn('country_code', 'Country')->setSortable();
 
-		$this->setPagination(12, $this->userCounter);
-		$this->setDataLoader($this->dataLoader);
+		$this->setPagination(12, [$this, 'userCounter']);
+		$this->setDataLoader([$this, 'dataLoader']);
 	}
 
 
@@ -23,7 +23,7 @@ class PaginationGrid extends BaseGrid
 	 * @param  array $filters
 	 * @return Nette\Database\Table\Selection
 	 */
-	function userCounter(PaginationGrid $grid, array $columns, array $filters)
+	public function userCounter(PaginationGrid $grid, array $columns, array $filters)
 	{
 		return $this->database->table('user')->count('*');
 	}
@@ -38,7 +38,7 @@ class PaginationGrid extends BaseGrid
 	 * @param  int $offset
 	 * @return Nette\Database\Table\Selection
 	 */
-	function dataLoader(PaginationGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
+	public function dataLoader(PaginationGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
 	{
 		$users = $this->database->table('user');
 

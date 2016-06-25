@@ -14,13 +14,13 @@ class FilterGrid extends BaseGrid
 		$this->addColumn('surname', 'Surname')->setSortable();
 		$this->addColumn('kilograms', 'Weight (kg)')->setSortable();
 
-		$this->setFilterFactory($this->filterFactory);
-		$this->setDataLoader($this->dataLoader);
+		$this->setFilterFactory([$this, 'filterFactory']);
+		$this->setDataLoader([$this, 'dataLoader']);
 	}
 
 
 	/** @return Nette\Forms\Container */
-	function filterFactory()
+	public function filterFactory()
 	{
 		$c = new Nette\Forms\Container;
 
@@ -42,7 +42,7 @@ class FilterGrid extends BaseGrid
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	function dataLoader(FilterGrid $grid, array $columns, array $filters, array $order)
+	public function dataLoader(FilterGrid $grid, array $columns, array $filters, array $order)
 	{
 		$users = $this->database->table('user');
 

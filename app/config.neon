@@ -2,10 +2,7 @@ parameters:
 	appDir: %wwwDir%/app
 
 php:
-	date.timezone: Europe/Prague
-
-latte:
-	xhtml: FALSE
+	date.timezone: UTC
 
 session:
 	save_path: %tempDir%/sessions
@@ -15,30 +12,10 @@ database:
 	dsn: 'sqlite:%appDir%/users.s3db'
 
 services:
-	simpleGrid:
-		autowired: FALSE
-		factory: SimpleGrid( ..., ... )
-
-	filterGrid:
-		autowired: FALSE
-		factory: FilterGrid( ..., ... )
-
-	rowActionGrid:
-		autowired: FALSE
-		factory: RowActionGrid( ..., ... )
-
-	groupActionGrid:
-		autowired: FALSE
-		factory: GroupActionGrid( ..., ... )
-
-	inlineGrid:
-		autowired: FALSE
-		factory: InlineGrid( ..., ... )
-
-	paginationGrid:
-		autowired: FALSE
-		factory: PaginationGrid( ..., ... )
-
-	fullGrid:
-		autowired: FALSE
-		factory: FullGrid( ..., ... )
+	sortingGrid: SortingGrid( ..., ... )
+	filterGrid: FilterGrid( ..., ... )
+	rowActionGrid: RowActionGrid( ..., ... )
+	groupActionGrid: GroupActionGrid( ..., ... )
+	inlineGrid: InlineGrid( ..., ... )
+	paginationGrid: PaginationGrid( ..., ... )
+	fullGrid: FullGrid( ..., ... )

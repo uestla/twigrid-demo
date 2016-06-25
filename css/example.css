@@ -1,45 +1,17 @@
 body {
-	padding: 0 0 128px;
+	padding: 45px 0 10px;
 }
 
-
-
-.jumbotron h2 {
-	margin: 16px 0 32px;
-	font-size: 230%;
-	text-align: center;
-}
-
-.jumbotron .promo {
-	margin: 0 0 48px;
-	padding: 0 0 48px;
-	border-bottom: 1px solid #bbb;
-}
-
-.jumbotron ul.examples {
-	text-align: center;
-}
-
-.jumbotron ul.examples li {
-	margin: 0 0 16px;
-}
-
-.jumbotron .row .col-xs-6 + .col-xs-6 {
-	border-left: 1px solid #bbb;
-	min-height: 420px;
-}
-
-
-
-.grid-cnt {
-	min-height: 680px;
+.navbar-fixed-top {
+	box-shadow: 0 0 8px #000;
 }
 
 
 
 .tip-box {
+	max-width: 300px;
 	padding-right: 14px;
-	max-width: 200px;
+	margin-bottom: 10px;
 }
 
 .tip-box + .tip-box {
@@ -47,6 +19,10 @@ body {
 }
 
 
+
+.tw-cnt .filter-cell:last-of-type {
+	min-width: 150px;
+}
 
 .tw-cnt .numeric {
 	width: 82px;
@@ -84,10 +60,4 @@ body {
 
 .tw-cnt input.max.date {
 	right: 0;
-}
-
-
-
-.fade {
-	opacity: 0.5;
 }

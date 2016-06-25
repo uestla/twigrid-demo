@@ -1,0 +1,8 @@
+
+{
+	"name": "twigrid-datagrid-demo",
+	"dependencies": {
+		"twigrid-datagrid": "^7.0",
+		"bootstrap-datepicker": "^1.6"
+	}
+}

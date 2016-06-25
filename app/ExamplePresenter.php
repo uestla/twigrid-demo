@@ -38,9 +38,9 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	// === DATAGRIDS ==================================================================
 
 	/** @return SimpleGrid */
-	protected function createComponentSimpleGrid()
+	protected function createComponentSortingGrid()
 	{
-		return $this->context->createService('simpleGrid');
+		return $this->context->createService('sortingGrid');
 	}
 
 
@@ -92,7 +92,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 * @param  array $params
 	 * @return void
 	 */
-	function loadState(array $params)
+	public function loadState(array $params)
 	{
 		parent::loadState($params);
 
@@ -108,11 +108,16 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	 */
 	protected function createTemplate($class = NULL)
 	{
-		$this->invalidateControl('links');
-		$this->invalidateControl('flashes');
-		Helpers::loadClientScripts($this->cache, __DIR__ . '/..');
-		id($template = parent::createTemplate($class))->showQueries = $this->showQueries;
-		$template->getLatte()->addFilter('mtime', function ($f) { return $f . '?' . filemtime(__DIR__ . '/../' . $f); });
+		$this->redrawControl('links');
+		$this->redrawControl('flashes');
+
+		$template = parent::createTemplate($class);
+		$template->showQueries = $this->showQueries;
+
+		$template->getLatte()->addFilter('mtime', function ($f) {
+			return $f . '?' . filemtime(__DIR__ . '/../' . $f);
+		});
+
 		return $template->setFile(__DIR__ . "/views/{$this->view}.latte");
 	}
 

@@ -5,6 +5,7 @@ use Nette\Caching\Cache;
 use Nette\Forms\Container;
 use Nette\Database\ResultSet;
 use Nette\Database\Connection;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Callback as NCallback;
 
 
@@ -16,7 +17,8 @@ class Helpers
 	const DATE_REGEXP = '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*\.\s*([0-9]{4})\s*$#';
 
 
-	static function getCountries()
+	/**  @return array*/
+	public static function getCountries()
 	{
 		return array(
 			'au' => 'Australia',
@@ -40,51 +42,52 @@ class Helpers
 	}
 
 
-	static function initQueryLogging(Connection $connection, $payload)
+	/**
+	 * @param  Connection $connection
+	 * @param  \stdClass $payload
+	 * @return void
+	 */
+	public static function initQueryLogging(Connection $connection, $payload)
 	{
-		$logger =
-		$logger = NCallback::closure(__CLASS__, 'logQuery');
-
 		$payload->queries = array();
-		$connection->onQuery[] = function (Connection $c, ResultSet $r) use ($logger, $payload) {
-			$logger($payload, $r->getPdoStatement()->queryString);
+		$connection->onQuery[] = function (Connection $c, ResultSet $result) use ($payload) {
+			self::logQuery($payload, $result->getPdoStatement()->queryString);
 		};
 	}
 
 
-	static function logQuery($payload, $sql)
+	/**
+	 * @param  \stdClass $payload
+	 * @param  string $sql
+	 * @return void
+	 */
+	public static function logQuery($payload, $sql)
 	{
 		$payload->queries[] = dibi::dump($sql, TRUE);
 	}
 
 
-	static function loadClientScripts(Cache $cache, $baseDir)
-	{
-		foreach (array('js/twigrid.datagrid.js', 'css/twigrid.datagrid.css') as $file) {
-			( ( $key = static::SCRIPT_KEY . $file ) && is_file( $dest = $baseDir . '/' . $file )
-					&& $cache->load( $key ) ) || (
-				copy($source = $baseDir . '/vendor/uestla/twigrid/client-side/' . basename($file), $dest)
-					&& $cache->save($key, TRUE, array(
-						Cache::FILES => array($source),
-					))
-			);
-		}
-	}
-
-
-	static function addDateInput(Container $container, $name)
+	/**
+	 * @param  Container $container
+	 * @param  string $name
+	 * @return TextInput
+	 */
+	public static function addDateInput(Container $container, $name)
 	{
 		$control = $container->addText($name);
-		$parser = NCallback::closure(__CLASS__, 'parseDate');
-		$control->addCondition( Form::FILLED )->addRule( function ($control) use ($parser) {
-			return $parser($control->value) !== FALSE;
+		$control->addCondition( Form::FILLED )->addRule( function ($control) {
+			return self::parseDate($control->value) !== FALSE;
 		}, 'Datum prosím zadávejte ve formátu "D.M.RRRR".' );
 
 		return $control;
 	}
 
 
-	static function parseDate($s)
+	/**
+	 * @param  string $s
+	 * @return DateTime|FALSE
+	 */
+	public static function parseDate($s)
 	{
 		try {
 			if (!($m = Nette\Utils\Strings::match($s, static::DATE_REGEXP))) {

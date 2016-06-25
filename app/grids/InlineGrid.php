@@ -15,12 +15,11 @@ class InlineGrid extends BaseGrid
 		$this->addColumn('biography', 'Biography');
 		$this->addColumn('country_code', 'Country');
 
-		$me = $this;
-		$this->setInlineEditing($this->inlineEditFactory, function ($id, Nette\Utils\ArrayHash $values) use ($me) {
-			$me->flashMessage("[DEMO] Updating item '$id' with values " . Nette\Utils\Json::encode($values), 'success');
+		$this->setInlineEditing([$this, 'inlineEditFactory'], function ($id, Nette\Utils\ArrayHash $values) {
+			$this->flashMessage("[DEMO] Updating item '$id' with values " . Nette\Utils\Json::encode($values), 'success');
 		});
 
-		$this->setDataLoader($this->dataLoader);
+		$this->setDataLoader([$this, 'dataLoader']);
 	}
 
 
@@ -28,7 +27,7 @@ class InlineGrid extends BaseGrid
 	 * @param  Nette\Database\Table\ActiveRow $record
 	 * @return Nette\Forms\Container
 	 */
-	function inlineEditFactory(Nette\Database\Table\ActiveRow $record)
+	public function inlineEditFactory(Nette\Database\Table\ActiveRow $record)
 	{
 		$c = new Nette\Forms\Container;
 
@@ -49,7 +48,7 @@ class InlineGrid extends BaseGrid
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	function dataLoader(InlineGrid $grid, array $columns, array $filters, array $order)
+	public function dataLoader(InlineGrid $grid, array $columns, array $filters, array $order)
 	{
 		return $this->database->table('user')
 			->select(implode(', ', $columns))

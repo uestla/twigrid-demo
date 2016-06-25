@@ -1,7 +1,7 @@
 <?php
 
 
-class SimpleGrid extends BaseGrid
+class SortingGrid extends BaseGrid
 {
 
 	/** @return void */
@@ -14,10 +14,8 @@ class SimpleGrid extends BaseGrid
 		$this->addColumn('birthday', 'Birthdate')->setSortable();
 		$this->addColumn('kilograms', 'Weight (kg)')->setSortable();
 
-		$db = $this->database;
-
-		$this->setDataLoader(function (SimpleGrid $grid, array $columns, array $filters, array $order) use ($db) {
-			$users = $db->table('user');
+		$this->setDataLoader(function (SortingGrid $grid, array $columns, array $filters, array $order) {
+			$users = $this->database->table('user');
 
 			// columns
 			$users->select(implode(', ', $columns));

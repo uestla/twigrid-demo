@@ -1,0 +1,17 @@
+{extends '@grid.latte'}
+
+
+{block h2}Sorting{/block}
+
+
+{block tips}
+{include #tip-box, tip => 'Use the "+" links for multiple column sorting' |indent:1}
+{include #tip-box, tip => 'Sorting has 3 states - ascending, descending and non-sorting state.' |indent:1}
+{/block}
+
+
+{block content}
+
+{include #grid, grid => 'sortingGrid', sources => [ $sourceDir . '/SortingGrid.php', $sourceDir . '/BaseGrid.php' ]}
+
+{/block}

@@ -20,15 +20,15 @@ class FullGrid extends BaseGrid
 		$this->addColumn('birthday', 'Birthdate')->setSortable();
 		$this->addColumn('kilograms', 'W (kg)')->setSortable();
 
-		$this->setFilterFactory($this->createFilterContainer);
-		$this->setDataLoader($this->dataLoader);
-		$this->setPagination(12, $this->itemCounter);
-		$this->setInlineEditing($this->createInlineEditContainer, $this->processInlineEditForm);
+		$this->setFilterFactory([$this, 'createFilterContainer']);
+		$this->setDataLoader([$this, 'dataLoader']);
+		$this->setPagination(12, [$this, 'itemCounter']);
+		$this->setInlineEditing([$this, 'createInlineEditContainer'], [$this, 'processInlineEditForm']);
 
-		$this->addRowAction('delete', 'Delete', $this->deleteRecord)
+		$this->addRowAction('delete', 'Delete', [$this, 'deleteRecord'])
 			->setConfirmation('Do you really want to delete this record?');
 
-		$this->addGroupAction('delete', 'Delete', $this->deleteMany)
+		$this->addGroupAction('delete', 'Delete', [$this, 'deleteMany'])
 			->setConfirmation('WARNING! Deleted records cannot be restored! Proceed?');
 
 		$this->setDefaultOrderBy(array(
@@ -47,7 +47,7 @@ class FullGrid extends BaseGrid
 
 
 	/** @return Nette\Forms\Container */
-	function createFilterContainer()
+	public function createFilterContainer()
 	{
 		$container = new Nette\Forms\Container;
 
@@ -58,12 +58,12 @@ class FullGrid extends BaseGrid
 		$min = Helpers::addDateInput($birthday, 'min');
 		$max = Helpers::addDateInput($birthday, 'max');
 
-		$parser = NCallback::closure('Helpers::parseDate');
-		$min->addCondition(Form::FILLED)->addRule(function () use ($min, $max, $parser) {
+		$min->addCondition(Form::FILLED)->addRule(function () use ($min, $max) {
 			return !$max->filled
-					|| (($minDt = $parser($min->value)) !== FALSE
-						&& ($maxDt = $parser($max->value)) !== FALSE
+					|| (($minDt = Helpers::parseDate($min->value)) !== FALSE
+						&& ($maxDt = Helpers::parseDate($max->value)) !== FALSE
 						&& $minDt <= $maxDt);
+
 		}, 'Please select valid date range.');
 
 		$container->addSelect('country_code', 'Country', Helpers::getCountries())
@@ -79,17 +79,19 @@ class FullGrid extends BaseGrid
 	 * @param  Nette\Database\Table\ActiveRow $record
 	 * @return Nette\Forms\Container
 	 */
-	function createInlineEditContainer(Nette\Database\Table\ActiveRow $record)
+	public function createInlineEditContainer(Nette\Database\Table\ActiveRow $record)
 	{
 		$container = new Nette\Forms\Container;
 		$container->addText('firstname')->setRequired();
 		$container->addText('surname')->setRequired();
-		$container->addSelect('country_code', 'Country', Helpers::getCountries())->setRequired()
+		$container->addSelect('country_code', 'Country', Helpers::getCountries())
+				->setRequired()
 				->setDefaultValue($record->country_code);
+
 		Helpers::addDateInput($container, 'birthday')->setRequired();
 		$container->addText('kilograms')->addRule(Form::FLOAT);
 		$defaults = $record->toArray();
-		$defaults['birthday'] = id(new DateTime($defaults['birthday']))->format('d. m. Y');
+		$defaults['birthday'] = (new DateTime($defaults['birthday']))->format('d. m. Y');
 		return $container->setDefaults($defaults);
 	}
 
@@ -103,7 +105,7 @@ class FullGrid extends BaseGrid
 	 * @param  int $offset
 	 * @return Nette\Database\Table\Selection
 	 */
-	function dataLoader(FullGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
+	public function dataLoader(FullGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
 	{
 		// selection factory
 		$users = $this->database->table('user');
@@ -128,7 +130,7 @@ class FullGrid extends BaseGrid
 	 * @param  array $filters
 	 * @return int
 	 */
-	function itemCounter(FullGrid $grid, array $columns, array $filters)
+	public function itemCounter(FullGrid $grid, array $columns, array $filters)
 	{
 		return static::filterData($this->database->table('user'), $columns, $filters)
 				->count('*');
@@ -188,7 +190,7 @@ class FullGrid extends BaseGrid
 	 * @param  Nette\Database\Table\ActiveRow $record
 	 * @return void
 	 */
-	function deleteRecord(Nette\Database\Table\ActiveRow $record)
+	public function deleteRecord(Nette\Database\Table\ActiveRow $record)
 	{
 		$this->flashMessage("[DEMO] Deletion request sent for record '{$record->id}'.", 'success');
 	}
@@ -199,7 +201,7 @@ class FullGrid extends BaseGrid
 	 * @param  Nette\Utils\ArrayHash $values
 	 * @return void
 	 */
-	function processInlineEditForm(Nette\Database\Table\ActiveRow $record, Nette\Utils\ArrayHash $values)
+	public function processInlineEditForm(Nette\Database\Table\ActiveRow $record, Nette\Utils\ArrayHash $values)
 	{
 		$this->flashMessage("[DEMO] Update request sent for record '{$record->id}'; new values: " . Nette\Utils\Json::encode($values), 'success');
 	}
@@ -209,7 +211,7 @@ class FullGrid extends BaseGrid
 	 * @param  Nette\Database\Table\ActiveRow[]
 	 * @return void
 	 */
-	function deleteMany(array $records)
+	public function deleteMany(array $records)
 	{
 		$ids = array();
 		foreach ($records as $record) {

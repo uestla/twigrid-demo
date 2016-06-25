@@ -5,6 +5,22 @@ $(function () {
 	hljs.initHighlightingOnLoad();
 
 
+	// === bootstrap tooltips ====================
+
+	$.nette.ext({
+		load: function () {
+			$('[rel="tooltip"]').remove();
+
+			$('[title]').each(function () {
+				$(this).tooltip({
+					animation: false,
+					container: 'body'
+				});
+			});
+		}
+	});
+
+
 	var flashes, datepickers;
 
 
@@ -20,9 +36,9 @@ $(function () {
 	// === datepicker ====================
 
 	(datepickers = function (parent) {
-		parent.find('input.date').datetimepicker({
-			pickTime: false,
-			format: 'DD. MM. YYYY'
+		parent.find('input.date').datepicker({
+			autoclose: true,
+			format: 'dd. mm. yyyy'
 
 		}).on('show', function (event) {
 			var el = $(event.target);
@@ -50,14 +66,9 @@ $(function () {
 	var queries = function (queries) {
 		$('#queries').html('')
 			.append($('<h3>', {
-				text: 'SQL dotazy (' + queries.length + ')',
-				title: 'Rozbalit/sbalit příkazy',
-				href: '#n',
-				click: function (event) {
-					event.preventDefault();
-				}
+				text: 'SQL queries (' + queries.length + ')'
 			}))
-			.append($('<div class="list">').html(queries));
+			.append(queries);
 	};
 
 	if (typeof g_Queries !== 'undefined') { queries(g_Queries); }

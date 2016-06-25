@@ -13,12 +13,12 @@ class GroupActionGrid extends BaseGrid
 		$this->addColumn('country_code', 'Country');
 		$this->addColumn('birthday', 'Birthdate');
 
-		$this->addGroupAction('export', 'Export', $this->exportMany);
+		$this->addGroupAction('export', 'Export', [$this, 'exportMany']);
 
-		$this->addGroupAction('delete', 'Delete', $this->deleteMany)
+		$this->addGroupAction('delete', 'Delete', [$this, 'deleteMany'])
 			->setConfirmation('Do you really want to delete all chosen items?');
 
-		$this->setDataLoader($this->dataLoader);
+		$this->setDataLoader([$this, 'dataLoader']);
 	}
 
 
@@ -29,7 +29,7 @@ class GroupActionGrid extends BaseGrid
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	function dataLoader(GroupActionGrid $grid, array $columns, array $filters, array $order)
+	public function dataLoader(GroupActionGrid $grid, array $columns, array $filters, array $order)
 	{
 		return $this->database->table('user')
 			->select(implode(', ', $columns))
@@ -41,7 +41,7 @@ class GroupActionGrid extends BaseGrid
 	 * @param  Nette\Database\Table\ActiveRow[]
 	 * @return void
 	 */
-	function exportMany(array $records)
+	public function exportMany(array $records)
 	{
 		$ids = array();
 		foreach ($records as $record) {
@@ -56,7 +56,7 @@ class GroupActionGrid extends BaseGrid
 	 * @param  Nette\Database\Table\ActiveRow[]
 	 * @return void
 	 */
-	function deleteMany(array $records)
+	public function deleteMany(array $records)
 	{
 		$ids = array();
 		foreach ($records as $record) {

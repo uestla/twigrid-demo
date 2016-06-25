@@ -1,3 +1,7 @@
+/deploy
 /vendor
 /log/[^.]*
 /composer.lock
+/bower_components
+/.htaccess-production
+/app/views/@layout.latte-production

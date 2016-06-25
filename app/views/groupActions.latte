@@ -1,13 +1,16 @@
 {extends '@grid.latte'}
 
 
-{block h2}Manipulating with multiple records via group actions{/block}
+{block h2}Group actions{/block}
+
+
+{block tips}
+{include #tip-box, tip => 'Press Shift to (un)check multiple rows.'}
+{include #tip-box, tip => 'Clicking in the header row checks all rows.'}
+{/block}
 
 
 {block content}
-
-{include #tip-box, tip => 'Press Shift to (un)check multiple rows.'}
-{include #tip-box, tip => 'Clicking in the header row checks all rows.'}
 
 {include #grid, grid => 'groupActionGrid', sources => [ $sourceDir . '/GroupActionGrid.php', $sourceDir . '/BaseGrid.php' ]}
 

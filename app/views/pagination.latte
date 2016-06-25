@@ -4,10 +4,13 @@
 {block h2}Paginate result set{/block}
 
 
-{block content}
-
+{block tips}
 {include #tip-box, tip => 'Note that $limit and $offset parameters are appended to the dataLoader callback.'}
 {include #tip-box, tip => 'U can use [Ctrl] + arrow left/right to turn pages (make sure you\'ve clicked inside the grid before to make it focused)'}
+{/block}
+
+
+{block content}
 
 {include #grid, grid => 'paginationGrid', sources => [ $sourceDir . '/PaginationGrid.php', $sourceDir . '/BaseGrid.php' ]}
 

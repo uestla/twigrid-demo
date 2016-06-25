@@ -4,10 +4,13 @@
 {block h2}Quick item editing via inline edit feature{/block}
 
 
-{block content}
+{block tips}
+{include #tip-box, tip => 'When inside a textarea, use [Ctrl] + [Enter] to submit the form.' |indent:1}
+{include #tip-box, tip => 'Press [Ctrl] + Click to activate inline editing and [Esc] to cancel it.' |indent:1}
+{/block}
 
-{include #tip-box, tip => 'When inside a textarea, use [Ctrl] + [Enter] to submit the form.'}
-{include #tip-box, tip => 'Press [Ctrl] + Click to activate inline editing and [Esc] to cancel it.'}
+
+{block content}
 
 {include #grid, grid => 'inlineGrid', sources => [ $sourceDir . '/InlineGrid.php', $sourceDir . '/BaseGrid.php', $sourceDir . '/@inline.latte' ] }
 

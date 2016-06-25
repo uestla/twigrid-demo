@@ -45,7 +45,7 @@
 
 
 {define row-action-delete}
-	<a href="{$link}" class="btn btn-danger btn-sm tw-ajax" n:attr="data-tw-confirm => $action->confirmation">
-		{$action->label}
+	<a href="{$link}" class="btn btn-danger btn-sm tw-ajax" n:attr="data-tw-confirm => $action->getConfirmation()">
+		{$action->getLabel()}
 	</a>
 {/define}
