@@ -18,6 +18,11 @@
 		<div class="navbar navbar-default navbar-fixed-top">
 			<div class="container-fluid">
 				<div class="navbar-header">
+					<button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu">
+						<span class="sr-only">Menu</span>
+						<i class="fa fa-fw fa-bars"></i>
+					</button>
+
 					<a n:href="Example:homepage,
 						dataGrid-poluted => NULL,
 						dataGrid-orderBy => NULL,
@@ -27,30 +32,32 @@
 						dataGrid-inlineEditPrimary => NULL" class="navbar-brand">TwiGrid</a>
 				</div>
 
-				<ul class="nav navbar-nav">
-					<li n:class="$presenter->isLinkCurrent('Example:homepage') ? 'active'"><a n:href="Example:homepage">Quickstart</a></li>
-					<li n:class="$presenter->isLinkCurrent('Example:sorting') ? 'active'"><a n:href="Example:sorting">Sorting</a></li>
-					<li n:class="$presenter->isLinkCurrent('Example:filtering') ? 'active'"><a n:href="Example:filtering">Filtering</a></li>
-					<li n:class="$presenter->isLinkCurrent('Example:rowActions') ? 'active'"><a n:href="Example:rowActions">Row actions</a></li>
-					<li n:class="$presenter->isLinkCurrent('Example:groupActions') ? 'active'"><a n:href="Example:groupActions">Group actions</a></li>
-					<li n:class="$presenter->isLinkCurrent('Example:inline') ? 'active'"><a n:href="Example:inline">Inline editing</a></li>
-					<li n:class="$presenter->isLinkCurrent('Example:pagination') ? 'active'"><a n:href="Example:pagination">Pagination</a></li>
-					<li n:class="$presenter->isLinkCurrent('Example:full') ? 'active'"><a n:href="Example:full">Full featured</a></li>
-				</ul>
+				<div class="collapse navbar-collapse" id="main-menu">
+					<ul class="nav navbar-nav">
+						<li n:class="$presenter->isLinkCurrent('Example:homepage') ? 'active'"><a n:href="Example:homepage">Quickstart</a></li>
+						<li n:class="$presenter->isLinkCurrent('Example:sorting') ? 'active'"><a n:href="Example:sorting">Sorting</a></li>
+						<li n:class="$presenter->isLinkCurrent('Example:filtering') ? 'active'"><a n:href="Example:filtering">Filtering</a></li>
+						<li n:class="$presenter->isLinkCurrent('Example:rowActions') ? 'active'"><a n:href="Example:rowActions">Row actions</a></li>
+						<li n:class="$presenter->isLinkCurrent('Example:groupActions') ? 'active'"><a n:href="Example:groupActions">Group actions</a></li>
+						<li n:class="$presenter->isLinkCurrent('Example:inline') ? 'active'"><a n:href="Example:inline">Inline editing</a></li>
+						<li n:class="$presenter->isLinkCurrent('Example:pagination') ? 'active'"><a n:href="Example:pagination">Pagination</a></li>
+						<li n:class="$presenter->isLinkCurrent('Example:full') ? 'active'"><a n:href="Example:full">Full featured</a></li>
+					</ul>
 
-				<ul class="nav navbar-nav navbar-right">
-					<li>
-						<a href="https://github.com/uestla/twigrid" target="_blank">
-							<i class="fa fa-lg fa-github"></i> Source
-						</a>
-					</li>
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a href="https://github.com/uestla/twigrid" target="_blank">
+								<i class="fa fa-lg fa-github"></i> Source
+							</a>
+						</li>
 
-					<li>
-						<a href="https://github.com/uestla/twigrid-demo" target="_blank">
-							<i class="fa fa-lg fa-github"></i> This demo
-						</a>
-					</li>
-				</ul>
+						<li>
+							<a href="https://github.com/uestla/twigrid-demo" target="_blank">
+								<i class="fa fa-lg fa-github"></i> This demo
+							</a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 
