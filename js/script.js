@@ -1,105 +1,75 @@
-$(function () {
 
-	// === sources highlighting ====================
+// this is a example-specific script that extends basic TwiGrid functionality for example purposes
 
-	hljs.initHighlightingOnLoad();
+;(function (window, $) {
+
+	$(function () {
+
+		// === sources highlighting ====================
+
+		hljs.initHighlightingOnLoad();
 
 
-	// === bootstrap tooltips ====================
+		// === datepicker ====================
 
-	$.nette.ext({
-		load: function () {
-			$('[rel="tooltip"]').remove();
+		$.nette.ext({
+			load: function () {
+				$('input.date').datepicker('destroy').datepicker({
+					autoclose: true,
+					format: 'dd. mm. yyyy'
 
-			$('[title]').each(function () {
-				$(this).tooltip({
-					animation: false,
-					container: 'body'
+				}).on('show', function (event) {
+					var el = $(event.target);
+					el.attr('value') === '' && (el.attr('value', el.hasClass('min') ? '1950-05-02' : '2000-01-01'));
 				});
-			});
-		}
-	});
-
-
-	var flashes, datepickers;
-
-
-	// === flash messages hiding ====================
-
-	(flashes = function (parent) {
-		parent.find('.alert.hidable')
-			.prepend($('<button type="button" class="close" data-dismiss="alert">&times;</button>'));
-
-	})($('body'));
-
-
-	// === datepicker ====================
-
-	(datepickers = function (parent) {
-		parent.find('input.date').datepicker({
-			autoclose: true,
-			format: 'dd. mm. yyyy'
-
-		}).on('show', function (event) {
-			var el = $(event.target);
-			el.attr('value') === '' && (el.attr('value', el.hasClass('min') ? '1950-05-02' : '2000-01-01'));
+			}
 		});
 
-	})($('body'));
 
+		// === showing SQL queries ====================
 
-	$.nette.ext('bind-events', {
-		init: function () {
-			var snippets;
-			if (!(snippets = this.ext('snippets'))) return;
+		if (typeof g_Queries !== 'undefined') {
+			var queries = function (queries) {
+				$('#queries').html(
+					$('<h3 />', {
+						text: 'SQL queries (' + queries.length + ')'
+					})
+				).append(queries);
+			};
 
-			snippets.after(function (el) {
-				flashes(el);
-				datepickers(el);
+			$.nette.ext({
+				load: function () {
+					queries(g_Queries);
+				},
+
+				success: function (payload) {
+					if (payload.queries) {
+						queries(payload.queries);
+					}
+				}
 			});
 		}
-	});
 
 
-	// === showing SQL queries mechanism ====================
+		// === AJAX "spinner" (sand-clock cursor) ====================
 
-	var queries = function (queries) {
-		$('#queries').html('')
-			.append($('<h3>', {
-				text: 'SQL queries (' + queries.length + ')'
-			}))
-			.append(queries);
-	};
+		$.nette.ext({
+			init: function () {
+				$('body').append('<style>.ajax-loading * { cursor: wait !important; }</style>');
+			},
 
-	if (typeof g_Queries !== 'undefined') { queries(g_Queries); }
+			before: function () {
+				$('html').addClass('ajax-loading');
+			},
 
-
-	$.nette.ext('queries', {
-		success: function (payload) {
-			if (payload.queries) {
-				queries(payload.queries);
+			complete: function () {
+				$('html').removeClass('ajax-loading');
 			}
-		}
+		});
+
+
+		$.nette.init();
+
 	});
 
-
-	// === AJAX "spinner" (sand-clock cursor) ====================
-
-	$.nette.ext('spinner', {
-		init: function () {
-			$('body').append('<style>.ajax-loading * { cursor: wait !important; }</style>');
-		},
-
-		before: function () {
-			$('html').addClass('ajax-loading');
-		},
-
-		complete: function () {
-			$('html').removeClass('ajax-loading');
-		}
-	});
-
-
-	$.nette.init();
-
-});
+})(window, window.jQuery);
