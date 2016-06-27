@@ -31,18 +31,18 @@ class FullGrid extends BaseGrid
 		$this->addGroupAction('delete', 'Delete', [$this, 'deleteMany'])
 			->setConfirmation('WARNING! Deleted records cannot be restored! Proceed?');
 
-		$this->setDefaultOrderBy(array(
+		$this->setDefaultOrderBy([
 			'surname' => Column::ASC,
 			'firstname' => Column::DESC,
-		));
+		]);
 
-		$this->setDefaultFilters(array(
+		$this->setDefaultFilters([
 			'kilograms' => 70,
-			'birthday' => array(
+			'birthday' => [
 				'min' => '01. 01. 1970',
 				'max' => '28. 11. 1996',
-			),
-		));
+			],
+		]);
 	}
 
 
@@ -213,7 +213,7 @@ class FullGrid extends BaseGrid
 	 */
 	public function deleteMany(array $records)
 	{
-		$ids = array();
+		$ids = [];
 		foreach ($records as $record) {
 			$ids[] = $record->id;
 		}

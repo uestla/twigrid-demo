@@ -43,7 +43,7 @@ class GroupActionGrid extends BaseGrid
 	 */
 	public function exportMany(array $records)
 	{
-		$ids = array();
+		$ids = [];
 		foreach ($records as $record) {
 			$ids[] = $record->id;
 		}
@@ -58,7 +58,7 @@ class GroupActionGrid extends BaseGrid
 	 */
 	public function deleteMany(array $records)
 	{
-		$ids = array();
+		$ids = [];
 		foreach ($records as $record) {
 			$ids[] = $record->id;
 		}

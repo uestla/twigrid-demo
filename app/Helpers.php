@@ -20,7 +20,7 @@ class Helpers
 	/**  @return array*/
 	public static function getCountries()
 	{
-		return array(
+		return [
 			'au' => 'Australia',
 			'at' => 'Austria',
 			'be' => 'Belgium',
@@ -38,7 +38,7 @@ class Helpers
 			'pl' => 'Poland',
 			'se' => 'Sweden',
 			'us' => 'United States',
-		);
+		];
 	}
 
 
@@ -49,7 +49,7 @@ class Helpers
 	 */
 	public static function initQueryLogging(Connection $connection, $payload)
 	{
-		$payload->queries = array();
+		$payload->queries = [];
 		$connection->onQuery[] = function (Connection $c, ResultSet $result) use ($payload) {
 			self::logQuery($payload, $result->getPdoStatement()->queryString);
 		};
