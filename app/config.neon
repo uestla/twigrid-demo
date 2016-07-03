@@ -1,9 +1,3 @@
-parameters:
-	appDir: %wwwDir%/app
-
-php:
-	date.timezone: UTC
-
 session:
 	save_path: %tempDir%/sessions
 	expiration: + 14 days

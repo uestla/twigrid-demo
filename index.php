@@ -1,21 +1,24 @@
 <?php
 
-use Nette\Application\Routers;
-use Nette\Application\Application as NApplication;
+use Nette\Application as NApplication;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$c = new Nette\Configurator;
-$c->setTempDirectory(__DIR__ . '/temp');
-$c->enableDebugger(__DIR__ . '/log');
-$c->createRobotLoader()->addDirectory([__DIR__ . '/app'])->register();
-$c->addConfig(__DIR__ . '/app/config.neon');
+$configurator = new Nette\Configurator;
+$configurator->setTimeZone('UTC');
+$configurator->enableDebugger(__DIR__ . '/log');
+$configurator->setTempDirectory(__DIR__ . '/temp');
+$configurator->addConfig(__DIR__ . '/app/config.neon');
+$configurator->addParameters(['appDir' => __DIR__ . '/app']);
+$configurator->createRobotLoader()->addDirectory(__DIR__ . '/app')->register();
 
-function id($a) { return $a; }
 
-$container = $c->createContainer();
-$router = $container->getService('router');
-$router[] = new Routers\Route('simple', 'Example:sorting');
-$router[] = new Routers\Route('<action>', 'Example:homepage');
-$router[] = new Routers\SimpleRouter('Example:default');
-$container->getByType(NApplication::class)->run();
+$container = $configurator->createContainer();
+
+$router = $container->getByType(NApplication\IRouter::class);
+$router[] = new NApplication\Routers\Route('? action=<action>', 'Example:homepage', NApplication\Routers\Route::ONE_WAY);
+$router[] = new NApplication\Routers\Route('simple', 'Example:sorting');
+$router[] = new NApplication\Routers\Route('<action>', 'Example:homepage');
+$router[] = new NApplication\Routers\SimpleRouter('Example:default');
+
+$container->getByType(NApplication\Application::class)->run();
