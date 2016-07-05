@@ -14,11 +14,8 @@ class SortingGrid extends BaseGrid
 		$this->addColumn('birthday', 'Birthdate')->setSortable();
 		$this->addColumn('kilograms', 'Weight (kg)')->setSortable();
 
-		$this->setDataLoader(function (SortingGrid $grid, array $columns, array $filters, array $order) {
+		$this->setDataLoader(function (SortingGrid $grid, array $filters, array $order) {
 			$users = $this->database->table('user');
-
-			// columns
-			$users->select(implode(', ', $columns));
 
 			// sorting
 			foreach ($order as $column => $dir) {

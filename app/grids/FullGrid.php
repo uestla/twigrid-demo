@@ -2,7 +2,6 @@
 
 use Nette\Forms\Form;
 use TwiGrid\Components\Column;
-use Nette\Utils\Callback as NCallback;
 
 
 class FullGrid extends BaseGrid
@@ -98,23 +97,19 @@ class FullGrid extends BaseGrid
 
 	/**
 	 * @param  FullGrid $grid
-	 * @param  array $columns
 	 * @param  array $filters
 	 * @param  array $order
 	 * @param  int $limit
 	 * @param  int $offset
 	 * @return Nette\Database\Table\Selection
 	 */
-	public function dataLoader(FullGrid $grid, array $columns, array $filters, array $order, $limit, $offset)
+	public function dataLoader(FullGrid $grid, array $filters, array $order, $limit, $offset)
 	{
 		// selection factory
 		$users = $this->database->table('user');
 
-		// columns
-		$users->select(implode(', ', $columns));
-
 		// filtering
-		static::filterData($users, $columns, $filters);
+		static::filterData($users, $filters);
 
 		// order
 		static::orderData($users, $order);
@@ -126,48 +121,46 @@ class FullGrid extends BaseGrid
 
 	/**
 	 * @param  FullGrid $grid
-	 * @param  array $columns
 	 * @param  array $filters
 	 * @return int
 	 */
-	public function itemCounter(FullGrid $grid, array $columns, array $filters)
+	public function itemCounter(FullGrid $grid, array $filters)
 	{
-		return static::filterData($this->database->table('user'), $columns, $filters)
+		return static::filterData($this->database->table('user'), $filters)
 				->count('*');
 	}
 
 
 	/**
-	 * @param  NSelection $data
-	 * @param  array $columns
+	 * @param  NSelection $selection
 	 * @param  array $filters
 	 * @return NSelection
 	 */
-	protected static function filterData(Nette\Database\Table\Selection $data, array $columns, array $filters)
+	protected static function filterData(Nette\Database\Table\Selection $selection, array $filters)
 	{
 		foreach ($filters as $column => $value) {
 			if ($column === 'gender') {
-				$data->where($column, $value);
+				$selection->where($column, $value);
 
 			} elseif ($column === 'country_code') {
-				$data->where($column, $value);
+				$selection->where($column, $value);
 
 			} elseif ($column === 'birthday') {
-				isset($value['min']) && $data->where("$column >= ?", Helpers::parseDate($value['min'])->format('Y-m-d'));
-				isset($value['max']) && $data->where("$column <= ?", Helpers::parseDate($value['max'])->format('Y-m-d'));
+				isset($value['min']) && $selection->where("$column >= ?", Helpers::parseDate($value['min'])->format('Y-m-d'));
+				isset($value['max']) && $selection->where("$column <= ?", Helpers::parseDate($value['max'])->format('Y-m-d'));
 
 			} elseif ($column === 'kilograms') {
-				$data->where("$column <= ?", $value);
+				$selection->where("$column <= ?", $value);
 
 			} elseif ($column === 'firstname' || $column === 'surname') {
-				$data->where("$column LIKE ?", "$value%");
+				$selection->where("$column LIKE ?", "$value%");
 
 			} elseif (isset($columns[$column])) {
-				$data->where("$column LIKE ?", "%$value%");
+				$selection->where("$column LIKE ?", "%$value%");
 			}
 		}
 
-		return $data;
+		return $selection;
 	}
 
 

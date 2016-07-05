@@ -37,17 +37,13 @@ class FilterGrid extends BaseGrid
 
 	/**
 	 * @param  FilterGrid $grid
-	 * @param  array $columns
 	 * @param  array $filters
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	public function dataLoader(FilterGrid $grid, array $columns, array $filters, array $order)
+	public function dataLoader(FilterGrid $grid, array $filters, array $order)
 	{
 		$users = $this->database->table('user');
-
-		// columns
-		$users->select(implode(', ', $columns));
 
 		// filtering
 		foreach ($filters as $column => $value) {

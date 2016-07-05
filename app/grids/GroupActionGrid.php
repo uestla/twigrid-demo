@@ -24,15 +24,13 @@ class GroupActionGrid extends BaseGrid
 
 	/**
 	 * @param  GroupActionGrid $grid
-	 * @param  array $columns
 	 * @param  array $filters
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	public function dataLoader(GroupActionGrid $grid, array $columns, array $filters, array $order)
+	public function dataLoader(GroupActionGrid $grid, array $filters, array $order)
 	{
 		return $this->database->table('user')
-			->select(implode(', ', $columns))
 			->limit(12);
 	}
 

@@ -15,9 +15,9 @@ abstract class BaseGrid extends TwiGrid\DataGrid
 	 * @param  NSession $session
 	 * @param  NdbContext $database
 	 */
-	public function __construct(NSession $s, NdbContext $database)
+	public function __construct(NSession $session, NdbContext $database)
 	{
-		parent::__construct($s);
+		parent::__construct($session);
 		$this->database = $database;
 	}
 
