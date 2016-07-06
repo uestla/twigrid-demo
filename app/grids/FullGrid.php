@@ -10,6 +10,8 @@ class FullGrid extends BaseGrid
 	/** @return void */
 	protected function build()
 	{
+		parent::build();
+
 		$this->setTemplateFile(__DIR__ . '/@full.latte');
 
 		$this->setPrimaryKey('id');

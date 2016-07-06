@@ -21,4 +21,12 @@ abstract class BaseGrid extends TwiGrid\DataGrid
 		$this->database = $database;
 	}
 
+
+	/** @return void */
+	protected function build()
+	{
+		parent::build();
+		$this->setRecordVariable('user');
+	}
+
 }

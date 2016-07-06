@@ -7,6 +7,8 @@ class GroupActionGrid extends BaseGrid
 	/** @return void */
 	protected function build()
 	{
+		parent::build();
+
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name');
 		$this->addColumn('surname', 'Surname');

@@ -9,6 +9,8 @@ class FilterGrid extends BaseGrid
 	/** @return void */
 	protected function build()
 	{
+		parent::build();
+
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name')->setSortable();
 		$this->addColumn('surname', 'Surname')->setSortable();

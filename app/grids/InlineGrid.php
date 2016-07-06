@@ -7,6 +7,8 @@ class InlineGrid extends BaseGrid
 	/** @return void */
 	protected function build()
 	{
+		parent::build();
+
 		$this->setTemplateFile(__DIR__ . '/@inline.latte');
 
 		$this->setPrimaryKey('id');
