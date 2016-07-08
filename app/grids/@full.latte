@@ -20,7 +20,7 @@
 
 
 {define body-cell-birthday}
-	<td class="numeric center">{$value |date:'d. m. Y'}</td>
+	<td class="numeric center">{$user->birthday |date:'d. m. Y'}</td>
 {/define}
 
 
@@ -35,7 +35,7 @@
 
 
 {define body-cell-kilograms}
-	<td class="numeric right">{$value}</td>
+	<td class="numeric right">{$user->kilograms}</td>
 {/define}
 
 

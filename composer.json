@@ -20,7 +20,7 @@
 		"nette/robot-loader": "^2.4",
 
 		"dibi/dibi": "^3.0",
-		"uestla/twigrid": "^8.0"
+		"uestla/twigrid": "^10.0"
 	},
 
 	"require-dev": {
