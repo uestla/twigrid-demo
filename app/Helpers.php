@@ -1,12 +1,10 @@
 <?php
 
 use Nette\Forms\Form;
-use Nette\Caching\Cache;
 use Nette\Forms\Container;
 use Nette\Database\ResultSet;
 use Nette\Database\Connection;
 use Nette\Forms\Controls\TextInput;
-use Nette\Utils\Callback as NCallback;
 
 
 /** Misc helpers for demo purposes */

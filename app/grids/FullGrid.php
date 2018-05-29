@@ -1,7 +1,10 @@
 <?php
 
 use Nette\Forms\Form;
+use Nette\Forms\Container;
 use TwiGrid\Components\Column;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 
 
 class FullGrid extends BaseGrid
@@ -47,11 +50,12 @@ class FullGrid extends BaseGrid
 	}
 
 
-	/** @return Nette\Forms\Container */
-	public function createFilterContainer()
+	/**
+	 * @param  Container $container
+	 * @return void
+	 */
+	public function createFilterContainer(Container $container)
 	{
-		$container = new Nette\Forms\Container;
-
 		$container->addText('firstname');
 		$container->addText('surname');
 
@@ -71,18 +75,16 @@ class FullGrid extends BaseGrid
 				->setPrompt('---');
 
 		$container->addText('kilograms')->addCondition(Form::FILLED)->addRule(Form::FLOAT);
-
-		return $container;
 	}
 
 
 	/**
-	 * @param  Nette\Database\Table\ActiveRow $record
-	 * @return Nette\Forms\Container
+	 * @param  Container $container
+	 * @param  ActiveRow $record
+	 * @return void
 	 */
-	public function createInlineEditContainer(Nette\Database\Table\ActiveRow $record)
+	public function createInlineEditContainer(Container $container, ActiveRow $record)
 	{
-		$container = new Nette\Forms\Container;
 		$container->addText('firstname')->setRequired();
 		$container->addText('surname')->setRequired();
 		$container->addSelect('country_code', 'Country', Helpers::getCountries())
@@ -93,19 +95,19 @@ class FullGrid extends BaseGrid
 		$container->addText('kilograms')->addRule(Form::FLOAT);
 		$defaults = $record->toArray();
 		$defaults['birthday'] = (new DateTime($defaults['birthday']))->format('d. m. Y');
-		return $container->setDefaults($defaults);
+
+		$container->setDefaults($defaults);
 	}
 
 
 	/**
-	 * @param  FullGrid $grid
 	 * @param  array $filters
 	 * @param  array $order
 	 * @param  int $limit
 	 * @param  int $offset
-	 * @return Nette\Database\Table\Selection
+	 * @return Selection
 	 */
-	public function dataLoader(FullGrid $grid, array $filters, array $order, $limit, $offset)
+	public function dataLoader(array $filters, array $order, $limit, $offset)
 	{
 		// selection factory
 		$users = $this->database->table('user');
@@ -122,11 +124,10 @@ class FullGrid extends BaseGrid
 
 
 	/**
-	 * @param  FullGrid $grid
 	 * @param  array $filters
 	 * @return int
 	 */
-	public function itemCounter(FullGrid $grid, array $filters)
+	public function itemCounter(array $filters)
 	{
 		return static::filterData($this->database->table('user'), $filters)
 				->count('*');
@@ -138,7 +139,7 @@ class FullGrid extends BaseGrid
 	 * @param  array $filters
 	 * @return NSelection
 	 */
-	protected static function filterData(Nette\Database\Table\Selection $selection, array $filters)
+	protected static function filterData(Selection $selection, array $filters)
 	{
 		foreach ($filters as $column => $value) {
 			if ($column === 'gender') {
@@ -157,7 +158,7 @@ class FullGrid extends BaseGrid
 			} elseif ($column === 'firstname' || $column === 'surname') {
 				$selection->where("$column LIKE ?", "$value%");
 
-			} elseif (isset($columns[$column])) {
+			} else {
 				$selection->where("$column LIKE ?", "%$value%");
 			}
 		}
@@ -171,7 +172,7 @@ class FullGrid extends BaseGrid
 	 * @param  array $order
 	 * @return NSelection
 	 */
-	protected static function orderData(Nette\Database\Table\Selection $data, array $order)
+	protected static function orderData(Selection $data, array $order)
 	{
 		foreach ($order as $column => $dir) {
 			$data->order($column . ($dir === TwiGrid\Components\Column::DESC ? ' DESC' : ''));
@@ -182,28 +183,28 @@ class FullGrid extends BaseGrid
 
 
 	/**
-	 * @param  Nette\Database\Table\ActiveRow $record
+	 * @param  ActiveRow $record
 	 * @return void
 	 */
-	public function deleteRecord(Nette\Database\Table\ActiveRow $record)
+	public function deleteRecord(ActiveRow $record)
 	{
 		$this->flashMessage("[DEMO] Deletion request sent for record '{$record->id}'.", 'success');
 	}
 
 
 	/**
-	 * @param  Nette\Database\Table\ActiveRow $record
-	 * @param  Nette\Utils\ArrayHash $values
+	 * @param  ActiveRow $record
+	 * @param  array $values
 	 * @return void
 	 */
-	public function processInlineEditForm(Nette\Database\Table\ActiveRow $record, Nette\Utils\ArrayHash $values)
+	public function processInlineEditForm(ActiveRow $record, array $values)
 	{
 		$this->flashMessage("[DEMO] Update request sent for record '{$record->id}'; new values: " . Nette\Utils\Json::encode($values), 'success');
 	}
 
 
 	/**
-	 * @param  Nette\Database\Table\ActiveRow[]
+	 * @param  ActiveRow[]
 	 * @return void
 	 */
 	public function deleteMany(array $records)

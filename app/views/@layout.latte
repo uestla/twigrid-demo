@@ -4,12 +4,11 @@
 		<meta charset="utf-8">
 		<title>TwiGrid example</title>
 
-		<link rel="stylesheet" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-		<link rel="stylesheet" media="screen" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+		<link href="{$basePath}/{='bower_components/bootstrap/dist/css/bootstrap.css' |mtime}" rel="stylesheet">
 		<link href="{$basePath}/{='bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' |mtime}" rel="stylesheet">
+		<link href="{$basePath}/{='bower_components/fontawesome/css/font-awesome.css' |mtime}" rel="stylesheet">
 		<link href="{$basePath}/{='bower_components/twigrid-datagrid/assets/twigrid.datagrid.css' |mtime}" rel="stylesheet">
-		<link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/github.min.css" rel="stylesheet">
-
+		<link href="{$basePath}/{='bower_components/highlightjs/styles/github.css' |mtime}" rel="stylesheet">
 		<link href="{$basePath}/{='css/example.css' |mtime}" rel="stylesheet">
 	</head>
 
@@ -24,12 +23,12 @@
 					</button>
 
 					<a n:href="Example:homepage,
-						dataGrid-poluted => NULL,
-						dataGrid-orderBy => NULL,
-						dataGrid-orderDesc => NULL,
-						dataGrid-filters => NULL,
-						dataGrid-page => NULL,
-						dataGrid-inlineEditPrimary => NULL" class="navbar-brand">TwiGrid</a>
+						dataGrid-poluted => null,
+						dataGrid-orderBy => null,
+						dataGrid-orderDesc => null,
+						dataGrid-filters => null,
+						dataGrid-page => null,
+						dataGrid-inlineEditPrimary => null" class="navbar-brand">TwiGrid</a>
 				</div>
 
 				<div class="collapse navbar-collapse" id="main-menu">
@@ -74,15 +73,14 @@
 
 		</div>
 
-		<script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
-		<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+		<script type="text/javascript" src="{$basePath}/{='bower_components/jquery/dist/jquery.js' |mtime}"></script>
+		<script type="text/javascript" src="{$basePath}/{='bower_components/bootstrap/dist/js/bootstrap.js' |mtime}"></script>
+		<script type="text/javascript" src="{$basePath}/{='bower_components/momentjs/moment.js' |mtime}"></script>
 		<script type="text/javascript" src="{$basePath}/{='bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' |mtime}"></script>
 		<script type="text/javascript" src="{$basePath}/{='bower_components/nette-forms/src/assets/netteForms.js' |mtime}"></script>
 		<script type="text/javascript" src="{$basePath}/{='bower_components/nette.ajax.js/nette.ajax.js' |mtime}"></script>
 		<script type="text/javascript" src="{$basePath}/{='bower_components/twigrid-datagrid/assets/twigrid.datagrid.js' |mtime}"></script>
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
-
-		<script type="text/javascript" src="{$basePath}/{='js/script.js' |mtime}"></script>
+		<script type="text/javascript" src="{$basePath}/{='bower_components/highlightjs/highlight.pack.min.js' |mtime}"></script>
+		<script type="text/javascript" src="{$basePath}/{='js/example.js' |mtime}"></script>
 	</body>
 </html>

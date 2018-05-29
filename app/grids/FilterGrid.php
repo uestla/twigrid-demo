@@ -1,6 +1,7 @@
 <?php
 
 use Nette\Forms\Form;
+use Nette\Forms\Container;
 
 
 class FilterGrid extends BaseGrid
@@ -21,29 +22,27 @@ class FilterGrid extends BaseGrid
 	}
 
 
-	/** @return Nette\Forms\Container */
-	public function filterFactory()
+	/**
+	 * @param  Container $container
+	 * @return void
+	 */
+	public function filterFactory(Container $container)
 	{
-		$c = new Nette\Forms\Container;
+		$container->addText('firstname');
+		$container->addText('surname');
 
-		$c->addText('firstname');
-		$c->addText('surname');
-
-		$c->addText('kilograms')
+		$container->addText('kilograms')
 			->addCondition(Form::FILLED)
 				->addRule(Form::FLOAT);
-
-		return $c;
 	}
 
 
 	/**
-	 * @param  FilterGrid $grid
 	 * @param  array $filters
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	public function dataLoader(FilterGrid $grid, array $filters, array $order)
+	public function dataLoader(array $filters, array $order)
 	{
 		$users = $this->database->table('user');
 

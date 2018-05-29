@@ -1,6 +1,5 @@
 <?php
 
-use Nette\Http\Session as NSession;
 use Nette\Database\Context as NdbContext;
 
 
@@ -11,13 +10,10 @@ abstract class BaseGrid extends TwiGrid\DataGrid
 	protected $database;
 
 
-	/**
-	 * @param  NSession $session
-	 * @param  NdbContext $database
-	 */
-	public function __construct(NSession $session, NdbContext $database)
+	/** @param  NdbContext $database */
+	public function __construct(NdbContext $database)
 	{
-		parent::__construct($session);
+		parent::__construct();
 		$this->database = $database;
 	}
 

@@ -1,5 +1,9 @@
 <?php
 
+use Nette\Utils\Json;
+use Nette\Forms\Container;
+use Nette\Database\Table\ActiveRow;
+
 
 class InlineGrid extends BaseGrid
 {
@@ -17,8 +21,8 @@ class InlineGrid extends BaseGrid
 		$this->addColumn('biography', 'Biography');
 		$this->addColumn('country_code', 'Country');
 
-		$this->setInlineEditing([$this, 'inlineEditFactory'], function ($id, Nette\Utils\ArrayHash $values) {
-			$this->flashMessage("[DEMO] Updating item '$id' with values " . Nette\Utils\Json::encode($values), 'success');
+		$this->setInlineEditing([$this, 'inlineEditFactory'], function ($id, array $values) {
+			$this->flashMessage("[DEMO] Updating item '$id' with values " . Json::encode($values), 'success');
 		});
 
 		$this->setDataLoader([$this, 'dataLoader']);
@@ -26,30 +30,26 @@ class InlineGrid extends BaseGrid
 
 
 	/**
-	 * @param  Nette\Database\Table\ActiveRow $record
-	 * @return Nette\Forms\Container
+	 * @param  Container $container
+	 * @param  ActiveRow $record
+	 * @return void
 	 */
-	public function inlineEditFactory(Nette\Database\Table\ActiveRow $record)
+	public function inlineEditFactory(Container $container, ActiveRow $record)
 	{
-		$c = new Nette\Forms\Container;
+		$container->addText('firstname')->setRequired();
+		$container->addText('surname')->setRequired();
+		$container->addTextarea('biography')->setRequired()->setAttribute('rows', 7);
 
-		$c->addText('firstname')->setRequired();
-		$c->addText('surname')->setRequired();
-		$c->addTextarea('biography')->setRequired()->setAttribute('rows', 7);
-
-		$c->setDefaults($record->toArray());
-
-		return $c;
+		$container->setDefaults($record->toArray());
 	}
 
 
 	/**
-	 * @param  InlineGrid $grid
 	 * @param  array $filters
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	public function dataLoader(InlineGrid $grid, array $filters, array $order)
+	public function dataLoader(array $filters, array $order)
 	{
 		return $this->database->table('user')
 			->limit(12);

@@ -26,12 +26,11 @@ class RowActionGrid extends BaseGrid
 
 
 	/**
-	 * @param  RowActionGrid $grid
 	 * @param  array $filters
 	 * @param  array $order
 	 * @return Nette\Database\Table\Selection
 	 */
-	public function dataLoader(RowActionGrid $grid, array $filters, array $order)
+	public function dataLoader(array $filters, array $order)
 	{
 		return $this->database->table('user')
 				->limit(12);
