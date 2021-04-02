@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 use Nette\Forms\Form;
+use Nette\Utils\Json;
 use Nette\Forms\Container;
 use TwiGrid\Components\Column;
 use Nette\Database\Table\ActiveRow;
@@ -10,8 +13,7 @@ use Nette\Database\Table\Selection;
 class FullGrid extends BaseGrid
 {
 
-	/** @return void */
-	protected function build()
+	protected function build(): void
 	{
 		parent::build();
 
@@ -50,11 +52,7 @@ class FullGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  Container $container
-	 * @return void
-	 */
-	public function createFilterContainer(Container $container)
+	public function createFilterContainer(Container $container): void
 	{
 		$container->addText('firstname');
 		$container->addText('surname');
@@ -65,8 +63,8 @@ class FullGrid extends BaseGrid
 
 		$min->addCondition(Form::FILLED)->addRule(function () use ($min, $max) {
 			return !$max->filled
-					|| (($minDt = Helpers::parseDate($min->value)) !== FALSE
-						&& ($maxDt = Helpers::parseDate($max->value)) !== FALSE
+					|| (($minDt = Helpers::parseDate($min->value)) !== null
+						&& ($maxDt = Helpers::parseDate($max->value)) !== null
 						&& $minDt <= $maxDt);
 
 		}, 'Please select valid date range.');
@@ -78,12 +76,7 @@ class FullGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  Container $container
-	 * @param  ActiveRow $record
-	 * @return void
-	 */
-	public function createInlineEditContainer(Container $container, ActiveRow $record)
+	public function createInlineEditContainer(Container $container, ActiveRow $record): void
 	{
 		$container->addText('firstname')->setRequired();
 		$container->addText('surname')->setRequired();
@@ -101,13 +94,10 @@ class FullGrid extends BaseGrid
 
 
 	/**
-	 * @param  array $filters
-	 * @param  array $order
-	 * @param  int $limit
-	 * @param  int $offset
-	 * @return Selection
+	 * @param  array<string, mixed> $filters
+	 * @param  array<string, bool> $order
 	 */
-	public function dataLoader(array $filters, array $order, $limit, $offset)
+	public function dataLoader(array $filters, array $order, int $limit, int $offset): Selection
 	{
 		// selection factory
 		$users = $this->database->table('user');
@@ -123,23 +113,16 @@ class FullGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  array $filters
-	 * @return int
-	 */
-	public function itemCounter(array $filters)
+	/** @param  array<string, mixed> $filters */
+	public function itemCounter(array $filters): int
 	{
 		return static::filterData($this->database->table('user'), $filters)
 				->count('*');
 	}
 
 
-	/**
-	 * @param  NSelection $selection
-	 * @param  array $filters
-	 * @return NSelection
-	 */
-	protected static function filterData(Selection $selection, array $filters)
+	/** @param  array<string, mixed> $filters */
+	protected static function filterData(Selection $selection, array $filters): Selection
 	{
 		foreach ($filters as $column => $value) {
 			if ($column === 'gender') {
@@ -167,12 +150,8 @@ class FullGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  NSelection $data
-	 * @param  array $order
-	 * @return NSelection
-	 */
-	protected static function orderData(Selection $data, array $order)
+	/** @param  array<string, bool> $order */
+	protected static function orderData(Selection $data, array $order): Selection
 	{
 		foreach ($order as $column => $dir) {
 			$data->order($column . ($dir === TwiGrid\Components\Column::DESC ? ' DESC' : ''));
@@ -182,39 +161,28 @@ class FullGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  ActiveRow $record
-	 * @return void
-	 */
-	public function deleteRecord(ActiveRow $record)
+	public function deleteRecord(ActiveRow $record): void
 	{
 		$this->flashMessage("[DEMO] Deletion request sent for record '{$record->id}'.", 'success');
 	}
 
 
-	/**
-	 * @param  ActiveRow $record
-	 * @param  array $values
-	 * @return void
-	 */
-	public function processInlineEditForm(ActiveRow $record, array $values)
+	/** @param  array<string, mixed> $values */
+	public function processInlineEditForm(ActiveRow $record, array $values): void
 	{
-		$this->flashMessage("[DEMO] Update request sent for record '{$record->id}'; new values: " . Nette\Utils\Json::encode($values), 'success');
+		$this->flashMessage("[DEMO] Update request sent for record '{$record->id}'; new values: " . Json::encode($values), 'success');
 	}
 
 
-	/**
-	 * @param  ActiveRow[]
-	 * @return void
-	 */
-	public function deleteMany(array $records)
+	/** @param  ActiveRow[] $records */
+	public function deleteMany(array $records): void
 	{
 		$ids = [];
 		foreach ($records as $record) {
 			$ids[] = $record->id;
 		}
 
-		$this->flashMessage('[DEMO] Records deletion request : ' . Nette\Utils\Json::encode($ids), 'success');
+		$this->flashMessage('[DEMO] Records deletion request : ' . Json::encode($ids), 'success');
 	}
 
 }

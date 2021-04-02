@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types = 1);
+
+
+use Nette\Database\Table\Selection;
+
 
 class PaginationGrid extends BaseGrid
 {
 
-	/** @return void */
-	protected function build()
+	protected function build(): void
 	{
 		parent::build();
 
@@ -19,25 +23,18 @@ class PaginationGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  array $filters
-	 * @return Nette\Database\Table\Selection
-	 */
-	public function userCounter(array $filters)
+	/** @param  array<string, mixed> $filters */
+	public function userCounter(array $filters): int
 	{
 		return $this->database->table('user')->count('*');
 	}
 
 
 	/**
-	 * @param  PaginationGrid $grid
-	 * @param  array $filters
-	 * @param  array $order
-	 * @param  int $limit
-	 * @param  int $offset
-	 * @return Nette\Database\Table\Selection
+	 * @param  array<string, mixed> $filters
+	 * @param  array<string, bool> $order
 	 */
-	public function dataLoader(array $filters, array $order, $limit, $offset)
+	public function dataLoader(array $filters, array $order, int $limit, int $offset): Selection
 	{
 		$users = $this->database->table('user');
 

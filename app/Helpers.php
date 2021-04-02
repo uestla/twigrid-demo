@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types = 1);
+
 use Nette\Forms\Form;
+use Nette\Utils\Strings;
 use Nette\Forms\Container;
 use Nette\Database\ResultSet;
 use Nette\Database\Connection;
@@ -15,8 +18,8 @@ class Helpers
 	const DATE_REGEXP = '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*\.\s*([0-9]{4})\s*$#';
 
 
-	/**  @return array*/
-	public static function getCountries()
+	/**  @return array<string, string> */
+	public static function getCountries(): array
 	{
 		return [
 			'au' => 'Australia',
@@ -40,12 +43,7 @@ class Helpers
 	}
 
 
-	/**
-	 * @param  Connection $connection
-	 * @param  \stdClass $payload
-	 * @return void
-	 */
-	public static function initQueryLogging(Connection $connection, $payload)
+	public static function initQueryLogging(Connection $connection, \stdClass $payload): void
 	{
 		$payload->queries = [];
 		$connection->onQuery[] = function (Connection $c, ResultSet $result) use ($payload) {
@@ -54,49 +52,35 @@ class Helpers
 	}
 
 
-	/**
-	 * @param  \stdClass $payload
-	 * @param  string $sql
-	 * @return void
-	 */
-	public static function logQuery($payload, $sql)
+	public static function logQuery(\stdClass$payload, string $sql): void
 	{
-		$payload->queries[] = dibi::dump($sql, TRUE);
+		$payload->queries[] = dibi::dump($sql, true);
 	}
 
 
-	/**
-	 * @param  Container $container
-	 * @param  string $name
-	 * @return TextInput
-	 */
-	public static function addDateInput(Container $container, $name)
+	public static function addDateInput(Container $container, string $name): TextInput
 	{
 		$control = $container->addText($name);
 		$control->addCondition( Form::FILLED )->addRule( function ($control) {
-			return self::parseDate($control->value) !== FALSE;
+			return self::parseDate($control->value) !== null;
 		}, 'Datum prosím zadávejte ve formátu "D.M.RRRR".' );
 
 		return $control;
 	}
 
 
-	/**
-	 * @param  string $s
-	 * @return DateTime|FALSE
-	 */
-	public static function parseDate($s)
+	public static function parseDate(string $s): ?\DateTime
 	{
 		try {
-			if (!($m = Nette\Utils\Strings::match($s, static::DATE_REGEXP))) {
-				return FALSE;
+			if (!($m = Strings::match($s, static::DATE_REGEXP))) {
+				return null;
 			}
 
 			return new DateTime("{$m[3]}-{$m[2]}-{$m[1]}");
 
 		} catch (Exception $e) {}
 
-		return FALSE;
+		return null;
 	}
 
 }

@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types = 1);
+
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
+
 
 class RowActionGrid extends BaseGrid
 {
 
-	/** @return void */
-	protected function build()
+	protected function build(): void
 	{
 		parent::build();
 
@@ -16,7 +20,7 @@ class RowActionGrid extends BaseGrid
 		$this->addColumn('birthday', 'Birthdate');
 
 		$this->addRowAction('download', 'Download', [$this, 'downloadItem'])
-			->setProtected(FALSE); // turns off the CSRF protection which is not necessary here
+			->setProtected(false); // turns off the CSRF protection which is not necessary here
 
 		$this->addRowAction('delete', 'Delete', [$this, 'deleteItem'])
 			->setConfirmation('Do you really want to delete this item?');
@@ -26,32 +30,23 @@ class RowActionGrid extends BaseGrid
 
 
 	/**
-	 * @param  array $filters
-	 * @param  array $order
-	 * @return Nette\Database\Table\Selection
+	 * @param  array<string, mixed> $filters
+	 * @param  array<string, bool> $order
 	 */
-	public function dataLoader(array $filters, array $order)
+	public function dataLoader(array $filters, array $order): Selection
 	{
 		return $this->database->table('user')
 				->limit(12);
 	}
 
 
-	/**
-	 * @param  Nette\Database\Table\ActiveRow $record
-	 * @return void
-	 */
-	public function downloadItem(Nette\Database\Table\ActiveRow $record)
+	public function downloadItem(ActiveRow $record): void
 	{
 		$this->flashMessage("[DEMO] Downloading item '{$record->id}'...", 'success');
 	}
 
 
-	/**
-	 * @param  Nette\Database\Table\ActiveRow $record
-	 * @return void
-	 */
-	public function deleteItem(Nette\Database\Table\ActiveRow $record)
+	public function deleteItem(ActiveRow $record): void
 	{
 		$this->flashMessage("[DEMO] Deleting item '{$record->id}'...", 'success');
 	}

@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 use Nette\Utils\Json;
 use Nette\Forms\Container;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 
 
 class InlineGrid extends BaseGrid
 {
 
-	/** @return void */
-	protected function build()
+	protected function build(): void
 	{
 		parent::build();
 
@@ -29,12 +31,7 @@ class InlineGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  Container $container
-	 * @param  ActiveRow $record
-	 * @return void
-	 */
-	public function inlineEditFactory(Container $container, ActiveRow $record)
+	public function inlineEditFactory(Container $container, ActiveRow $record): void
 	{
 		$container->addText('firstname')->setRequired();
 		$container->addText('surname')->setRequired();
@@ -45,11 +42,10 @@ class InlineGrid extends BaseGrid
 
 
 	/**
-	 * @param  array $filters
-	 * @param  array $order
-	 * @return Nette\Database\Table\Selection
+	 * @param  array<string, mixed> $filters
+	 * @param  array<string, bool> $order
 	 */
-	public function dataLoader(array $filters, array $order)
+	public function dataLoader(array $filters, array $order): Selection
 	{
 		return $this->database->table('user')
 			->limit(12);

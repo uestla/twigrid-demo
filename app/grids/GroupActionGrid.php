@@ -1,11 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
+use Nette\Utils\Json;
+use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
+
 
 class GroupActionGrid extends BaseGrid
 {
 
-	/** @return void */
-	protected function build()
+	protected function build(): void
 	{
 		parent::build();
 
@@ -25,44 +30,37 @@ class GroupActionGrid extends BaseGrid
 
 
 	/**
-	 * @param  array $filters
-	 * @param  array $order
-	 * @return Nette\Database\Table\Selection
+	 * @param  array<string, mixed> $filters
+	 * @param  array<string, bool> $order
 	 */
-	public function dataLoader(array $filters, array $order)
+	public function dataLoader(array $filters, array $order): Selection
 	{
 		return $this->database->table('user')
 			->limit(12);
 	}
 
 
-	/**
-	 * @param  Nette\Database\Table\ActiveRow[]
-	 * @return void
-	 */
-	public function exportMany(array $records)
+	/** @param  ActiveRow[] $records */
+	public function exportMany(array $records): void
 	{
 		$ids = [];
 		foreach ($records as $record) {
 			$ids[] = $record->id;
 		}
 
-		$this->flashMessage('[DEMO] Exporting items ' . Nette\Utils\Json::encode($ids), 'success');
+		$this->flashMessage('[DEMO] Exporting items ' . Json::encode($ids), 'success');
 	}
 
 
-	/**
-	 * @param  Nette\Database\Table\ActiveRow[]
-	 * @return void
-	 */
-	public function deleteMany(array $records)
+	/** @param  ActiveRow[] $records */
+	public function deleteMany(array $records): void
 	{
 		$ids = [];
 		foreach ($records as $record) {
 			$ids[] = $record->id;
 		}
 
-		$this->flashMessage('[DEMO] Deleting items ' . Nette\Utils\Json::encode($ids), 'success');
+		$this->flashMessage('[DEMO] Deleting items ' . Json::encode($ids), 'success');
 	}
 
 }

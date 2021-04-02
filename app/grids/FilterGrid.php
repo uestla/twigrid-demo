@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 use Nette\Forms\Form;
 use Nette\Forms\Container;
+use Nette\Database\Table\Selection;
 
 
 class FilterGrid extends BaseGrid
 {
 
-	/** @return void */
-	protected function build()
+	protected function build(): void
 	{
 		parent::build();
 
@@ -22,11 +24,7 @@ class FilterGrid extends BaseGrid
 	}
 
 
-	/**
-	 * @param  Container $container
-	 * @return void
-	 */
-	public function filterFactory(Container $container)
+	public function filterFactory(Container $container): void
 	{
 		$container->addText('firstname');
 		$container->addText('surname');
@@ -38,11 +36,10 @@ class FilterGrid extends BaseGrid
 
 
 	/**
-	 * @param  array $filters
-	 * @param  array $order
-	 * @return Nette\Database\Table\Selection
+	 * @param  array<string, mixed> $filters
+	 * @param  array<string, bool> $order
 	 */
-	public function dataLoader(array $filters, array $order)
+	public function dataLoader(array $filters, array $order): Selection
 	{
 		$users = $this->database->table('user');
 

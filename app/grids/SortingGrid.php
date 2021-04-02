@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 
 class SortingGrid extends BaseGrid
 {
 
-	/** @return void */
-	protected function build()
+	protected function build(): void
 	{
 		parent::build();
 

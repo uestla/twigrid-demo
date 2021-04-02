@@ -1,33 +1,53 @@
 <?php
 
+declare(strict_types = 1);
 
-class ExamplePresenter extends Nette\Application\UI\Presenter
+use Nette\Database\Explorer;
+use Nette\Application\UI\Template;
+use Nette\Application\UI\Presenter;
+
+
+class ExamplePresenter extends Presenter
 {
 
-	/** @persistent bool */
-	public $showQueries = FALSE;
+	/** @persistent */
+	public bool $showQueries = false;
 
-	/** @var \Nette\Database\Context @inject */
-	public $database;
+	private Explorer $database;
+	private SortingGrid $sortingGrid;
+	private FilterGrid $filterGrid;
+	private RowActionGrid $rowActionGrid;
+	private GroupActionGrid $groupActionGrid;
+	private InlineGrid $inlineGrid;
+	private PaginationGrid $paginationGrid;
+	private FullGrid $fullGrid;
 
-	/** @var Nette\Caching\IStorage @inject */
-	public $storage;
 
-	/** @var Nette\Caching\Cache */
-	private $cache;
+	public function __construct(
+		Explorer $database,
+		SortingGrid $sortingGrid,
+		FilterGrid $filterGrid,
+		RowActionGrid $rowActionGrid,
+		GroupActionGrid $groupActionGrid,
+		InlineGrid $inlineGrid,
+		PaginationGrid $paginationGrid,
+		FullGrid $fullGrid
 
+	) {
+		parent::__construct();
 
-	/** @return void */
-	protected function startup()
-	{
-		parent::startup();
-
-		$this->cache = new Nette\Caching\Cache($this->storage, __CLASS__);
+		$this->database = $database;
+		$this->fullGrid = $fullGrid;
+		$this->filterGrid = $filterGrid;
+		$this->inlineGrid = $inlineGrid;
+		$this->sortingGrid = $sortingGrid;
+		$this->rowActionGrid = $rowActionGrid;
+		$this->paginationGrid = $paginationGrid;
+		$this->groupActionGrid = $groupActionGrid;
 	}
 
 
-	/** @return void */
-	protected function beforeRender()
+	protected function beforeRender(): void
 	{
 		parent::beforeRender();
 
@@ -37,62 +57,52 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 
 	// === DATAGRIDS ==================================================================
 
-	/** @return SimpleGrid */
-	protected function createComponentSortingGrid()
+	protected function createComponentSortingGrid(): SortingGrid
 	{
-		return $this->context->createService('sortingGrid');
+		return $this->sortingGrid;
 	}
 
 
-	/** @return FilterGrid */
-	protected function createComponentFilterGrid()
+	protected function createComponentFilterGrid(): FilterGrid
 	{
-		return $this->context->createService('filterGrid');
+		return $this->filterGrid;
 	}
 
 
-	/** @return RowActionGrid */
-	protected function createComponentRowActionGrid()
+	protected function createComponentRowActionGrid(): RowActionGrid
 	{
-		return $this->context->createService('rowActionGrid');
+		return $this->rowActionGrid;
 	}
 
 
-	/** @return GroupActionGrid */
-	protected function createComponentGroupActionGrid()
+	protected function createComponentGroupActionGrid(): GroupActionGrid
 	{
-		return $this->context->createService('groupActionGrid');
+		return $this->groupActionGrid;
 	}
 
 
-	/** @return InlineGrid */
-	protected function createComponentInlineGrid()
+	protected function createComponentInlineGrid(): InlineGrid
 	{
-		return $this->context->createService('inlineGrid');
+		return $this->inlineGrid;
 	}
 
 
-	/** @return PaginationGrid */
-	protected function createComponentPaginationGrid()
+	protected function createComponentPaginationGrid(): PaginationGrid
 	{
-		return $this->context->createService('paginationGrid');
+		return $this->paginationGrid;
 	}
 
 
-	/** @return FullGrid */
-	protected function createComponentFullGrid()
+	protected function createComponentFullGrid(): FullGrid
 	{
-		return $this->context->createService('fullGrid');
+		return $this->fullGrid;
 	}
 
 
 	// === APP-RELATED STUFF & HELPERS ===============================================================
 
-	/**
-	 * @param  array $params
-	 * @return void
-	 */
-	public function loadState(array $params)
+	/** @param  mixed[] $params */
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 
@@ -102,11 +112,7 @@ class ExamplePresenter extends Nette\Application\UI\Presenter
 	}
 
 
-	/**
-	 * @param  string $class
-	 * @return \Nette\Templating\ITemplate
-	 */
-	protected function createTemplate($class = NULL)
+	protected function createTemplate(?string $class = null): Template
 	{
 		$this->redrawControl('links');
 		$this->redrawControl('flashes');

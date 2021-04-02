@@ -1,6 +1,8 @@
 <?php
 
-use Nette\Application as NApplication;
+use Nette\Routing\Router;
+use Nette\Application\Application;
+use Nette\Application\Routers\RouteList;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -12,13 +14,12 @@ $configurator->addConfig(__DIR__ . '/app/config.neon');
 $configurator->addParameters(['appDir' => __DIR__ . '/app']);
 $configurator->createRobotLoader()->addDirectory(__DIR__ . '/app')->register();
 
-
 $container = $configurator->createContainer();
 
-$router = $container->getByType(NApplication\IRouter::class);
-$router[] = new NApplication\Routers\Route('? action=<action>', 'Example:homepage', NApplication\Routers\Route::ONE_WAY);
-$router[] = new NApplication\Routers\Route('simple', 'Example:sorting');
-$router[] = new NApplication\Routers\Route('<action>', 'Example:homepage');
-$router[] = new NApplication\Routers\SimpleRouter('Example:default');
+$router = new RouteList;
+$router->addRoute('? action=<action>', 'Example:homepage', Router::ONE_WAY);
+$router->addRoute('sorting', 'Example:sorting');
+$router->addRoute('<action>', 'Example:homepage');
+$container->addService('router', $router);
 
-$container->getByType(NApplication\Application::class)->run();
+$container->getByType(Application::class)->run();

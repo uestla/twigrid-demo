@@ -56,9 +56,7 @@
 		<a href="#code" n:if="count($sources) > 1">&uArr;</a>
 	</h3>
 
-	<pre><code class="{pathinfo($file, PATHINFO_EXTENSION)}">
-{file_get_contents('safe://' . $file) |replaceRE:'#^<\?php#':''|trim}
-	</code></pre>
+	<pre><code class="{pathinfo($file, PATHINFO_EXTENSION)}">{file_get_contents('safe://' . $file) |trim}</code></pre>
 	{/foreach}
 
 {/define}

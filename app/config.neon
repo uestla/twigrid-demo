@@ -6,10 +6,10 @@ database:
 	dsn: 'sqlite:%appDir%/users.s3db'
 
 services:
-	sortingGrid: SortingGrid( ..., ... )
-	filterGrid: FilterGrid( ..., ... )
-	rowActionGrid: RowActionGrid( ..., ... )
-	groupActionGrid: GroupActionGrid( ..., ... )
-	inlineGrid: InlineGrid( ..., ... )
-	paginationGrid: PaginationGrid( ..., ... )
-	fullGrid: FullGrid( ..., ... )
+	- SortingGrid
+	- FilterGrid
+	- RowActionGrid
+	- GroupActionGrid
+	- InlineGrid
+	- PaginationGrid
+	- FullGrid
