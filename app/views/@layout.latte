@@ -4,12 +4,12 @@
 		<meta charset="utf-8">
 		<title>TwiGrid example</title>
 
-		<link href="{$basePath}/{='bower_components/bootstrap/dist/css/bootstrap.css' |mtime}" rel="stylesheet">
-		<link href="{$basePath}/{='bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css' |mtime}" rel="stylesheet">
-		<link href="{$basePath}/{='bower_components/fontawesome/css/font-awesome.css' |mtime}" rel="stylesheet">
-		<link href="{$basePath}/{='bower_components/twigrid-datagrid/assets/twigrid.datagrid.css' |mtime}" rel="stylesheet">
-		<link href="{$basePath}/{='bower_components/highlightjs/styles/github.css' |mtime}" rel="stylesheet">
-		<link href="{$basePath}/{='css/example.css' |mtime}" rel="stylesheet">
+		<link href="{$basePath}/{='assets/vendor/bootstrap/dist/css/bootstrap.min.css' |mtime}" rel="stylesheet">
+		<link href="{$basePath}/{='assets/vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css' |mtime}" rel="stylesheet">
+		<link href="{$basePath}/{='assets/vendor/@fortawesome/fontawesome-free/css/all.min.css' |mtime}" rel="stylesheet">
+		<link href="{$basePath}/{='assets/vendor/twigrid-datagrid/assets/twigrid.datagrid.css' |mtime}" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/styles/github.min.css">
+		<link href="{$basePath}/{='assets/css/example.css' |mtime}" rel="stylesheet">
 	</head>
 
 	<body>
@@ -45,14 +45,14 @@
 
 					<ul class="nav navbar-nav navbar-right">
 						<li>
-							<a href="https://github.com/uestla/twigrid" target="_blank">
-								<i class="fa fa-lg fa-github"></i> Source
+							<a href="https://github.com/uestla/TwiGrid" target="_blank">
+								<i class="fab fa-lg fa-github"></i> Source
 							</a>
 						</li>
 
 						<li>
 							<a href="https://github.com/uestla/twigrid-demo" target="_blank">
-								<i class="fa fa-lg fa-github"></i> This demo
+								<i class="fab fa-lg fa-github"></i> This demo
 							</a>
 						</li>
 					</ul>
@@ -73,14 +73,14 @@
 
 		</div>
 
-		<script type="text/javascript" src="{$basePath}/{='bower_components/jquery/dist/jquery.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='bower_components/bootstrap/dist/js/bootstrap.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='bower_components/momentjs/moment.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='bower_components/nette-forms/src/assets/netteForms.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='bower_components/nette.ajax.js/nette.ajax.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='bower_components/twigrid-datagrid/assets/twigrid.datagrid.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='bower_components/highlightjs/highlight.pack.min.js' |mtime}"></script>
-		<script type="text/javascript" src="{$basePath}/{='js/example.js' |mtime}"></script>
+		<script src="{$basePath}/{='assets/vendor/jquery/dist/jquery.min.js' |mtime}"></script>
+		<script src="{$basePath}/{='assets/vendor/bootstrap/dist/js/bootstrap.min.js' |mtime}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
+		<script src="{$basePath}/{='assets/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' |mtime}"></script>
+		<script src="{$basePath}/{='assets/vendor/nette-forms/src/assets/netteForms.min.js' |mtime}"></script>
+		<script src="{$basePath}/{='assets/vendor/nette.ajax.js/nette.ajax.js' |mtime}"></script>
+		<script src="{$basePath}/{='assets/vendor/twigrid-datagrid/assets/twigrid.datagrid.js' |mtime}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/highlight.min.js"></script>
+		<script src="{$basePath}/{='assets/js/example.js' |mtime}"></script>
 	</body>
 </html>

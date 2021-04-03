@@ -7,7 +7,7 @@
 
 		// === sources highlighting ====================
 
-		hljs.initHighlightingOnLoad();
+		hljs.highlightAll();
 
 
 		// === datepicker ====================

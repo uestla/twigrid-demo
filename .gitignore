@@ -1,4 +1,5 @@
 /vendor
 /log/[^.]*
+/yarn.lock
+/assets/vendor
 /composer.lock
-/bower_components
