@@ -1,0 +1,11 @@
+parameters:
+	level: max
+	paths:
+		- app/
+		- tests/
+		- index.php
+	tmpDir: temp
+	ignoreErrors:
+		- '#^Parameter \#1 \$limit of method Nette\\Database\\Table\\Selection::limit\(\) expects int<0, max>\|null, int given\.$#D'
+		- '#^Parameter \#2 \$offset of method Nette\\Database\\Table\\Selection::limit\(\) expects int<0, max>\|null, int given\.$#D'
+		- '#^Array \(array<callable\(Nette\\Database\\Connection, Nette\\Database\\DriverException\|Nette\\Database\\ResultSet\): void>\) does not accept Closure\(Nette\\Database\\Connection, Nette\\Database\\ResultSet\): void\.$#D'
