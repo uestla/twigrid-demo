@@ -10,12 +10,10 @@ use Nette\Database\Connection;
 use Nette\Forms\Controls\TextInput;
 
 
-/** Misc helpers for demo purposes */
-class Helpers
+final class Helpers
 {
 
-	const SCRIPT_KEY = 'grid-script-';
-	const DATE_REGEXP = '#^\s*(0[1-9]|[12][0-9]|3[01])\s*\.\s*(0?[1-9]|1[0-2])\s*\.\s*([0-9]{4})\s*$#';
+	private const DATE_REGEXP = '#^\s*(\d+)\s*\.\s*(\d+)\s*\.\s*(\d+)\s*$#';
 
 
 	/**  @return array<string, string> */
@@ -46,24 +44,27 @@ class Helpers
 	public static function initQueryLogging(Connection $connection, \stdClass $payload): void
 	{
 		$payload->queries = [];
-		$connection->onQuery[] = function (Connection $c, ResultSet $result) use ($payload) {
-			self::logQuery($payload, $result->getPdoStatement()->queryString);
+
+		$connection->onQuery[] = static function (Connection $c, ResultSet $result) use ($payload): void {
+			$stmt = $result->getPdoStatement();
+
+			if ($stmt === null) {
+				return ;
+			}
+
+			$payload->queries[] = dibi::dump($stmt->queryString, true);
 		};
-	}
-
-
-	public static function logQuery(\stdClass$payload, string $sql): void
-	{
-		$payload->queries[] = dibi::dump($sql, true);
 	}
 
 
 	public static function addDateInput(Container $container, string $name): TextInput
 	{
 		$control = $container->addText($name);
-		$control->addCondition( Form::FILLED )->addRule( function ($control) {
-			return self::parseDate($control->value) !== null;
-		}, 'Datum prosím zadávejte ve formátu "D.M.RRRR".' );
+
+		$control->addCondition(Form::FILLED)
+			->addRule(static function ($control): bool {
+				return self::parseDate($control->value) !== null;
+			}, 'Please provide a date using format "DD. MM. YYYY".');
 
 		return $control;
 	}
@@ -72,13 +73,17 @@ class Helpers
 	public static function parseDate(string $s): ?\DateTime
 	{
 		try {
-			if (!($m = Strings::match($s, static::DATE_REGEXP))) {
+			if (($m = Strings::match($s, self::DATE_REGEXP)) === null) {
 				return null;
 			}
 
-			return new DateTime("{$m[3]}-{$m[2]}-{$m[1]}");
+			if (!checkdate((int) $m[2], (int) $m[1], (int) $m[3])) {
+				return null;
+			}
 
-		} catch (Exception $e) {}
+			return new \DateTime("$m[3]-$m[2]-$m[1] 00:00:00");
+
+		} catch (\Exception $e) {}
 
 		return null;
 	}

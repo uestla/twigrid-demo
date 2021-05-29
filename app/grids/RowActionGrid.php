@@ -2,53 +2,50 @@
 
 declare(strict_types = 1);
 
+use TwiGrid\DataGrid;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 
-class RowActionGrid extends BaseGrid
+final class RowActionGrid extends DataGrid
 {
+
+	private Explorer $database;
+
+
+	public function __construct(Explorer $database)
+	{
+		parent::__construct();
+
+		$this->database = $database;
+	}
+
 
 	protected function build(): void
 	{
-		parent::build();
-
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name');
 		$this->addColumn('surname', 'Surname');
 		$this->addColumn('country_code', 'Country');
 		$this->addColumn('birthday', 'Birthdate');
 
-		$this->addRowAction('download', 'Download', [$this, 'downloadItem'])
+		$this->setDataLoader(function (array $filters, array $order): Selection {
+			return $this->database->table('user')
+				->limit(12);
+		});
+
+		$this->setRecordVariable('user');
+
+		$this->addRowAction('download', 'Download', function (ActiveRow $user): void {
+				$this->flashMessage("[DEMO] Downloading item '{$user->id}'...", 'success');
+			})
 			->setProtected(false); // turns off the CSRF protection which is not necessary here
 
-		$this->addRowAction('delete', 'Delete', [$this, 'deleteItem'])
+		$this->addRowAction('delete', 'Delete', function (ActiveRow $user): void {
+				$this->flashMessage("[DEMO] Deleting item '{$user->id}'...", 'success');
+			})
 			->setConfirmation('Do you really want to delete this item?');
-
-		$this->setDataLoader([$this, 'dataLoader']);
-	}
-
-
-	/**
-	 * @param  array<string, mixed> $filters
-	 * @param  array<string, bool> $order
-	 */
-	public function dataLoader(array $filters, array $order): Selection
-	{
-		return $this->database->table('user')
-				->limit(12);
-	}
-
-
-	public function downloadItem(ActiveRow $record): void
-	{
-		$this->flashMessage("[DEMO] Downloading item '{$record->id}'...", 'success');
-	}
-
-
-	public function deleteItem(ActiveRow $record): void
-	{
-		$this->flashMessage("[DEMO] Deleting item '{$record->id}'...", 'success');
 	}
 
 }

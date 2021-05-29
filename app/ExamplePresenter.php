@@ -7,7 +7,7 @@ use Nette\Application\UI\Template;
 use Nette\Application\UI\Presenter;
 
 
-class ExamplePresenter extends Presenter
+final class ExamplePresenter extends Presenter
 {
 
 	/** @persistent */
@@ -117,10 +117,12 @@ class ExamplePresenter extends Presenter
 		$this->redrawControl('links');
 		$this->redrawControl('flashes');
 
+		/** @var \Nette\Bridges\ApplicationLatte\Template $template */
 		$template = parent::createTemplate($class);
+
 		$template->showQueries = $this->showQueries;
 
-		$template->getLatte()->addFilter('mtime', function ($f) {
+		$template->getLatte()->addFilter('mtime', function ($f): string {
 			return $f . '?' . filemtime(__DIR__ . '/../' . $f);
 		});
 

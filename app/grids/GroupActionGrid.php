@@ -3,64 +3,58 @@
 declare(strict_types = 1);
 
 use Nette\Utils\Json;
-use Nette\Database\Table\ActiveRow;
+use TwiGrid\DataGrid;
+use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 
 
-class GroupActionGrid extends BaseGrid
+final class GroupActionGrid extends DataGrid
 {
+
+	private Explorer $database;
+
+
+	public function __construct(Explorer $database)
+	{
+		parent::__construct();
+
+		$this->database = $database;
+	}
+
 
 	protected function build(): void
 	{
-		parent::build();
-
 		$this->setPrimaryKey('id');
 		$this->addColumn('firstname', 'Name');
 		$this->addColumn('surname', 'Surname');
 		$this->addColumn('country_code', 'Country');
 		$this->addColumn('birthday', 'Birthdate');
 
-		$this->addGroupAction('export', 'Export', [$this, 'exportMany']);
+		$this->setDataLoader(function (array $filters, array $order): Selection {
+			return $this->database->table('user')
+				->limit(12);
+		});
 
-		$this->addGroupAction('delete', 'Delete', [$this, 'deleteMany'])
+		$this->setRecordVariable('user');
+
+		$this->addGroupAction('export', 'Export', function (array $users): void {
+			$IDs = [];
+			foreach ($users as $user) {
+				$IDs[] = $user->id;
+			}
+
+			$this->flashMessage('[DEMO] Exporting items ' . Json::encode($IDs), 'success');
+		});
+
+		$this->addGroupAction('delete', 'Delete', function (array $users): void {
+				$ids = [];
+				foreach ($users as $user) {
+					$ids[] = $user->id;
+				}
+
+				$this->flashMessage('[DEMO] Deleting items ' . Json::encode($ids), 'success');
+			})
 			->setConfirmation('Do you really want to delete all chosen items?');
-
-		$this->setDataLoader([$this, 'dataLoader']);
-	}
-
-
-	/**
-	 * @param  array<string, mixed> $filters
-	 * @param  array<string, bool> $order
-	 */
-	public function dataLoader(array $filters, array $order): Selection
-	{
-		return $this->database->table('user')
-			->limit(12);
-	}
-
-
-	/** @param  ActiveRow[] $records */
-	public function exportMany(array $records): void
-	{
-		$ids = [];
-		foreach ($records as $record) {
-			$ids[] = $record->id;
-		}
-
-		$this->flashMessage('[DEMO] Exporting items ' . Json::encode($ids), 'success');
-	}
-
-
-	/** @param  ActiveRow[] $records */
-	public function deleteMany(array $records): void
-	{
-		$ids = [];
-		foreach ($records as $record) {
-			$ids[] = $record->id;
-		}
-
-		$this->flashMessage('[DEMO] Deleting items ' . Json::encode($ids), 'success');
 	}
 
 }
